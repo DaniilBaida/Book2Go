@@ -19,6 +19,11 @@ class AvatarController extends Controller
     {
         $request->validate([
             'avatar_path' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ], [
+            'avatar_path.required' => 'Please upload an avatar image.',
+            'avatar_path.image' => 'The file must be an image (JPEG, PNG, or JPG).',
+            'avatar_path.mimes' => 'Only JPEG, PNG, or JPG formats are allowed.',
+            'avatar_path.max' => 'The image must be smaller than 2MB.',
         ]);
 
         if ($request->hasFile('avatar_path')) {
