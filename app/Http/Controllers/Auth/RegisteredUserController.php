@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Laravolt\Avatar\Avatar;
+use Illuminate\Support\Str;
 
 class RegisteredUserController extends Controller
 {
@@ -40,6 +42,22 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
+        $avatar = new Avatar(); // Initialize the Avatar object
+        $uuid = (string) Str::uuid(); // Generate a unique UUID for the file name
+        $fileName = $uuid . '.png'; // Set the avatar file name with the UUID and '.png' extension
+        $filePath = 'avatars/' . $fileName; // Define the relative path for storing the avatar
+
+
+        // Check if the avatars directory exists, and if not, create it with proper permissions
+        $storageDir = storage_path('app/public/avatars');
+        if (!file_exists($storageDir)) {
+            mkdir($storageDir, 0755, true);
+        }
+
+        $avatar->create($request->name)->save($storageDir . '/' . $fileName); // Create and save the avatar image
+        $user->logo_path = $filePath; // Update the user's logo_path with the avatar file path
+        $user->save(); // Save the updated user object to the database
 
         event(new Registered($user));
 
