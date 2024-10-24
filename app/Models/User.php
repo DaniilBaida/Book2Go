@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_id',
     ];
 
     /**
@@ -44,5 +45,23 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    public function getRedirectRouteName(): string
+    {
+        return match ((int) $this->role_id) {
+            1 => 'client.dashboard',
+            2 => 'business.dashboard',
+            3 => 'admin.dashboard',
+        };
+    }
+
+    protected static function booted()
+    {
+        static::creating(function ($user) {
+            // If the avatar_path is not set, assign the default avatar
+            if (empty($user->avatar_path)) {
+                $user->avatar_path = 'images/avatars/default-avatar.svg';
+            }
+        });
     }
 }

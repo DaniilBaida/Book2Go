@@ -42,6 +42,7 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role_id' => 1,
         ]);
 
         $avatar = new Avatar(); // Initialize the Avatar object
@@ -59,7 +60,7 @@ class RegisteredUserController extends Controller
         $image = $avatar->create($request->name)->getImageObject();
 
         // Save the image directly to the file system
-        $image->save($storagePath . '/' . $fileName, 90, 'png'); // 90 is the quality, 'png' is the format
+        $image->save($storagePath . '/' . $fileName, 'png');
 
         $filePath = $directory . '/' . $fileName; // Path to store in the database (e.g., 'avatars/UUID.png')
         $user->avatar_path = '/storage/' . $filePath;
@@ -71,6 +72,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route("client.dashboard", absolute: false));
     }
 }
