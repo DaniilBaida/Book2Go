@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use Laravolt\Avatar\Avatar;
@@ -45,19 +46,26 @@ class RegisteredUserController extends Controller
 
         $avatar = new Avatar(); // Initialize the Avatar object
         $uuid = (string) Str::uuid(); // Generate a unique UUID for the file name
-        $fileName = $uuid . '.png'; // Set the avatar file name with the UUID and '.png' extension
-        $filePath = 'avatars/' . $fileName; // Define the relative path for storing the avatar
+        $fileName = $uuid . '.png'; // Filename with UUID and extension
+        $directory = 'avatars'; // Directory to store avatars within 'storage/app/public/'
+        $storagePath = storage_path('app/public/' . $directory); // Full path to the storage directory
 
-
-        // Check if the avatars directory exists, and if not, create it with proper permissions
-        $storageDir = storage_path('app/public/avatars');
-        if (!file_exists($storageDir)) {
-            mkdir($storageDir, 0755, true);
+        // Ensure the directory exists
+        if (!Storage::disk('public')->exists($directory)) {
+            Storage::disk('public')->makeDirectory($directory, 0755, true);
         }
 
-        $avatar->create($request->name)->save($storageDir . '/' . $fileName); // Create and save the avatar image
-        $user->logo_path = $filePath; // Update the user's logo_path with the avatar file path
+        // Create the avatar image
+        $image = $avatar->create($request->name)->getImageObject();
+
+        // Save the image directly to the file system
+        $image->save($storagePath . '/' . $fileName, 90, 'png'); // 90 is the quality, 'png' is the format
+
+        $filePath = $directory . '/' . $fileName; // Path to store in the database (e.g., 'avatars/UUID.png')
+        $user->avatar_path = '/storage/' . $filePath;
         $user->save(); // Save the updated user object to the database
+
+
 
         event(new Registered($user));
 

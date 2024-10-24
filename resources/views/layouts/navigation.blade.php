@@ -24,7 +24,7 @@
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <img class="mr-2" src="{{ asset('storage/' . Auth::user()->logo_path) }}" alt="User Avatar" width="40">
+                            <img class="mr-2 w-10 h-10 rounded-full object-cover" src="{{ asset(Auth::user()->avatar_path) }}" alt="User Avatar">
                             <div>{{ Auth::user()->name }}</div>
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -77,7 +77,7 @@
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="px-4 flex items-center">
                 <div>
-                    <img class="mr-2" src="{{ asset('storage/' . Auth::user()->logo_path) }}" alt="User Avatar" width="40">
+                    <img class="mr-2 w-10 h-10 rounded-full object-cover" src="{{ asset(Auth::user()->avatar_path) }}" alt="User Avatar">
                 </div>
                 <div>
                     <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
