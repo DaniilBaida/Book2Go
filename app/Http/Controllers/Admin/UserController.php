@@ -118,7 +118,7 @@ class UserController extends Controller
 
         $user->save();
 
-        return redirect()->route('admin.users.edit', $user->id)->with('status', 'user-updated');
+        return redirect()->route('admin.users.index', $user->id)->with('status', 'user-updated');
     }
 
 
