@@ -41,6 +41,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/profile', [Admin\ProfileController::class, 'edit'])->name('profile.edit');
             Route::patch('/profile', [Admin\ProfileController::class, 'update'])->name('profile.update');
             Route::delete('/profile', [Admin\ProfileController::class, 'destroy'])->name('profile.destroy');
+
+            // User management routes
+            Route::resource('users', Admin\UserController::class);
         });
 });
 
