@@ -24,13 +24,15 @@
         <tbody>
         @foreach ($users as $user)
             <tr class="bg-white border-b hover:bg-gray-50">
-                <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap">
+                <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap w-[]">
                     <img class="w-10 h-10 rounded-full" src="{{ asset($user->avatar_path) }}" alt="{{ $user->name }}">
                     <div class="ps-3">
                         <div class="text-base font-semibold">{{ $user->name }}</div>
                         <div class="font-normal text-gray-500">{{ $user->email }}</div>
                     </div>
                 </th>
+
+
                 <td class="px-6 py-4">{{ $user->email }}</td>
                 <td class="px-6 py-4">
                     <div class="flex items-center">
