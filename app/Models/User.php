@@ -18,10 +18,17 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
+        'phone_number',
         'role_id',
+        'avatar_path',
+        'is_active',
+        'is_verified',
+        'preferences',
+        'last_login_at',
     ];
 
     /**
@@ -44,6 +51,10 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
+            'is_verified' => 'boolean',
+            'preferences' => 'array',
+            'last_login_at' => 'datetime',
         ];
     }
     public function getRedirectRouteName(): string

@@ -15,23 +15,12 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
-        Role::create(['name' => 'client']);
-        Role::create(['name' => 'business']);
-        Role::create(['name' => 'admin']);
-
-        User::factory()->create([
-            'name' => 'Admin',
-            'email' => 'admin@example.com',
-            'password' => bcrypt('secret'),
-            'role_id' => 3,
-        ]);
-        User::factory()->create([
-            'name' => 'Business Owner',
-            'email' => 'business@example.com',
-            'password' => bcrypt('secret'),
-            'role_id' => 2,
+        $this->call([
+            RoleSeeder::class,
+            UserSeeder::class,
         ]);
 
-        User::factory()->count(90)->create();
+
+
     }
 }
