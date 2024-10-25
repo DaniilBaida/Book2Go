@@ -45,29 +45,8 @@ class RegisteredUserController extends Controller
             'role_id' => 1,
         ]);
 
-        $avatar = new Avatar(); // Initialize the Avatar object
-        $uuid = (string) Str::uuid(); // Generate a unique UUID for the file name
-        $fileName = $uuid . '.png'; // Filename with UUID and extension
-        $directory = 'avatars'; // Directory to store avatars within 'storage/app/public/'
-        $storagePath = storage_path('app/public/' . $directory); // Full path to the storage directory
 
-        // Ensure the directory exists
-        if (!Storage::disk('public')->exists($directory)) {
-            Storage::disk('public')->makeDirectory($directory, 0755, true);
-        }
-
-        // Create the avatar image
-        $image = $avatar->create($request->name)->getImageObject();
-
-        // Save the image directly to the file system
-        $image->save($storagePath . '/' . $fileName, 'png');
-
-        $filePath = $directory . '/' . $fileName; // Path to store in the database (e.g., 'avatars/UUID.png')
-        $user->avatar_path = '/storage/' . $filePath;
-        $user->save(); // Save the updated user object to the database
-
-
-
+        $user->save();
         event(new Registered($user));
 
         Auth::login($user);

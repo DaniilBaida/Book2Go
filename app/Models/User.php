@@ -21,10 +21,10 @@ class User extends Authenticatable
         'first_name',
         'last_name',
         'email',
-        'password_hash',
+        'password',
         'phone_number',
         'role_id',
-        'profile_picture_url',
+        'avatar_path',
         'is_active',
         'is_verified',
         'preferences',
@@ -70,8 +70,8 @@ class User extends Authenticatable
     {
         static::creating(function ($user) {
             // If the avatar_path is not set, assign the default avatar
-            if (empty($user->profile_picture_url)) {
-                $user->profile_picture_url = 'images/avatars/default-avatar.svg';
+            if (empty($user->avatar_path)) {
+                $user->avatar_path = 'images/avatars/default-avatar.svg';
             }
         });
     }
