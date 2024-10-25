@@ -99,16 +99,28 @@ class UserController extends Controller
     {
         $userData = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique('users')->ignore($user->id),],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'password' => ['nullable', 'string', 'confirmed', Rules\Password::defaults()],
         ], [
-            'password.confirmed' => 'The password confirmation does not match.', // Custom error message
+            'name.max' => 'The name may not be greater than :max characters.',
+            'password.confirmed' => 'The password confirmation does not match.',
+            'password.min' => 'The password must be at least 8 characters long.',
         ]);
 
-        $user->update($userData);
+        // Update user info
+        $user->name = $userData['name'];
+        $user->email = $userData['email'];
+
+        // Only update the password if one was provided
+        if ($request->filled('password')) {
+            $user->password = Hash::make($userData['password']);
+        }
+
         $user->save();
-        return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
+
+        return redirect()->route('admin.users.edit', $user->id)->with('status', 'user-updated');
     }
+
 
     /**
      * Remove the specified resource from storage.
