@@ -18,10 +18,17 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
-        'password',
+        'password_hash',
+        'phone_number',
         'role_id',
+        'profile_picture_url',
+        'is_active',
+        'is_verified',
+        'preferences',
+        'last_login_at',
     ];
 
     /**
@@ -44,6 +51,10 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
+            'is_verified' => 'boolean',
+            'preferences' => 'array',
+            'last_login_at' => 'datetime',
         ];
     }
     public function getRedirectRouteName(): string
@@ -59,8 +70,8 @@ class User extends Authenticatable
     {
         static::creating(function ($user) {
             // If the avatar_path is not set, assign the default avatar
-            if (empty($user->avatar_path)) {
-                $user->avatar_path = 'images/avatars/default-avatar.svg';
+            if (empty($user->profile_picture_url)) {
+                $user->profile_picture_url = 'images/avatars/default-avatar.svg';
             }
         });
     }
