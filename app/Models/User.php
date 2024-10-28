@@ -12,6 +12,8 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+    protected string $avatar_path;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -71,7 +73,8 @@ class User extends Authenticatable
         static::creating(function ($user) {
             // If the avatar_path is not set, assign the default avatar
             if (empty($user->avatar_path)) {
-                $user->avatar_path = 'images/avatars/default-avatar.svg';
+
+                $user->avatar_path = 'storage/avatars/default-avatar.svg';
             }
         });
     }

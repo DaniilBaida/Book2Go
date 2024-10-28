@@ -15,8 +15,9 @@
         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
         <tr>
             <th scope="col" class="px-6 py-3">Name</th>
-            <th scope="col" class="px-6 py-3">Email</th>
+            <th scope="col" class="px-6 py-3">Phone Number</th>
             <th scope="col" class="px-6 py-3">Email Verified</th>
+            <th scope="col" class="px-6 py-3">Online Status</th>
             <th scope="col" class="px-6 py-3">Role</th>
             <th scope="col" class="px-6 py-3">Action</th>
         </tr>
@@ -27,17 +28,23 @@
                 <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap w-[]">
                     <img class="w-10 h-10 rounded-full" src="{{ asset($user->avatar_path) }}" alt="{{ $user->name }}">
                     <div class="ps-3">
-                        <div class="text-base font-semibold">{{ $user->name }}</div>
+                        <div class="text-base font-semibold">{{ $user->first_name.' '.$user->last_name  }}</div>
                         <div class="font-normal text-gray-500">{{ $user->email }}</div>
                     </div>
                 </th>
 
 
-                <td class="px-6 py-4">{{ $user->email }}</td>
+                <td class="px-6 py-4">{{ $user->phone_number ? $user->phone_number : 'N/A'  }}</td>
                 <td class="px-6 py-4">
                     <div class="flex items-center">
                         <div class="h-2.5 w-2.5 rounded-full {{ $user->email_verified_at ? 'bg-green-500' : 'bg-red-500' }} me-2"></div>
                         {{ $user->email_verified_at ? 'Yes' : 'No' }}
+                    </div>
+                </td>
+                <td class="px-6 py-4">
+                    <div class="flex items-center">
+                        <div class="h-2.5 w-2.5 rounded-full {{ $user->is_active ? 'bg-green-500' : 'bg-red-500' }} me-2"></div>
+                        {{ $user->is_active ? 'Yes' : 'No' }}
                     </div>
                 </td>
                 <td class="px-6 py-4">{{ $user->role->name }}</td>
