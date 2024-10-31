@@ -44,6 +44,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
             // User management routes
             Route::resource('users', Admin\UserController::class);
+            Route::patch('/users', [Admin\UserController::class, 'update'])->name('user.update');
+            Route::patch('/users/{user}/update-password', [Admin\UserController::class, 'updatePassword'])
+                ->name('users.update-password');
         });
 });
 

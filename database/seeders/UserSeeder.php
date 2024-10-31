@@ -30,6 +30,6 @@ class UserSeeder extends Seeder
             'role_id' => 2,
         ]);
 
-        User::factory()->count(90)->create();
+        User::factory()->count(4)->create();
     }
 }

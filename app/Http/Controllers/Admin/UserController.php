@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 use Laravolt\Avatar\Avatar;
 use Illuminate\Validation\Rules;
 
@@ -98,7 +100,8 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $userData = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'password' => ['nullable', 'string', 'confirmed', Rules\Password::defaults()],
         ], [
@@ -108,17 +111,29 @@ class UserController extends Controller
         ]);
 
         // Update user info
-        $user->name = $userData['name'];
+        $user->first_name = $userData['first_name'];
+        $user->last_name = $userData['last_name'];
         $user->email = $userData['email'];
-
-        // Only update the password if one was provided
-        if ($request->filled('password')) {
+        if(isset($userData['password'])) {
             $user->password = Hash::make($userData['password']);
         }
+
 
         $user->save();
 
         return redirect()->route('admin.users.index', $user->id)->with('status', 'user-updated');
+    }
+
+    public function updatePassword(Request $request, User $user): RedirectResponse
+    {
+        $request->validateWithBag('updatePassword', [
+            'password' => ['required', Password::defaults(), 'confirmed'],
+        ]);
+
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return redirect()->route('admin.users.index')->with('status', 'user-updated');
     }
 
 
