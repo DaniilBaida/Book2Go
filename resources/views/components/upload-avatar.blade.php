@@ -7,7 +7,7 @@
             <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload</span> or drag and drop</p>
             <p class="text-xs text-gray-500">SVG, PNG or JPG (MAX. 2048MB)</p>
         </div>
-        <input id="dropzone-file" type="file" class="hidden" name="avatar" />
+        <input id="dropzone-file" type="file" class="hidden" name="avatar_path" />
     </label>
 </div>
 

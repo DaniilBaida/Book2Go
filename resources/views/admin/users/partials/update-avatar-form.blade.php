@@ -1,4 +1,4 @@
-<form action="{{ route('admin.users.update-avatar', $user->id) }}" method="POST" enctype="multipart/form-data">
+<form action="{{ route('admin.users.update-avatar', ['user' => $user->id]) }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('PATCH')
     <div>

@@ -4,15 +4,18 @@ use App\Http\Controllers\Admin;
 use App\Http\Controllers\Business;
 use App\Http\Controllers\Client;
 use App\Http\Controllers\Admin\ProfileController;
-use App\Http\Controllers\Auth\AvatarController; // Importando o AvatarController
-use App\Http\Controllers\Auth\PasswordController; // Importando o PasswordController
+use App\Http\Controllers\Auth\AvatarController;
+use App\Http\Controllers\Auth\PasswordController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\UserController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    
+    // Grupo de rotas para cliente
     Route::prefix('client')
         ->middleware('role:1')
         ->name('client.')
@@ -24,7 +27,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::delete('/profile', [Client\ProfileController::class, 'destroy'])->name('profile.destroy');
         });
 
-   Route::prefix('business')
+    // Grupo de rotas para negócio
+    Route::prefix('business')
         ->middleware('role:2')
         ->name('business.')
         ->group(function () {
@@ -35,28 +39,32 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::delete('/profile', [Business\ProfileController::class, 'destroy'])->name('profile.destroy');
         });
 
+    // Grupo de rotas para administração
     Route::prefix('admin')
         ->middleware('role:3')
         ->name('admin.')
         ->group(function () {
             Route::get('dashboard', [Admin\DashboardController::class, 'index'])
                 ->name('dashboard');
+
+            // Rotas de perfil para o admin
             Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
             Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
             Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-            // Rota para atualizar o avatar do perfil do admin usando AvatarController
+            // Rota para atualizar o avatar do perfil do admin
             Route::patch('/profile/update-avatar', [AvatarController::class, 'update'])
                 ->name('profile.update-avatar');
 
             // Rotas para gerenciamento de usuários
-            Route::resource('users', Admin\UserController::class);
-            Route::patch('/users', [Admin\UserController::class, 'update'])->name('user.update');
-            Route::patch('/users/{user}/update-password', [PasswordController::class, 'update']) // Adicione isso
-                ->name('users.update-password');
+            Route::resource('users', UserController::class);
             
-            // Rota para atualizar o avatar de um usuário específico usando AvatarController
-            Route::patch('/users/{user}/update-avatar', [AvatarController::class, 'update'])
+            // Atualização de senha para um usuário específico (feito pelo admin)
+            Route::patch('/users/{user}/update-password', [PasswordController::class, 'update'])
+                ->name('users.update-password');
+
+            // Atualização de avatar para um usuário específico (feito pelo admin)
+            Route::patch('/users/{user}/update-avatar', [UserController::class, 'updateUserAvatar'])
                 ->name('users.update-avatar');
         });
 });

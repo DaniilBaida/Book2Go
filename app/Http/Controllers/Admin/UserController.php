@@ -123,28 +123,24 @@ class UserController extends Controller
     /**
      * Update the avatar for the specified user.
      */
-    public function updateAvatar(Request $request, $id)
+    public function updateUserAvatar(Request $request, $id)
     {
-        $user = User::findOrFail($id);
-
-        // Validação do arquivo de avatar
         $request->validate([
-            'avatar_path' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'avatar_path' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        // Processamento do upload
-        if ($request->hasFile('avatar_path')) {
-            // Apagar o avatar antigo, se existir
-            if ($user->avatar_path && Storage::disk('public')->exists($user->avatar_path)) {
-                Storage::disk('public')->delete($user->avatar_path);
-            }
+        $user = User::findOrFail($id);
 
-            // Armazenar o novo avatar e obter o caminho
-            $avatarPath = $request->file('avatar_path')->store('avatars', 'public');
-            $user->avatar_path = '/storage/' . $avatarPath; // Caminho completo para a exibição
-            $user->save();
+        // Remova o avatar antigo, se existir
+        if ($user->avatar_path) {
+            Storage::disk('public')->delete($user->avatar_path);
         }
 
-        return redirect()->back()->with('status', 'avatar-updated');
+        // Armazene o novo avatar
+        $path = $request->file('avatar_path')->store('avatars', 'public');
+        $user->avatar_path = '/storage/' . $path;
+        $user->save();
+
+        return redirect()->back()->with('status', 'Avatar updated successfully.');
     }
 }

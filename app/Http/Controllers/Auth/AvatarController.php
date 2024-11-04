@@ -17,28 +17,22 @@ class AvatarController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request): RedirectResponse
-{
-    $request->validate([
-        'avatar' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-    ]);
+    {
+        $request->validate([
+            'avatar_path' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
 
-    // Obter o usuário autenticado
-    /** @var \App\Models\User $user */
-    $user = Auth::user();
+        $user = Auth::user();
 
-    // Remover o avatar antigo se existir
-    if ($user->avatar_path) {
-        Storage::disk('public')->delete($user->avatar_path);
+        if ($user->avatar_path) {
+            Storage::disk('public')->delete($user->avatar_path);
+        }
+
+        // Armazena o novo avatar
+        $path = $request->file('avatar_path')->store('avatars', 'public');
+        $user->avatar_path = '/storage/' . $path;
+        $user->save();
+
+        return redirect()->back()->with('status', 'Avatar atualizado com sucesso.');
     }
-
-    // Armazena o novo avatar
-    $path = $request->file('avatar')->store('avatars', 'public');
-    $user->avatar_path = '/storage/' . $path;
-    $user->save();
-
-    return redirect()->back()->with('success', 'Avatar updated successfully.');
-}
-
-
-
 }
