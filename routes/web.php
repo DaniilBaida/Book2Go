@@ -42,12 +42,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::patch('/profile', [Admin\ProfileController::class, 'update'])->name('profile.update');
             Route::delete('/profile', [Admin\ProfileController::class, 'destroy'])->name('profile.destroy');
 
-            // User management routes
-            Route::resource('users', Admin\UserController::class);
-            Route::patch('/users', [Admin\UserController::class, 'update'])->name('user.update');
-            Route::patch('/users/{user}/update-password', [Admin\UserController::class, 'updatePassword'])
-                ->name('users.update-password');
-        });
+        // User management routes
+        Route::resource('users', Admin\UserController::class);
+        Route::patch('/users', [Admin\UserController::class, 'update'])->name('user.update');
+        Route::patch('/users/{user}/update-password', [Admin\UserController::class, 'updatePassword'])
+            ->name('users.update-password');
+
+        // Add the route for updating the avatar
+        Route::post('/users/{id}/update-avatar', [Admin\UserController::class, 'updateAvatar'])
+            ->name('users.update-avatar');
+    });
+        
 });
 
 

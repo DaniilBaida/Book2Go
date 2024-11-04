@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -73,8 +72,6 @@ class UserController extends Controller
         $user->avatar_path = '/storage/' . $filePath;
         $user->save(); // Save the updated user object to the database
 
-
-
         event(new Registered($user));
     }
 
@@ -118,31 +115,36 @@ class UserController extends Controller
             $user->password = Hash::make($userData['password']);
         }
 
-
         $user->save();
 
-        return redirect()->route('admin.users.index', $user->id)->with('status', 'user-updated');
+        return redirect()->back()->with('success', 'User information updated successfully.');
     }
-
-    public function updatePassword(Request $request, User $user): RedirectResponse
-    {
-        $request->validateWithBag('updatePassword', [
-            'password' => ['required', Password::defaults(), 'confirmed'],
-        ]);
-
-        $user->password = Hash::make($request->password);
-        $user->save();
-
-        return redirect()->route('admin.users.index')->with('status', 'user-updated');
-    }
-
 
     /**
-     * Remove the specified resource from storage.
+     * Update the avatar for the specified user.
      */
-    public function destroy(User $user)
+    public function updateAvatar(Request $request, $id)
     {
-        $user->delete();
-        return redirect()->route('admin.users.index')->with('success', 'User deleted successfully.');
+        // Validate the uploaded file
+        $request->validate([
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        // Find the user by ID
+        $user = User::findOrFail($id);
+
+        // Delete the old avatar if it exists
+        if ($user->avatar_path) {
+            Storage::disk('public')->delete($user->avatar_path);
+        }
+
+        // Store the new avatar
+        $path = $request->file('avatar')->store('avatars', 'public');
+
+        // Update the user's avatar path
+        $user->avatar_path = $path;
+        $user->save();
+
+        return redirect()->back()->with('success', 'Avatar updated successfully.');
     }
 }
