@@ -13,19 +13,3 @@
 
 <x-input-error :messages="$errors->get('avatar_path')" class="mt-2" />
 
-<div class="flex items-center gap-4 mt-4">
-    <!-- Botão de envio do formulário -->
-    <button type="submit" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-        {{ __('Save') }}
-    </button>
-
-    @if (session('status') === 'avatar-updated')
-        <p
-            x-data="{ show: true }"
-            x-show="show"
-            x-transition
-            x-init="setTimeout(() => show = false, 2000)"
-            class="text-sm text-green-500"
-        >{{ __('Saved.') }}</p>
-    @endif
-</div>
