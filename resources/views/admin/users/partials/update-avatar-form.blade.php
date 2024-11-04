@@ -2,8 +2,6 @@
     @csrf
     @method('PATCH')
     <div>
-        <label for="avatar">Upload New Avatar:</label>
-        <input type="file" name="avatar" id="avatar" required>
+        <x-upload-avatar />
     </div>
-    <button type="submit">Update Avatar</button>
 </form>
