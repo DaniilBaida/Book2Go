@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -73,8 +72,6 @@ class UserController extends Controller
         $user->avatar_path = '/storage/' . $filePath;
         $user->save(); // Save the updated user object to the database
 
-
-
         event(new Registered($user));
     }
 
@@ -118,31 +115,32 @@ class UserController extends Controller
             $user->password = Hash::make($userData['password']);
         }
 
-
         $user->save();
 
-        return redirect()->route('admin.users.index', $user->id)->with('status', 'user-updated');
+        return redirect()->back()->with('success', 'User information updated successfully.');
     }
-
-    public function updatePassword(Request $request, User $user): RedirectResponse
-    {
-        $request->validateWithBag('updatePassword', [
-            'password' => ['required', Password::defaults(), 'confirmed'],
-        ]);
-
-        $user->password = Hash::make($request->password);
-        $user->save();
-
-        return redirect()->route('admin.users.index')->with('status', 'user-updated');
-    }
-
 
     /**
-     * Remove the specified resource from storage.
+     * Update the avatar for the specified user.
      */
-    public function destroy(User $user)
+    public function updateUserAvatar(Request $request, $id)
     {
-        $user->delete();
-        return redirect()->route('admin.users.index')->with('success', 'User deleted successfully.');
+        $request->validate([
+            'avatar_path' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        $user = User::findOrFail($id);
+
+        // Remova o avatar antigo, se existir
+        if ($user->avatar_path) {
+            Storage::disk('public')->delete($user->avatar_path);
+        }
+
+        // Armazene o novo avatar
+        $path = $request->file('avatar_path')->store('avatars', 'public');
+        $user->avatar_path = '/storage/' . $path;
+        $user->save();
+
+        return redirect()->back()->with('status', 'Avatar updated successfully.');
     }
 }
