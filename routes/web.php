@@ -3,6 +3,9 @@
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Business;
 use App\Http\Controllers\Client;
+use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Auth\AvatarController; // Importando o AvatarController
+use App\Http\Controllers\Auth\PasswordController; // Importando o PasswordController
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -38,22 +41,24 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->group(function () {
             Route::get('dashboard', [Admin\DashboardController::class, 'index'])
                 ->name('dashboard');
-            Route::get('/profile', [Admin\ProfileController::class, 'edit'])->name('profile.edit');
-            Route::patch('/profile', [Admin\ProfileController::class, 'update'])->name('profile.update');
-            Route::delete('/profile', [Admin\ProfileController::class, 'destroy'])->name('profile.destroy');
+            Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+            Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+            Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-        // User management routes
-        Route::resource('users', Admin\UserController::class);
-        Route::patch('/users', [Admin\UserController::class, 'update'])->name('user.update');
-        Route::patch('/users/{user}/update-password', [Admin\UserController::class, 'updatePassword'])
-            ->name('users.update-password');
+            // Rota para atualizar o avatar do perfil do admin usando AvatarController
+            Route::patch('/profile/update-avatar', [AvatarController::class, 'update'])
+                ->name('profile.update-avatar');
 
-        // Add the route for updating the avatar
-        Route::post('/users/{id}/update-avatar', [Admin\UserController::class, 'updateAvatar'])
-            ->name('users.update-avatar');
-    });
-        
+            // Rotas para gerenciamento de usuários
+            Route::resource('users', Admin\UserController::class);
+            Route::patch('/users', [Admin\UserController::class, 'update'])->name('user.update');
+            Route::patch('/users/{user}/update-password', [PasswordController::class, 'update']) // Adicione isso
+                ->name('users.update-password');
+            
+            // Rota para atualizar o avatar de um usuário específico usando AvatarController
+            Route::patch('/users/{user}/update-avatar', [AvatarController::class, 'update'])
+                ->name('users.update-avatar');
+        });
 });
-
 
 require __DIR__.'/auth.php';

@@ -9,14 +9,14 @@
         </p>
 
     </header>
-    {{--
-    <form id="send-verification" method="post" action="{{ route('verification.send') }}">
+    <form action="{{ route('admin.users.update-avatar', $user->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
-    </form>--}}
-
-    <form method="post" action="{{ route('avatar.update') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
-        @csrf
-        @method('put')
-        <x-upload-avatar/>
+        @method('PATCH')
+        <div>
+            <label for="avatar">Upload New Avatar:</label>
+            <input type="file" name="avatar" id="avatar" required>
+        </div>
+        <button type="submit">Update Avatar</button>
     </form>
+
 </section>
