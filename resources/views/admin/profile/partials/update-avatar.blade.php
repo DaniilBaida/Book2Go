@@ -7,7 +7,7 @@
             {{ __("Update your account's profile avatar") }}
         </p>
     </header>
-    <form action="{{ route('admin.profile.update-avatar') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('avatar.update') }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('PATCH')
     <div>

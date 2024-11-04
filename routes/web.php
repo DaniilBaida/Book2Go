@@ -14,7 +14,7 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    
+
     // Grupo de rotas para cliente
     Route::prefix('client')
         ->middleware('role:1')
@@ -52,13 +52,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
             Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-            // Rota para atualizar o avatar do perfil do admin
-            Route::patch('/profile/update-avatar', [AvatarController::class, 'update'])
-                ->name('profile.update-avatar');
-
             // Rotas para gerenciamento de usuários
             Route::resource('users', UserController::class);
-            
+
             // Atualização de senha para um usuário específico (feito pelo admin)
             Route::patch('/users/{user}/update-password', [PasswordController::class, 'update'])
                 ->name('users.update-password');
