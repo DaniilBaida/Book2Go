@@ -44,20 +44,21 @@ class RegisteredUserController extends Controller
         $firstName = $nameParts[0];
         $lastName = count($nameParts) > 1 ? implode(' ', array_slice($nameParts, 1)) : '';
 
+        // Check if the checkbox is selected to set the role as Business
+        $isBusiness = $request->boolean('is_business'); // This will return true if 'is_business' is present and checked
+
         $user = User::create([
             'first_name' => $firstName,
             'last_name' => $lastName,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role_id' => 1,
+            'role_id' => $isBusiness ? 2 : 1, // Set to 2 if Business, 1 if User
         ]);
 
-
-        $user->save();
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route("client.dashboard", absolute: false));
+        return $isBusiness ? redirect()->route('business.dashboard') : redirect()->route('client.dashboard');
     }
 }
