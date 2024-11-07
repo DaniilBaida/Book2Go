@@ -9,11 +9,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
-use Laravolt\Avatar\Avatar;
-use Illuminate\Support\Str;
 
 class RegisteredUserController extends Controller
 {
@@ -34,7 +31,7 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -45,20 +42,27 @@ class RegisteredUserController extends Controller
         $lastName = count($nameParts) > 1 ? implode(' ', array_slice($nameParts, 1)) : '';
 
         // Check if the checkbox is selected to set the role as Business
-        $isBusiness = $request->boolean('is_business'); // This will return true if 'is_business' is present and checked
+        $isBusiness = $request->boolean('is_business');
 
         $user = User::create([
             'first_name' => $firstName,
             'last_name' => $lastName,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role_id' => $isBusiness ? 2 : 1, // Set to 2 if Business, 1 if User
+            'role_id' => $isBusiness ? 2 : 1,
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return $isBusiness ? redirect()->route('business.dashboard') : redirect()->route('client.dashboard');
+        // Redirect based on the role
+        if ($isBusiness) {
+            // Redirect to the business setup page (first step of the setup assistant)
+            return redirect()->route('business.setup.stepOne');
+        }
+
+        // Redirect to the client dashboard if the user is not a business
+        return redirect()->route('client.dashboard');
     }
 }
