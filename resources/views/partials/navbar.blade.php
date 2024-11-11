@@ -39,11 +39,11 @@
                     </x-dropdown>
                 @else
                     <!-- Log in Button for Guests -->
-                    <x-secondary-button>
-                        <a href="{{ route('login') }}">
+                    <a href="{{ route('login') }}">
+                        <x-secondary-button>
                             Log in
-                        </a>
-                    </x-secondary-button>
+                        </x-secondary-button>
+                    </a>
                 @endauth
             </div>
         @endif
