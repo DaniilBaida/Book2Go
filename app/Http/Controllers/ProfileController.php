@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\Business;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -17,7 +16,10 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
-        return view('business.profile.edit', [
+        // Dynamically generate view path based on role
+        $rolePrefix = $this->getRolePrefix();
+
+        return view("$rolePrefix.profile.edit", [
             'user' => $request->user(),
         ]);
     }
@@ -35,27 +37,22 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('business.profile.edit')->with('status', 'profile-updated');
+        // Dynamically determine redirect route
+        $rolePrefix = $this->getRolePrefix();
+
+        return Redirect::route("$rolePrefix.profile.edit")->with('status', 'profile-updated');
     }
 
     /**
-     * Delete the user's account.
+     * Get the role prefix for views and routes based on the user's role.
      */
-    public function destroy(Request $request): RedirectResponse
+    private function getRolePrefix(): string
     {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
-        ]);
-
-        $user = $request->user();
-
-        Auth::logout();
-
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+        return match (Auth::user()->role_id) {
+            1 => 'admin',
+            2 => 'business',
+            3 => 'client',
+            default => 'profile', // Fallback if role doesn't match
+        };
     }
 }
