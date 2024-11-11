@@ -16,8 +16,6 @@
             </div>
         </div>
 
-
-
         <!-- Email Address -->
         <div class="mt-4">
             <x-input-label for="email" :value="__('Email')" />
