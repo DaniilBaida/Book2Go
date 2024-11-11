@@ -26,19 +26,17 @@ class BusinessSetupController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'logo_path' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'email' => 'required|email|max:255',
+            'phone_number' => 'required|string|max:20',
+            'address' => 'required|string|max:255',
+            'city' => 'required|string|max:100',
+            'postal_code' => 'required|string|max:20',
+            'country' => 'required|string|max:100',
         ]);
 
-        $business = Auth::user()->business;
-        $business->name = $request->name;
-
-
-        if ($request->hasFile('logo_path')) {
-            $path = $request->file('logo_path')->store('logos', 'public');
-            $business->logo_path= '/storage/' . $path;
-        }
-
-        $business->save();
+        $request->session()->put('business_step_one', $request->only([
+            'name', 'email', 'phone_number', 'address', 'city', 'postal_code', 'country'
+        ]));
 
         return redirect()->route('business.setup.stepTwo');
     }
@@ -57,46 +55,36 @@ class BusinessSetupController extends Controller
     public function storeStepTwo(Request $request)
     {
         $request->validate([
-            'city' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'logo_path' => 'nullable|image|mimes:jpg,jpeg,png,gif,svg|max:2048',
         ]);
 
+        // Retrieve Step 1 data from session
+        $stepOneData = $request->session()->get('business_step_one');
 
-
-        $business = Auth::user()->business;
-
-        if (empty($business->name)) {
+        if (!$stepOneData) {
             return redirect()->route('business.setup.stepOne')->withErrors('Please complete Step One first.');
         }
 
-        $business->city = $request->input('city');
+        // Retrieve or create a new business for the authenticated user
+        $business = Auth::user()->business;
+        $business->fill($stepOneData);
+
+        // Save additional data from Step 2
+        if ($request->hasFile('logo_path')) {
+            $path = $request->file('logo_path')->store('logos', 'public');
+            $business->logo_path = 'storage/' . $path;
+        }
+
+        $business->description = $request->input('description');
         $business->setup_complete = true;
+
         $business->save();
 
+        // Clear the session data for Step 1
+        $request->session()->forget('business_step_one');
+
         return redirect()->route('business.dashboard')->with('success', 'Business setup completed successfully.');
-    }
-
-    /**
-     * Exibe a terceira etapa do assistente de configuração.
-     */
-    public function stepThree(): View
-    {
-        return view('business.setup.step-three');
-    }
-
-    /**
-     * Processa a terceira etapa do assistente de configuração.
-     */
-    public function storeStepThree(Request $request)
-    {
-        $request->validate([
-            'service_category' => 'required|string|max:255',
-        ]);
-
-        $user = Auth::user();
-        $user->service_category = $request->service_category;
-        $user->save();
-
-        return redirect()->route('business.setup.confirm');
     }
 
 
