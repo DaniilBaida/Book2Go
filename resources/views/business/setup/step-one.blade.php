@@ -1,21 +1,29 @@
 <x-guest-layout>
     <form method="POST" action="{{ route('business.setup.storeStepOne') }}" enctype="multipart/form-data">
         @csrf
-        <h2 class="text-xl font-bold mb-4">Step 1: Company Name and Logo</h2>
-
-        <!-- Campo para Nome da Empresa -->
-        <div class="mb-4">
-            <label for="company_name" class="block text-gray-700">Company Name</label>
-            <input type="text" id="company_name" name="company_name" class="border rounded w-full p-2 mt-1" required>
+        <h2>Setup da Empresa - Passo 1</h2>
+        
+        <!-- Company Name -->
+        <div>
+            <x-input-label for="company_name" :value="__('Company Name')" />
+            <x-text-input id="company_name" name="company_name" type="text" class="mt-1 block w-full" required />
+            <x-input-error :messages="$errors->get('company_name')" class="mt-2" />
         </div>
 
-        <!-- Campo para Upload do Logo -->
-        <div class="mb-4">
-            <label for="logo" class="block text-gray-700">Company Logo</label>
-            <input type="file" id="logo" name="logo" class="border rounded w-full p-2 mt-1" accept="image/*">
+        <!-- Company Logo Upload -->
+        <div class="mt-4">
+            <label for="company_logo" class="block text-sm font-medium text-gray-700">Company Logo</label>
+            <input type="file" id="company_logo" name="company_logo" class="block w-full text-sm text-gray-500
+                file:mr-4 file:py-2 file:px-4
+                file:rounded-full file:border-0
+                file:text-sm file:font-semibold
+                file:bg-blue-50 file:text-blue-700
+                hover:file:bg-blue-100" />
+            <x-input-error :messages="$errors->get('company_logo')" class="mt-2" />
         </div>
 
-        <div class="flex items-center justify-end mt-4">
+        <!-- Submit Button -->
+        <div class="mt-4">
             <x-primary-button>
                 {{ __('Next Step') }}
             </x-primary-button>

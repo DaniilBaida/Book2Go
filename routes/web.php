@@ -31,28 +31,30 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Grupo de rotas para negócio
     Route::prefix('business')
-        ->middleware('role:2')
-        ->name('business.')
-        ->group(function () {
-            Route::get('dashboard', [BusinessDashboardController::class, 'index'])
-                ->name('dashboard');
-            Route::get('/profile', [BusinessProfileController::class, 'edit'])->name('profile.edit');
-            Route::patch('/profile', [BusinessProfileController::class, 'update'])->name('profile.update');
-            Route::delete('/profile', [BusinessProfileController::class, 'destroy'])->name('profile.destroy');
+    ->middleware('role:2')
+    ->name('business.')
+    ->group(function () {
 
-            // Rotas para o assistente de configuração inicial
-            Route::get('setup/step-one', [BusinessSetupController::class, 'stepOne'])->name('setup.stepOne');
-            Route::post('setup/step-one', [BusinessSetupController::class, 'storeStepOne'])->name('setup.storeStepOne');
+        Route::get('dashboard', [BusinessDashboardController::class, 'index'])
+            ->name('dashboard');
 
-            Route::get('setup/step-two', [BusinessSetupController::class, 'stepTwo'])->name('setup.stepTwo');
-            Route::post('setup/step-two', [BusinessSetupController::class, 'storeStepTwo'])->name('setup.storeStepTwo');
+        Route::get('/profile', [BusinessProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [BusinessProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [BusinessProfileController::class, 'destroy'])->name('profile.destroy');
 
-            Route::get('setup/step-three', [BusinessSetupController::class, 'stepThree'])->name('setup.stepThree');
-            Route::post('setup/step-three', [BusinessSetupController::class, 'storeStepThree'])->name('setup.storeStepThree');
+        // Rotas do assistente de configuração inicial
+        Route::get('setup/step-one', [BusinessSetupController::class, 'stepOne'])->name('setup.stepOne');
+        Route::post('setup/step-one', [BusinessSetupController::class, 'storeStepOne'])->name('setup.storeStepOne');
 
-            Route::get('setup/confirm', [BusinessSetupController::class, 'confirm'])->name('setup.confirm');
-            Route::post('setup/finish', [BusinessSetupController::class, 'finish'])->name('setup.finish');
-        });
+        Route::get('setup/step-two', [BusinessSetupController::class, 'stepTwo'])->name('setup.stepTwo');
+        Route::post('setup/step-two', [BusinessSetupController::class, 'storeStepTwo'])->name('setup.storeStepTwo');
+
+        Route::get('setup/step-three', [BusinessSetupController::class, 'stepThree'])->name('setup.stepThree');
+        Route::post('setup/step-three', [BusinessSetupController::class, 'storeStepThree'])->name('setup.storeStepThree');
+
+        Route::get('setup/confirm', [BusinessSetupController::class, 'confirm'])->name('setup.confirm');
+        Route::post('setup/finish', [BusinessSetupController::class, 'finish'])->name('setup.finish');
+    });
 
     // Grupo de rotas para administração
     Route::prefix('admin')

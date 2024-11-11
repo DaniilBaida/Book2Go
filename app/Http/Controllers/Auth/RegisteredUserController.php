@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
-use Illuminate\Support\Str;
 
 class RegisteredUserController extends Controller
 {
@@ -37,30 +36,30 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-
-
-        // Check if the checkbox is selected to set the role as Business
+        // Verifica se o usuário selecionou a opção para criar uma conta business
         $isBusiness = $request->boolean('is_business');
 
+        // Cria o usuário com role_id dependendo do tipo de conta
         $user = User::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role_id' => $isBusiness ? 2 : 1,
+            'role_id' => $isBusiness ? 2 : 1, // 2 para Business, 1 para usuário comum
         ]);
 
+        // Dispara o evento de registro
         event(new Registered($user));
 
+        // Autentica o usuário automaticamente após o registro
         Auth::login($user);
 
-        // Redirect based on the role
+        // Redireciona o usuário para a etapa inicial de configuração caso seja business
         if ($isBusiness) {
-            // Redirect to the business setup page (first step of the setup assistant)
             return redirect()->route('business.setup.stepOne');
         }
 
-        // Redirect to the client dashboard if the user is not a business
+        // Redireciona para o dashboard do cliente se não for business
         return redirect()->route('client.dashboard');
     }
 }
