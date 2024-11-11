@@ -50,6 +50,7 @@ class RegisteredUserController extends Controller
             'role_id' => $isBusiness ? 2 : 1,
         ]);
 
+
         event(new Registered($user));
 
         Auth::login($user);
@@ -57,6 +58,7 @@ class RegisteredUserController extends Controller
         // Redirect based on the role
         if ($isBusiness) {
             // Redirect to the business setup page (first step of the setup assistant)
+            $user->business()->create();
             return redirect()->route('business.setup.stepOne');
         }
 

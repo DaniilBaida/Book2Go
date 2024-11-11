@@ -16,7 +16,7 @@
 
     <form method="post" action="{{ route('avatar.update') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
         @csrf
-        @method('put')
+        @method('patch')
 
 
 

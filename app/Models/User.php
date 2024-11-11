@@ -13,6 +13,9 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected string $avatar_path;
+    const ROLE_CLIENT = 1;
+    const ROLE_BUSINESS = 2;
+    const ROLE_ADMIN = 3;
 
     /**
      * The attributes that are mass assignable.
@@ -82,5 +85,10 @@ class User extends Authenticatable
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function business()
+    {
+        return $this->hasOne(Business::class);
     }
 }

@@ -25,20 +25,20 @@ class BusinessSetupController extends Controller
     public function storeStepOne(Request $request)
     {
         $request->validate([
-            'company_name' => 'required|string|max:255',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'name' => 'required|string|max:255',
+            'logo_path' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $user = Auth::user();
-        $user->company_name = $request->input('company_name');
+        $business = Auth::user()->business;
+        $business->name = $request->name;
 
-        if ($request->hasFile('logo')) {
-            // Armazena o logo da empresa
-            $path = $request->file('logo')->store('logos', 'public');
-            $user->company_logo = '/storage/' . $path;
+
+        if ($request->hasFile('logo_path')) {
+            $path = $request->file('logo_path')->store('logos', 'public');
+            $business->logo_path= '/storage/' . $path;
         }
 
-        $user->save();
+        $business->save();
 
         return redirect()->route('business.setup.stepTwo');
     }
@@ -57,16 +57,21 @@ class BusinessSetupController extends Controller
     public function storeStepTwo(Request $request)
     {
         $request->validate([
-            'location' => 'required|string|max:255',
-            'operating_hours' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
         ]);
 
-        $user = Auth::user();
-        $user->location = $request->input('location');
-        $user->operating_hours = $request->input('operating_hours');
-        $user->save();
 
-        // Redireciona para o dashboard do Business ao invés de um terceiro passo
+
+        $business = Auth::user()->business;
+
+        if (empty($business->name)) {
+            return redirect()->route('business.setup.stepOne')->withErrors('Please complete Step One first.');
+        }
+
+        $business->city = $request->input('city');
+        $business->setup_complete = true;
+        $business->save();
+
         return redirect()->route('business.dashboard')->with('success', 'Business setup completed successfully.');
     }
 
@@ -94,25 +99,5 @@ class BusinessSetupController extends Controller
         return redirect()->route('business.setup.confirm');
     }
 
-    /**
-     * Exibe a página de confirmação final.
-     */
-    public function confirm(): View
-    {
-        $user = Auth::user();
-        return view('business.setup.confirm', compact('user'));
-    }
 
-    /**
-     * Finaliza o assistente de configuração após a confirmação.
-     */
-    public function finish(Request $request)
-    {
-        // Aqui você pode adicionar uma flag de "configuração concluída" no usuário.
-        $user = Auth::user();
-        $user->setup_complete = true;
-        $user->save();
-
-        return redirect()->route('business.dashboard');
-    }
 }
