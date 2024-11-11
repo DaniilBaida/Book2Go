@@ -24,8 +24,6 @@
             </button>
         </div>
 
-
-
         <!-- Remember Me -->
         <div class="block my-4">
             <label for="remember_me" class="inline-flex items-center">
@@ -42,17 +40,17 @@
         </div>
         
         <!-- Useful links -->
-        <div class="flex flex-col mt-4">
+        <div class="flex flex-col mt-4 text-sm">
             <!-- Forgot Password -->
             @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 mx-auto" href="{{ route('password.request') }}">
+                <a class="underline text-gray-600 hover:text-gray-900 mx-auto" href="{{ route('password.request') }}">
                     {{ __('Forgot your password?') }}
                 </a>
             @endif
             <!-- Register Button -->
-            <div class="text-sm text-gray-600 mx-auto">
+            <div class="text-gray-600 mx-auto">
                 Don't have an account? 
-                <a href="{{ route('register') }}" class="underline text-sm text-gray-600 hover:text-gray-900">
+                <a href="{{ route('register') }}" class="underline text-gray-600 hover:text-gray-900">
                     Register here
                 </a>
             </div>
@@ -60,6 +58,7 @@
     </form>
 </x-guest-layout>
 
+<!-- Hide/Show password script -->
 <script>
     function togglePassword() {
         const passwordField = document.getElementById("password");
