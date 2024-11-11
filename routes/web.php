@@ -23,9 +23,6 @@ Route::get('/', function () {
 // Authenticated and Verified Routes
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    // Shared Dashboard Route for All Roles
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
     // Define Role-Based Routes Using the Helper Function
 
     roleBasedRoutes('admin', User::ROLE_ADMIN, 'admin', function () {
@@ -42,19 +39,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     roleBasedRoutes('business', User::ROLE_BUSINESS, 'business', function () {
-        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-        Route::get('profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-        Route::patch('profile/update', [ProfileController::class, 'update'])->name('profile.update');
-        Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        // Routes accessible only after setup is complete
+        Route::middleware('business.setup.complete')->group(function () {
+            Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+            Route::get('profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+            Route::patch('profile/update', [ProfileController::class, 'update'])->name('profile.update');
+            Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        });
 
-        Route::get('setup/step-one', [BusinessSetupController::class, 'stepOne'])->name('setup.stepOne');
-        Route::post('setup/step-one', [BusinessSetupController::class, 'storeStepOne'])->name('setup.storeStepOne');
-        Route::get('setup/step-two', [BusinessSetupController::class, 'stepTwo'])->name('setup.stepTwo');
-        Route::post('setup/step-two', [BusinessSetupController::class, 'storeStepTwo'])->name('setup.storeStepTwo');
-        Route::get('setup/step-three', [BusinessSetupController::class, 'stepThree'])->name('setup.stepThree');
-        Route::post('setup/step-three', [BusinessSetupController::class, 'storeStepThree'])->name('setup.storeStepThree');
-        Route::get('setup/confirm', [BusinessSetupController::class, 'confirm'])->name('setup.confirm');
-        Route::post('setup/finish', [BusinessSetupController::class, 'finish'])->name('setup.finish');
+        // Routes accessible only if setup is not complete
+        Route::middleware('business.setup.incomplete')->group(function () {
+            Route::get('setup/step-one', [BusinessSetupController::class, 'stepOne'])->name('setup.stepOne');
+            Route::post('setup/step-one', [BusinessSetupController::class, 'storeStepOne'])->name('setup.storeStepOne');
+            Route::get('setup/step-two', [BusinessSetupController::class, 'stepTwo'])->name('setup.stepTwo');
+            Route::post('setup/step-two', [BusinessSetupController::class, 'storeStepTwo'])->name('setup.storeStepTwo');
+        });
     });
 
     roleBasedRoutes('client', User::ROLE_CLIENT, 'client', function () {
