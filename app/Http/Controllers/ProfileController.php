@@ -49,9 +49,9 @@ class ProfileController extends Controller
     private function getRolePrefix(): string
     {
         return match (Auth::user()->role_id) {
-            1 => 'admin',
+            1 => 'client',
             2 => 'business',
-            3 => 'client',
+            3 => 'admin',
             default => 'profile', // Fallback if role doesn't match
         };
     }
