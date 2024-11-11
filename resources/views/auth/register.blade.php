@@ -26,13 +26,28 @@
         <!-- Password -->
         <div class="mt-4 relative">
             <x-input-label for="password" :value="__('Password')" />
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
 
-            <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 top-6 pr-3 flex items-center text-gray-500 hover:text-gray-700 duration-300">
-                <i id="eye-icon" class="fas fa-eye"></i>
-            </button>
+            <div class="relative">
+                <x-text-input
+                    id="password"
+                    class="block mt-1 w-full pr-10"
+                    type="password"
+                    name="password"
+                    required
+                    autocomplete="new-password"
+                />
+                <button
+                    type="button"
+                    onclick="togglePassword()"
+                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700 duration-300"
+                >
+                    <i id="eye-icon" class="fas fa-eye"></i>
+                </button>
+            </div>
+
+            <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
+
 
         <!-- Confirm Password -->
         <div class="mt-4">
