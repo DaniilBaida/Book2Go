@@ -11,7 +11,8 @@
                 <div class="p-6 text-gray-900">
                     <div class="flex items-center justify-between">
                         <h3 class="text-2xl font-bold">{{ $service->name }}</h3>
-                        <a href="{{ route('business.services.index') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                        <a href="{{ route('business.services.index') }}"
+                           class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
                             {{ __('Back to Services') }}
                         </a>
                     </div>
@@ -61,7 +62,8 @@
                         @if ($service->image_path)
                             <div>
                                 <strong class="text-gray-700">{{ __('Image') }}:</strong>
-                                <img src="{{ asset('storage/' . $service->image_path) }}" alt="{{ $service->name }}" class="w-full max-w-md mt-2 rounded">
+                                <img src="{{ asset('storage/' . $service->image_path) }}" alt="{{ $service->name }}"
+                                     class="w-full max-w-md mt-2 rounded">
                             </div>
                         @endif
 
@@ -92,25 +94,14 @@
                             </div>
                         @endif
 
-                        @if($tagsArray && count($tagsArray) > 0)
-                            <div class="mt-2">
+                        @if($service->tags && count($service->tags) > 0)
+                            <div class="mt-2 flex flex-wrap gap-2">
                                 <strong class="text-gray-700">{{ __('Tags') }}:</strong>
-                                <ul class="list-disc list-inside">
-                                    @foreach($tagsArray as $tag)
-                                        <li class="text-gray-600">{{ $tag }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
-
-                        @if($service->add_ons)
-                            <div>
-                                <strong class="text-gray-700">{{ __('Add-Ons') }}:</strong>
-                                <ul class="list-disc list-inside">
-                                    @foreach($service->add_ons as $addOn)
-                                        <li>{{ $addOn }}</li>
-                                    @endforeach
-                                </ul>
+                                @foreach($service->tags as $tag)
+                                    <span class="px-3 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+                                        {{ $tag }}
+                                    </span>
+                                @endforeach
                             </div>
                         @endif
 
@@ -121,20 +112,24 @@
 
                         <div>
                             <strong class="text-gray-700">{{ __('Status') }}:</strong>
-                            <span class="px-2 py-1 rounded-full {{ $service->status === 'active' ? 'bg-green-100 text-green-800' : ($service->status === 'inactive' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800') }}">
+                            <span
+                                class="px-2 py-1 rounded-full {{ $service->status === 'active' ? 'bg-green-100 text-green-800' : ($service->status === 'inactive' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800') }}">
                                 {{ ucfirst($service->status) }}
                             </span>
                         </div>
                     </div>
 
                     <div class="mt-6 flex space-x-4">
-                        <a href="{{ route('business.services.edit', $service) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        <a href="{{ route('business.services.edit', $service) }}"
+                           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                             {{ __('Edit Service') }}
                         </a>
-                        <form action="{{ route('business.services.destroy', $service) }}" method="POST" class="inline-block">
+                        <form action="{{ route('business.services.destroy', $service) }}" method="POST"
+                              class="inline-block">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                            <button type="submit"
+                                    class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                                 {{ __('Delete Service') }}
                             </button>
                         </form>

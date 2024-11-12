@@ -131,16 +131,6 @@
                             @enderror
                         </div>
 
-                        <!-- Add-Ons -->
-                        <div class="mb-4">
-                            <x-input-label for="add_ons" :value="__('Add-Ons')" />
-                            <textarea id="add_ons" name="add_ons" class="block mt-1 w-full" rows="2">{{ old('add_ons') }}</textarea>
-                            <small class="text-gray-500">{{ __('Enter JSON-formatted data for additional options') }}</small>
-                            @error('add_ons')
-                            <span class="text-red-500 text-sm">{{ $message }}</span>
-                            @enderror
-                        </div>
-
                         <!-- Submit Button -->
                         <div class="flex items-center justify-end mt-6">
                             <x-primary-button class="ml-4">

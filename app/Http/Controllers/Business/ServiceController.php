@@ -36,8 +36,6 @@ class ServiceController extends Controller
 
     public function show(Service $service)
     {
-        $service->reviews_count = $service->reviews()->count();
-        $service->bookings_count = $service->bookings()->count();
         return view('business.services.show', compact('service'));
     }
 
@@ -62,7 +60,6 @@ class ServiceController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'required|in:active,inactive,archived',
             'tags' => 'nullable|string',
-            'add_ons' => 'nullable|string',
         ]);
 
         $data = $request->all();
@@ -72,12 +69,6 @@ class ServiceController extends Controller
             $data['tags'] = array_map('trim', explode(',', $data['tags']));
         } else {
             $data['tags'] = [];
-        }
-
-        if (!empty($data['add_ons'])) {
-            $data['add_ons'] = array_map('trim', explode(',', $data['add_ons']));
-        } else {
-            $data['add_ons'] = [];
         }
 
         if ($request->hasFile('image')) {
@@ -112,7 +103,6 @@ class ServiceController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'required|in:active,inactive,archived',
             'tags' => 'nullable|string',
-            'add_ons' => 'nullable|string',
         ]);
 
         $data = $request->all();
@@ -122,13 +112,6 @@ class ServiceController extends Controller
             $data['tags'] = array_map('trim', explode(',', $data['tags']));
         } else {
             $data['tags'] = [];
-        }
-
-        // Process add-ons
-        if (!empty($data['add_ons'])) {
-            $data['add_ons'] = array_map('trim', explode(',', $data['add_ons']));
-        } else {
-            $data['add_ons'] = [];
         }
 
         if ($request->hasFile('image')) {

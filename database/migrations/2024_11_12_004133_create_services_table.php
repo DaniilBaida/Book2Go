@@ -37,8 +37,6 @@ return new class extends Migration
 
             $table->jsonb('tags')->nullable(); // Keywords/tags for services
 
-            $table->jsonb('add_ons')->nullable(); // Additional service options
-
             $table->unsignedBigInteger('bookings_count')->default(0); // Track popularity
 
             $table->enum('status', ['active', 'inactive', 'archived'])->default('active'); // Service status
