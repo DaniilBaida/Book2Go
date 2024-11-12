@@ -30,7 +30,7 @@
                         <x-secondary-button type="submit" class="md:ml-2 text-blue-600 hover:text-blue-800">Search</x-secondary-button>
                         @if(request('search'))
                             <a href="{{ route('business.services.index') }}">
-                                <x-red-button class="bg-red-800 text-white hover:bg-red-600">Clear</x-red-button>
+                                <x-danger-button type="button">Clear</x-danger-button>
                             </a>
                         @endif
                     </div>

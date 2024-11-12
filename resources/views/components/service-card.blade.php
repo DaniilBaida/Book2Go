@@ -74,7 +74,7 @@
             <form action="{{ route('business.services.destroy', $service->id) }}" method="POST" class="w-1/3">
                 @csrf
                 @method('DELETE')
-                <x-red-button type="submit" class="flex-1 w-full justify-center ">{{ __('Delete') }}</x-red-button>
+                <x-danger-button type="submit" class="flex-1 w-full justify-center ">{{ __('Delete') }}</x-danger-button>
             </form>
         @elseif ($role == \App\Models\User::ROLE_ADMIN)
             <p class="text-gray-500 text-sm">{{ __('Managed by Business') }}</p>
