@@ -80,14 +80,12 @@ class ServiceController extends Controller
             $data['add_ons'] = [];
         }
 
-        // Handle image upload
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('services', 'public');
             $data['image_path'] = '/storage/' . $path;
         }
-
-        // Create the service
         auth()->user()->business->services()->create($data);
+
 
         return redirect()->route('business.services.index')->with('success', 'Service created successfully.');
     }
