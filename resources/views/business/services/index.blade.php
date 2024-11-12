@@ -5,12 +5,12 @@
         </h2>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-12 max-sm:px-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <!-- Search Bar and Create Button -->
-            <div class="flex justify-between items-center mb-6">
+            <div class="md:flex justify-between items-center mb-6">
                 <!-- Search Bar -->
-                <form method="GET" action="{{ route('business.services.index') }}" class="mb-6 flex items-center">
+                <form method="GET" action="{{ route('business.services.index') }}" class="max-md:mb-6 flex max-md:flex-col md:items-center max-md:gap-y-2">
                     <div class="relative">
                         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                             <svg class="w-4 h-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
@@ -22,14 +22,18 @@
                             name="search"
                             id="table-search-services"
                             value="{{ request('search') }}"
-                            class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                            class="block w-full ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
                             placeholder="Search for services"
                         >
                     </div>
-                    <button type="submit" class="ml-2 text-blue-600 hover:text-blue-800">Search</button>
-                    @if(request('search'))
-                        <a href="{{ route('business.services.index') }}" class="ml-2 text-red-600 hover:text-red-800">Clear</a>
-                    @endif
+                    <div class="flex gap-2 justify-start">
+                        <x-secondary-button type="submit" class="md:ml-2 text-blue-600 hover:text-blue-800">Search</x-secondary-button>
+                        @if(request('search'))
+                            <a href="{{ route('business.services.index') }}">
+                                <x-red-button class="bg-red-800 text-white hover:bg-red-600">Clear</x-red-button>
+                            </a>
+                        @endif
+                    </div>
                 </form>
 
                 <!-- Create Service Button -->

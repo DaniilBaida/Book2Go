@@ -1,4 +1,4 @@
-<div class="bg-white shadow-md rounded-lg overflow-hidden relative hover:shadow-lg transition-all duration-300">
+<div class="bg-white shadow-md rounded-2xl overflow-hidden relative hover:shadow-lg transition-all duration-300">
     <img class="w-full h-48 object-cover"
          src="{{ $service->image_path ? asset($service->image_path) : asset('images/default-service.png') }}"
          alt="{{ $service->name }}"
@@ -29,29 +29,22 @@
         @endif
 
         <!-- Reviews and Bookings -->
-        <div class="mt-4 flex items-center space-x-4">
+        <div class="mt-4 flex items-center space-x-4 align-middle">
             <!-- Reviews -->
             <div class="flex items-center">
-                <svg class="w-4 h-4 text-yellow-300 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
-                </svg>
-                <p class="ms-2 text-sm font-bold text-gray-900">
+                <i class="fas fa-star text-yellow-300 text-base mr-1 flex items-center"></i>
+                <p class="text-sm font-bold text-gray-900">
                     {{ number_format($service->reviews_avg_rating, 1) }}
                 </p>
                 <span class="w-1 h-1 mx-1.5 bg-gray-500 rounded-full"></span>
-                <a href="#" class="text-sm font-medium text-gray-900 underline hover:no-underline ">
+                <a href="#" class="text-sm font-medium text-gray-900 underline hover:no-underline">
                     {{ $service->reviews_count }} reviews
                 </a>
             </div>
             <!-- Bookings -->
-            <div class="flex items-center">
-                <svg class="w-6 h-6 text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
-                     height="24" fill="currentColor" viewBox="0 0 24 24">
-                    <path fill-rule="evenodd"
-                          d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4h-4Z"
-                          clip-rule="evenodd"/>
-                </svg>
-                <span class="ml-2 text-gray-600">{{ $service->bookings_count }} {{ __('Bookings') }}</span>
+            <div class="flex items-center border-l border-gray-200/80 pl-4">
+                <i class="fas fa-user text-gray-800 text-base mr-2 flex items-center"></i>
+                <span class="text-sm text-gray-600">{{ $service->bookings_count }} {{ __('Bookings') }}</span>
             </div>
         </div>
 
@@ -66,23 +59,22 @@
         </div>
     </div>
 
-    <div class="p-4 border-t border-gray-100 flex justify-between items-center">
+    <!-- View/Edit/Delete Buttons -->
+    <div class="p-4 border-t border-gray-200/80 flex justify-between items-center gap-3">
         @if ($role == \App\Models\User::ROLE_BUSINESS)
-            <a href="{{ route('business.services.show', $service->id) }}"
-               class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">
-                {{ __('View') }}
+            <!-- View -->
+            <a href="{{ route('business.services.show', $service->id) }}" class="w-1/3" >
+               <x-primary-button class="flex-1 w-full justify-center">{{ __('View') }}</x-primary-button>
             </a>
-            <a href="{{ route('business.services.edit', $service->id) }}"
-               class="text-yellow-400 hover:text-white border border-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-yellow-300 dark:text-yellow-300 dark:hover:text-white dark:hover:bg-yellow-400 dark:focus:ring-yellow-900">
-                {{ __('Edit') }}
+            <!-- Edit -->
+            <a href="{{ route('business.services.edit', $service->id) }}" class="w-1/3">
+                <x-secondary-button class="flex-1 w-full justify-center">{{ __('Edit') }}</x-secondary-button>
             </a>
-            <form action="{{ route('business.services.destroy', $service->id) }}" method="POST" class="inline-block">
+            <!-- Delete -->
+            <form action="{{ route('business.services.destroy', $service->id) }}" method="POST" class="w-1/3">
                 @csrf
                 @method('DELETE')
-                <button type="submit"
-                        class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
-                    {{ __('Delete') }}
-                </button>
+                <x-red-button type="submit" class="flex-1 w-full justify-center ">{{ __('Delete') }}</x-red-button>
             </form>
         @elseif ($role == \App\Models\User::ROLE_ADMIN)
             <p class="text-gray-500 text-sm">{{ __('Managed by Business') }}</p>
