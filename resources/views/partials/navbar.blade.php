@@ -21,8 +21,8 @@
                         </x-slot>
 
                         <x-slot name="content">
-                            <!-- Dashboard Link -->
-                            <x-dropdown-link :href="Auth::user()->role === 'admin' ? url('/business/dashboard') : url('/admin/dashboard')">
+
+                            <x-dropdown-link :href="Auth::user()->role_id === \App\Models\User::ROLE_BUSINESS ? route('business.dashboard') : route('admin.dashboard')">
                                 {{ __('Dashboard') }}
                             </x-dropdown-link>
 
