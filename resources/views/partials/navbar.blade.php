@@ -44,12 +44,6 @@
                             Log in
                         </x-secondary-button>
                     </a>
-
-                    <a href="{{ route('register') }}">
-                        <x-secondary-button>
-                            Register
-                        </x-secondary-button>
-                    </a>
                 @endauth
             </div>
         @endif

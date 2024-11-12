@@ -130,7 +130,6 @@
                             @enderror
                         </div>
 
-
                         <!-- Status -->
                         <div class="mb-4">
                             <x-input-label for="status" :value="__('Status')"/>

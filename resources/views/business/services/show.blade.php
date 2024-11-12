@@ -11,9 +11,9 @@
                 <div class="p-6 text-gray-900">
                     <div class="flex items-center justify-between">
                         <h3 class="text-2xl font-bold">{{ $service->name }}</h3>
-                        <a href="{{ route('business.services.index') }}"
-                           class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
-                            {{ __('Back to Services') }}
+                        <a href="{{ route('business.services.index') }}" class="border-2 rounded-full border-gray-800
+                        hover:bg-gray-800 duration-300 group">
+                            <i class="fa fa-arrow-left p-2 text-gray-800 group-hover:text-white" aria-hidden="true"></i>
                         </a>
                     </div>
 
@@ -120,18 +120,18 @@
                     </div>
 
                     <div class="mt-6 flex space-x-4">
-                        <a href="{{ route('business.services.edit', $service) }}"
-                           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            {{ __('Edit Service') }}
+                        <a href="{{ route('business.services.edit', $service) }}">
+                            <x-primary-button>
+                                {{ __('Edit Service') }}
+                            </x-primary-button>
                         </a>
                         <form action="{{ route('business.services.destroy', $service) }}" method="POST"
                               class="inline-block">
                             @csrf
                             @method('DELETE')
-                            <button type="submit"
-                                    class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                            <x-danger-button type="submit">
                                 {{ __('Delete Service') }}
-                            </button>
+                            </x-danger-button>
                         </form>
                     </div>
                 </div>
