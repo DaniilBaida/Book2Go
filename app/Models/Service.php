@@ -44,6 +44,11 @@ class Service extends Model
         return $this->belongsTo(ServiceCategory::class, 'service_category_id');
     }
 
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
     protected $casts = [
         'discount_start_date' => 'datetime',
         'discount_end_date' => 'datetime',

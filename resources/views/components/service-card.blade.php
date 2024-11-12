@@ -28,27 +28,20 @@
             </div>
         @endif
 
-        <!-- Add-Ons -->
-        @if(!empty($service->add_ons))
-            <div class="mt-2">
-                <strong class="text-gray-700">{{ __('Add-Ons') }}:</strong>
-                <ul class="list-disc list-inside">
-                    @foreach($service->add_ons as $addOn)
-                        <li class="text-gray-600">{{ $addOn }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
         <!-- Reviews and Bookings -->
         <div class="mt-4 flex items-center space-x-4">
             <!-- Reviews -->
             <div class="flex items-center">
-                <svg class="w-5 h-5 text-yellow-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
-                     height="24" fill="currentColor" viewBox="0 0 24 24">
-                    <path
-                        d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z"/>
+                <svg class="w-4 h-4 text-yellow-300 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
                 </svg>
-                <span class="ml-2 text-gray-600">{{ $service->reviews_count }} {{ __('Reviews') }}</span>
+                <p class="ms-2 text-sm font-bold text-gray-900">
+                    {{ number_format($service->reviews_avg_rating, 1) }}
+                </p>
+                <span class="w-1 h-1 mx-1.5 bg-gray-500 rounded-full"></span>
+                <a href="#" class="text-sm font-medium text-gray-900 underline hover:no-underline ">
+                    {{ $service->reviews_count }} reviews
+                </a>
             </div>
             <!-- Bookings -->
             <div class="flex items-center">
@@ -94,7 +87,7 @@
         @elseif ($role == \App\Models\User::ROLE_ADMIN)
             <p class="text-gray-500 text-sm">{{ __('Managed by Business') }}</p>
         @elseif ($role == \App\Models\User::ROLE_CLIENT)
-            <p class="text-green-500 font-bold">{{ __('Book Now') }}</p>
+            <a type="button" href="{{route('client.services.show', $service)}}" class="cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">{{ __('View') }}</a>
         @endif
     </div>
 </div>

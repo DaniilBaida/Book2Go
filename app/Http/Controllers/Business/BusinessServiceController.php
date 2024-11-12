@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
-class ServiceController extends Controller
+class BusinessServiceController extends Controller
 {
     public function index(Request $request)
     {
@@ -26,6 +26,8 @@ class ServiceController extends Controller
                         ->orWhere('name', 'LIKE', "{$search}");
                 });
             })
+            ->withCount('reviews')
+            ->withAvg('reviews', 'rating')
             ->with('category')
             ->paginate(9);
 

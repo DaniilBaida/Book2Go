@@ -3,9 +3,11 @@
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Business\BusinessSetupController;
-use App\Http\Controllers\Business\ServiceController;
+use App\Http\Controllers\Business\BusinessServiceController;
+use App\Http\Controllers\Client\ClientServiceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReviewController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -46,7 +48,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
             Route::patch('profile/update', [ProfileController::class, 'update'])->name('profile.update');
             Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-            Route::resource('services', ServiceController::class);
+            Route::resource('services', BusinessServiceController::class);
         });
 
         // Routes accessible only if setup is not complete
@@ -63,6 +65,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('profile/update', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+
+        Route::get('services', [ClientServiceController::class, 'index'])->name('services.index');
+        Route::get('services/{service}', [ClientServiceController::class, 'show'])->name('services.show');
+
+        Route::post('services/{service}/reviews', [ReviewController::class, 'store'])
+            ->name('reviews.store');
+
     });
 });
 

@@ -30,9 +30,6 @@ return new class extends Migration
 
             $table->string('image_path')->nullable(); // Service image path
 
-            $table->decimal('average_rating', 2, 1)->default(0); // Service rating (default 0)
-            $table->unsignedBigInteger('reviews_count')->default(0); // Total number of reviews
-
             $table->integer('max_capacity')->nullable(); // For group service bookings
 
             $table->jsonb('tags')->nullable(); // Keywords/tags for services
