@@ -4,12 +4,10 @@
          alt="{{ $service->name }}"
          onerror="this.onerror=null; this.src='{{ asset('images/default-service.png') }}';">
 
-
     <div class="p-4">
         <h3 class="font-bold text-lg">{{ $service->name }}</h3>
         <p class="text-gray-600 text-sm">{{ $service->category->name }}</p>
-        <p class="text-gray-800 font-semibold mt-2">{{ __('€') . number_format($service->price, 2) }}
-            / {{ __('session') }}</p>
+        <p class="text-gray-800 font-semibold mt-2">{{ __('€') . number_format($service->price, 2) }} / {{ __('session') }}</p>
         <p class="text-sm text-gray-500">{{ $service->duration_minutes }} {{ __('minutes') }}</p>
 
         <!-- Description -->
@@ -22,15 +20,14 @@
             <div class="mt-2 flex flex-wrap gap-2">
                 @foreach($service->tags as $tag)
                     <span class="px-3 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
-                {{ $tag }}
-            </span>
+                        {{ $tag }}
+                    </span>
                 @endforeach
             </div>
         @endif
 
         <!-- Reviews and Bookings -->
         <div class="mt-4 flex items-center space-x-4 align-middle">
-            <!-- Reviews -->
             <div class="flex items-center">
                 <i class="fas fa-star text-yellow-300 text-base mr-1 flex items-center"></i>
                 <p class="text-sm font-bold text-gray-900">
@@ -41,7 +38,6 @@
                     {{ $service->reviews_count }} reviews
                 </a>
             </div>
-            <!-- Bookings -->
             <div class="flex items-center border-l border-gray-200/80 pl-4">
                 <i class="fas fa-user text-gray-800 text-base mr-2 flex items-center"></i>
                 <span class="text-sm text-gray-600">{{ $service->bookings_count }} {{ __('Bookings') }}</span>
@@ -62,24 +58,39 @@
     <!-- View/Edit/Delete Buttons -->
     <div class="p-4 border-t border-gray-200/80 flex justify-between items-center gap-3">
         @if ($role == \App\Models\User::ROLE_BUSINESS)
-            <!-- View -->
-            <a href="{{ route('business.services.show', $service->id) }}" class="w-1/3" >
-               <x-primary-button class="flex-1 w-full justify-center">{{ __('View') }}</x-primary-button>
+            <a href="{{ route('business.services.show', $service->id) }}" class="w-1/3">
+                <x-primary-button class="flex-1 w-full justify-center">{{ __('View') }}</x-primary-button>
             </a>
-            <!-- Edit -->
             <a href="{{ route('business.services.edit', $service->id) }}" class="w-1/3">
                 <x-secondary-button class="flex-1 w-full justify-center">{{ __('Edit') }}</x-secondary-button>
             </a>
-            <!-- Delete -->
-            <form action="{{ route('business.services.destroy', $service->id) }}" method="POST" class="w-1/3">
-                @csrf
-                @method('DELETE')
-                <x-danger-button type="submit" class="flex-1 w-full justify-center ">{{ __('Delete') }}</x-danger-button>
-            </form>
+
+            <!-- Delete Button with Confirmation Modal -->
+            <div x-data="{ open: false }" class="w-1/3">
+                <x-danger-button @click="open = true" class="flex-1 w-full justify-center">{{ __('Delete') }}</x-danger-button>
+
+                <!-- Confirmation Modal -->
+                <div x-show="open" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <h2 class="text-lg font-medium text-gray-900">{{ __('Are you sure you want to delete this service?') }}</h2>
+                        <p class="mt-2 text-sm text-gray-600">{{ __('This action cannot be undone.') }}</p>
+                        
+                        <div class="mt-4 flex justify-end space-x-3">
+                            <x-secondary-button @click="open = false">{{ __('Cancel') }}</x-secondary-button>
+                            
+                            <form method="POST" action="{{ route('business.services.destroy', $service->id) }}" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <x-danger-button type="submit">{{ __('Confirm Delete') }}</x-danger-button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         @elseif ($role == \App\Models\User::ROLE_ADMIN)
             <p class="text-gray-500 text-sm">{{ __('Managed by Business') }}</p>
         @elseif ($role == \App\Models\User::ROLE_CLIENT)
-            <a type="button" href="{{route('client.services.show', $service)}}" class="cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">{{ __('View') }}</a>
+            <a type="button" href="{{ route('client.services.show', $service) }}" class="cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">{{ __('View') }}</a>
         @endif
     </div>
 </div>
