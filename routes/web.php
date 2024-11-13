@@ -8,6 +8,7 @@ use App\Http\Controllers\Client\ClientServiceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\CityController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -22,6 +23,8 @@ function roleBasedRoutes(string $prefix, int $roleId, string $namePrefix, callab
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/get-cities/{countryCode}', [CityController::class, 'getCities']);
+
 
 // Authenticated and Verified Routes
 Route::middleware(['auth', 'verified'])->group(function () {

@@ -31,25 +31,33 @@
             <x-input-error :messages="$errors->get('address')" class="mt-2" />
         </div>
 
-        <!-- City -->
-        <div class="mt-4">
-            <x-input-label for="city" :value="__('City')" />
-            <x-text-input id="city" class="block mt-1 w-full" type="text" name="city" :value="old('city')" required autocomplete="address-level2" />
-            <x-input-error :messages="$errors->get('city')" class="mt-2" />
-        </div>
+            @csrf
+            <!-- Country Dropdown -->
+            <div class="mt-4">
+                <x-input-label for="country">{{ __('Country') }}</x-input-label>
+                <select id="country" name="country" class="block w-full p-2.5 bg-gray-50 border text-gray-900 text-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm" required>
+                    <option value="" disabled selected>{{ __('Select Country') }}</option>
+                    @foreach(config('countries') as $country)
+                        <option value="{{ $country['code'] }}">{{ $country['name'] }}</option>
+                    @endforeach
+                </select>
+                <x-input-error :messages="$errors->get('country')" class="mt-2" />
+            </div>
+
+            <!-- City Dropdown -->
+            <div class="mt-4">
+                <x-input-label for="city">{{ __('City') }}</x-input-label>
+                <select id="city" name="city" class="block w-full p-2.5 bg-gray-50 border text-gray-900 text-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm" required>
+                    <option value="" disabled selected>{{ __('Select City') }}</option>
+                </select>
+                <x-input-error :messages="$errors->get('city')" class="mt-2" />
+            </div>
 
         <!-- Postal Code -->
         <div class="mt-4">
             <x-input-label for="postal_code" :value="__('Postal Code')" />
             <x-text-input id="postal_code" class="block mt-1 w-full" type="text" name="postal_code" :value="old('postal_code')" required autocomplete="postal-code" />
             <x-input-error :messages="$errors->get('postal_code')" class="mt-2" />
-        </div>
-
-        <!-- Country -->
-        <div class="mt-4">
-            <x-input-label for="country" :value="__('Country')" />
-            <x-text-input id="country" class="block mt-1 w-full" type="text" name="country" :value="old('country')" required autocomplete="country-name" />
-            <x-input-error :messages="$errors->get('country')" class="mt-2" />
         </div>
 
         <!-- Next Step Button -->
@@ -60,3 +68,28 @@
         </div>
     </form>
 </x-guest-layout>
+
+    <!-- JavaScript to Handle Country Selection and Load Cities -->
+    <script>
+        document.getElementById('country').addEventListener('change', function() {
+            var countryCode = this.value;
+            var citySelect = document.getElementById('city');
+            
+            // Clear existing options
+            citySelect.innerHTML = '<option value="" disabled selected>{{ __("Select City") }}</option>';
+
+            if (countryCode) {
+                fetch(`/get-cities/${countryCode}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(city => {
+                            var option = document.createElement('option');
+                            option.value = city;
+                            option.textContent = city;
+                            citySelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching cities:', error));
+            }
+        });
+    </script>
