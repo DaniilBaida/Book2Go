@@ -43,10 +43,10 @@
                 </h3>
                 <ul class="mt-3">
                     <!-- Dashboard -->
-                    <li class="pl-4 pr-3 py-2 rounded-lg mb-0.5 last:mb-0 bg-[linear-gradient(135deg,var(--tw-gradient-stops))] @if(in_array(Request::segment(1), ['business.dashboard'])){{ 'from-violet-500/[0.12] to-violet-500/[0.04]' }}@endif">
-                        <a class="block text-gray-800  truncate transition @if(!in_array(Request::segment(1), ['business.dashboard'])){{ 'hover:text-gray-900 ' }}@endif" href="{{ route('business.dashboard') }}">
+                    <li class="pl-4 pr-3 py-2 rounded-lg mb-0.5 last:mb-0 bg-[linear-gradient(135deg,var(--tw-gradient-stops))] @if(Request::segment(1) === 'business' && Request::segment(2) === 'dashboard') from-violet-500/[0.12] to-violet-500/[0.04] @endif">
+                        <a class="block text-gray-800 truncate transition @if(!(Request::segment(1) === 'business' && Request::segment(2) === 'dashboard')) hover:text-gray-900 @endif" href="{{ route('business.dashboard') }}">
                             <div class="flex items-center">
-                                <svg class="shrink-0 fill-current @if(in_array(Request::segment(1), ['business.dashboard'])){{ 'text-violet-500' }}@else{{ 'text-gray-400' }}@endif" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                                <svg class="shrink-0 fill-current @if(Request::segment(1) === 'business' && Request::segment(2) === 'dashboard') text-violet-500 @else text-gray-400 @endif" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
                                     <path d="M5.936.278A7.983 7.983 0 0 1 8 0a8 8 0 1 1-8 8c0-.722.104-1.413.278-2.064a1 1 0 1 1 1.932.516A5.99 5.99 0 0 0 2 8a6 6 0 1 0 6-6c-.53 0-1.045.076-1.548.21A1 1 0 1 1 5.936.278Z" />
                                     <path d="M6.068 7.482A2.003 2.003 0 0 0 8 10a2 2 0 1 0-.518-3.932L3.707 2.293a1 1 0 0 0-1.414 1.414l3.775 3.775Z" />
                                 </svg>
@@ -54,17 +54,19 @@
                             </div>
                         </a>
                     </li>
+
                     <!-- Services -->
-                    <li class="pl-4 pr-3 py-2 rounded-lg mb-0.5 last:mb-0 bg-[linear-gradient(135deg,var(--tw-gradient-stops))] @if(in_array(Request::segment(1), ['business.services.index'])){{ 'from-violet-500/[0.12] to-violet-500/[0.04]' }}@endif">
-                        <a class="block text-gray-800  truncate transition @if(!in_array(Request::segment(1), ['business.services.index'])){{ 'hover:text-gray-900 ' }}@endif" href="{{ route('business.services.index') }}">
+                    <li class="pl-4 pr-3 py-2 rounded-lg mb-0.5 last:mb-0 bg-[linear-gradient(135deg,var(--tw-gradient-stops))] @if(Route::is('business.services.index')) from-violet-500/[0.12] to-violet-500/[0.04] @endif">
+                        <a class="block text-gray-800 truncate transition @if(!Route::is('business.services.index')) hover:text-gray-900 @endif" href="{{ route('business.services.index') }}">
                             <div class="flex items-center">
-                                <svg class="shrink-0 fill-current @if(in_array(Request::segment(1), ['business.services.index'])){{ 'text-violet-500' }}@else{{ 'text-gray-400 ' }}@endif" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                                <svg class="shrink-0 fill-current @if(Route::is('business.services.index')) text-violet-500 @else text-gray-400 @endif" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
                                     <path d="M6.753 2.659a1 1 0 0 0-1.506-1.317L2.451 4.537l-.744-.744A1 1 0 1 0 .293 5.207l1.5 1.5a1 1 0 0 0 1.46-.048l3.5-4ZM6.753 10.659a1 1 0 1 0-1.506-1.317l-2.796 3.195-.744-.744a1 1 0 0 0-1.414 1.414l1.5 1.5a1 1 0 0 0 1.46-.049l3.5-4ZM8 4.5a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H9a1 1 0 0 1-1-1ZM9 11.5a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2H9Z" />
                                 </svg>
                                 <span class="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">Services</span>
                             </div>
                         </a>
                     </li>
+
                 </ul>
             </div>
         </div>
