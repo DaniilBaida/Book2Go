@@ -1,4 +1,7 @@
 <x-guest-layout>
+    <!-- Welcome Message -->
+    <h1 class="text-3xl text-gray-800 font-bold mb-6">{{ __('Create your Account!') }}</h1>
+
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
@@ -23,10 +26,18 @@
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
+        <!-- Dropdown for Account Type -->
+        <div class="mt-4">
+            <x-input-label for="account_type">{{ __('Select Account Type:') }}</x-input-label>
+            <select id="account_type" name="is_business" class="block w-full p-2.5 bg-gray-50 border text-gray-900 text-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm" required>
+                <option value="0" selected>{{ __('User') }}</option>
+                <option value="1">{{ __('Business') }}</option>
+            </select>
+        </div>
+
         <!-- Password -->
         <div class="mt-4 relative">
             <x-input-label for="password" :value="__('Password')" />
-
             <div class="relative">
                 <x-text-input
                     id="password"
@@ -48,44 +59,28 @@
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
-
         <!-- Confirm Password -->
-        <div class="mt-4">
+        <div class="my-4">
             <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
             <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
-        <!-- Toggle Switch for Account Type -->
-        <div class="my-4 flex items-center">
-            <label class="inline-flex items-center cursor-pointer">
-                <input type="checkbox" name="is_business" id="is_business" value="1" class="sr-only peer" onchange="toggleAccountType()">
-                <div class="relative w-11 h-6 bg-gray-200 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-            </label>
-            <p id="accountTypeText" class="text-sm text-gray-500 text-center flex ml-2">Currently selected: <span id="accountType" class="ml-1" > User</span></p>
-        </div>
-
         <!-- Button Register -->
-        <div class="flex">
-            <x-primary-button class="mx-auto">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
+        <div class="flex items-center justify-between mt-6">
+            
+            <!-- Register Button -->
+            <div class="text-sm">
+                {{ __('Have an account?') }} <a class="font-medium text-blue-500 hover:text-blue-600" href="{{ route('login') }}">{{ __('Sign In') }}</a>
+            </div>
 
-        <!-- Register Button -->
-        <div class="flex items-center justify-center mt-2">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
+            <div class="flex">
+                <x-button class="mx-auto">
+                    {{ __('Register') }}
+                </x-button>
+            </div>
         </div>
     </form>
-
-    <script>
-        function toggleAccountType() {
-            const isBusinessChecked = document.getElementById('is_business').checked;
-            document.getElementById('accountType').innerText = isBusinessChecked ? 'Business' : 'User';
-        }
-    </script>
 </x-guest-layout>
 
 <!-- Hide/Show password script -->
