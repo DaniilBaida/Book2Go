@@ -20,9 +20,6 @@
             </div>
 
             <div class="flex items-center space-x-3">
-                <x-modal-search />
-                <x-dropdown-notifications align="right" />
-                <x-dropdown-help align="right" />
                 <hr class="w-px h-6 bg-gray-200 border-none" />
 
                 <x-dropdown align="right" width="48">
@@ -39,9 +36,17 @@
                     </x-slot>
 
                     <x-slot name="content">
+                        <div class="px-4 py-2 text-sm text-gray-700">
+                            <div class="font-medium">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</div>
+                            <div class="text-xs text-gray-500 italic">Administrator</div>
+                        </div>
+
+                        <!-- Profile Button -->
                         <x-dropdown-link :href="route('admin.profile.edit')">
                             {{ __('Profile') }}
                         </x-dropdown-link>
+
+                        <!-- Log Out Button -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <x-dropdown-link :href="route('logout')"

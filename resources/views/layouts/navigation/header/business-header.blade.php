@@ -24,18 +24,12 @@
 
             <!-- Header: Right side -->
             <div class="flex items-center space-x-3">
-                <!-- Search Button with Modal -->
-                <x-modal-search />
-
                 <!-- Notifications button -->
-                <x-dropdown-notifications align="right" />
-
-                <!-- Info button -->
-                <x-dropdown-help align="right" />         
+                <!-- <x-dropdown-notifications align="right" /> -->
 
                 <!-- Divider -->
                 <hr class="w-px h-6 bg-gray-200 border-none" />
-
+                
                 <!-- User button with dropdown -->
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
@@ -51,21 +45,28 @@
                     </x-slot>
 
                     <x-slot name="content">
+                        <div class="px-4 py-2 text-sm text-gray-700">
+                            <div class="font-medium">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</div>
+                            <div class="text-xs text-gray-500 italic">Business</div>
+                        </div>
+                        
+                        <!-- Profile Button -->
                         <x-dropdown-link :href="route('business.profile.edit')">
                             {{ __('Profile') }}
                         </x-dropdown-link>
 
-                        <!-- Authentication -->
+                        <!-- Log Out Button -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <x-dropdown-link :href="route('logout')"
-                                             onclick="event.preventDefault();
-                                                this.closest('form').submit();">
+                                            onclick="event.preventDefault();
+                                            this.closest('form').submit();">
                                 {{ __('Log Out') }}
                             </x-dropdown-link>
                         </form>
                     </x-slot>
                 </x-dropdown>
+
             </div>
         </div>
     </div>

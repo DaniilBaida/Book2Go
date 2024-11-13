@@ -11,12 +11,12 @@
     <!-- Text content -->
     <div class="flex-1">
         <div class="text-sm font-medium text-gray-500">{{ $title }}</div>
-        <div class="text-xl font-bold text-gray-900">{{ $value }}</div>
+        <div class="text-md font-bold text-gray-900">{{ $value }}</div>
     </div>
 
     <!-- Percentage change -->
-    <div class="flex items-center ml-auto text-sm font-medium 
-        @if($increase) text-green-500 bg-green-100 @else text-red-500 bg-red-100 @endif rounded-full px-2">
+    <div class="flex items-center ml-auto text-xs font-medium 
+        @if($increase) text-green-500 bg-green-100 @else text-red-500 bg-red-100 @endif rounded-full px-2 py-1">
         {{ $percentage }}
         <i class="ml-1 {{ $increase ? 'fas fa-arrow-up' : 'fas fa-arrow-down' }}"></i>
     </div>
