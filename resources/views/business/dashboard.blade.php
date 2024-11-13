@@ -23,7 +23,8 @@
             </div>
 
             <div class="gap-10 flex flex-col">
-                <x-dashboard.dashboard-card-10 />
+                <x-dashboard.dashboard-card-03 />
+                <x-dashboard.dashboard-card-02 :dataFeed="$dataFeed" />
             </div>
         </div>
     </div>
