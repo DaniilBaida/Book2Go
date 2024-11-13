@@ -1,12 +1,9 @@
 <x-admin-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('User Details') }}
-        </h2>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+    <div class="px-4 py-8 max-w-8xl mx-auto">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+            <h1 class="text-3xl text-gray-800 font-bold mb-10">User Details</h1>
+        </div>
+        <div class="flex flex-col space-y-8 w-full">
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="max-w-xl">
                     User Details

@@ -24,7 +24,7 @@
     x-data="{ sidebarOpen: false, sidebarExpanded: localStorage.getItem('sidebar-expanded') == 'true' }"
     x-init="$watch('sidebarExpanded', value => localStorage.setItem('sidebar-expanded', value))"    
     >
-<div class="flex min-h-screen bg-gray-100">
+<div class="flex min-h-screen bg-gray-100 h-[100dvh] overflow-hidden">
 
     <!-- Sidebar -->
     @include('layouts.navigation.sidebar.admin-sidebar')
@@ -35,7 +35,7 @@
         @include('layouts.navigation.header.admin-header')
 
         <!-- Page Content -->
-        <main class="grow p-4">
+        <main class="grow p-4 sm:px-20">
             {{ $slot }}
         </main>
     </div>
