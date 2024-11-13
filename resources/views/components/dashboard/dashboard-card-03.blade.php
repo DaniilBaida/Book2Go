@@ -1,4 +1,4 @@
-<div class="col-span-full xl:col-span-6 bg-white overflow-hidden rounded-lg shadow-md">
+<div class="col-span-full xl:col-span-6 bg-white overflow-hidden rounded-lg shadow-sm">
     <header class="px-5 py-4 border-b border-gray-100">
         <h2 class="font-semibold text-gray-800">Costumers</h2>
     </header>

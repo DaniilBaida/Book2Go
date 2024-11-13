@@ -1,6 +1,6 @@
 @props(['title', 'value', 'percentage', 'icon', 'increase' => true])
 
-<div class="flex items-center p-4 bg-white rounded-lg shadow-md">
+<div class="flex items-center p-4 bg-white rounded-lg shadow-sm">
     <!-- Icon -->
     <div class="flex items-center justify-center w-12 h-12 mr-4 bg-blue-100 rounded-full">
         <i class="text-blue-500 text-lg 
