@@ -1,18 +1,24 @@
 <x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')"/>
+    <!-- Welcome Message -->
+    <h1 class="text-3xl text-gray-800 font-bold mb-6">{{ __('Welcome back!') }}</h1>
 
-    <form method="POST" action="{{ route('login') }}">
+    <!-- Session Status -->
+    @if (session('status'))
+        <div class="mb-4 font-medium text-sm text-green-600">
+            {{ session('status') }}
+        </div>
+    @endif
+
+    <!-- Login Form -->
+    <form method="POST" action="{{ route('login') }}" class="space-y-4">
         @csrf
 
         <!-- Email Address -->
         <div>
-            <x-input-label for="email" :value="__('Email')"/>
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required
-                          autofocus autocomplete="username"/>
-            <x-input-error :messages="$errors->get('email')" class="mt-2"/>
+            <x-input-label for="email" :value="__('Email Address')" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username"/>
         </div>
-
+        
         <!-- Password -->
         <div class="mt-4 relative">
             <x-input-label for="password" :value="__('Password')"/>
@@ -37,43 +43,35 @@
             </div>
 
         </div>
-
-        <!-- Remember Me -->
-        <div class="block my-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox"
-                       class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
-        </div>
-
-        <!-- Log in button -->
-        <div class="flex">
-            <x-primary-button class="mx-auto">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-
-        <!-- Useful links -->
-        <div class="flex flex-col mt-4 text-sm">
-            <!-- Forgot Password -->
+        
+        <x-input-error :messages="$errors->get('email')" class="mt-2"/>
+        <!-- Forgot Password Link / Sign In Button -->
+        <div class="flex items-center justify-between mt-6">
             @if (Route::has('password.request'))
-                <a class="underline text-gray-600 hover:text-gray-900 mx-auto" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
+                <div class="mr-1">
+                    <a class="text-gray-600 hover:text-gray-900 text-sm underline hover:no-underline" href="{{ route('password.request') }}">
+                        {{ __('Forgot Password?') }}
+                    </a>
+                </div>
             @endif
-            <!-- Register Button -->
-            <div class="text-gray-600 mx-auto">
-                Don't have an account?
-                <a href="{{ route('register') }}" class="underline text-gray-600 hover:text-gray-900">
-                    Register here
-                </a>
-            </div>
+
+            <!-- Sign In Button -->
+            <x-button class="ml-3">
+                {{ __('Sign In') }}
+            </x-button>
+        </div>
+
+        <!-- Register Link -->
+        <div class="mt-4 text-gray-600 border-t border-zinc-200 pt-5 text-sm">
+            {{ __("Don't have an account?") }}
+            <a href="{{ route('register') }}" class="font-medium text-blue-500 hover:text-blue-600">
+                {{ __('Register') }}
+            </a>
         </div>
     </form>
 </x-guest-layout>
 
-<!-- Hide/Show password script -->
+<!-- Hide/Show Password Script -->
 <script>
     function togglePassword() {
         const passwordField = document.getElementById("password");
@@ -90,6 +88,3 @@
         }
     }
 </script>
-
-
-
