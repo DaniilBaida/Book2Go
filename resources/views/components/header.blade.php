@@ -1,8 +1,12 @@
-@props(['variant' => 'default'])
+{{-- resources/views/components/header.blade.php --}}
+@props([
+    'profileRoute' => '#',
+    'roleLabel' => 'User',
+])
 
-<header class="sticky top-0 before:absolute before:inset-0 before:backdrop-blur-md max-lg:before:bg-white/90 before:-z-10 z-30 {{ $variant === 'v2' || $variant === 'v3' ? 'before:bg-white after:absolute after:h-px after:inset-x-0 after:top-full after:bg-gray-200  after:-z-10' : 'max-lg:shadow-sm lg:before:bg-gray-100/90 ' }} {{ $variant === 'v2' ? '' : '' }} {{ $variant === 'v3' ? '' : '' }}">
+<header class="sticky top-0 before:absolute before:inset-0 before:backdrop-blur-md max-lg:before:bg-white/90 before:-z-10 z-30 max-lg:shadow-sm lg:before:bg-gray-100/90">
     <div class="px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16 {{ $variant === 'v2' || $variant === 'v3' ? '' : 'lg:border-b border-gray-200' }}">
+        <div class="flex items-center justify-between h-16 lg:border-b border-gray-200">
 
             <!-- Header: Left side -->
             <div class="flex items-center space-x-8">
@@ -14,19 +18,12 @@
                     :aria-expanded="sidebarOpen"
                 >
                     <span class="sr-only">Open sidebar</span>
-                    <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="4" y="5" width="16" height="2" />
-                        <rect x="4" y="11" width="16" height="2" />
-                        <rect x="4" y="17" width="16" height="2" />
-                    </svg>
+                    <i class="fas fa-bars w-6 h-6 fill-current"></i>
                 </button>
             </div>
 
             <!-- Header: Right side -->
             <div class="flex items-center space-x-3">
-                <!-- Notifications button -->
-                <!-- <x-dropdown-notifications align="right" /> -->
-
                 <!-- Divider -->
                 <hr class="w-px h-6 bg-gray-200 border-none" />
                 
@@ -37,9 +34,7 @@
                             <img class="mr-2 w-10 h-10 rounded-full object-cover" src="{{ asset(Auth::user()->avatar_path) }}" alt="User Avatar">
                             <div>{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</div>
                             <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a 1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
+                                <i class="fas fa-caret-down fill-current h-4 w-4"></i>
                             </div>
                         </button>
                     </x-slot>
@@ -47,11 +42,11 @@
                     <x-slot name="content">
                         <div class="px-4 py-2 text-sm text-gray-700">
                             <div class="font-medium">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</div>
-                            <div class="text-xs text-gray-500 italic">Business</div>
+                            <div class="text-xs text-gray-500 italic">{{ $roleLabel }}</div>
                         </div>
                         
                         <!-- Profile Button -->
-                        <x-dropdown-link :href="route('business.profile.edit')">
+                        <x-dropdown-link :href="$profileRoute">
                             {{ __('Profile') }}
                         </x-dropdown-link>
 
@@ -66,7 +61,6 @@
                         </form>
                     </x-slot>
                 </x-dropdown>
-
             </div>
         </div>
     </div>
