@@ -12,6 +12,6 @@ class BusinessLayout extends Component
      */
     public function render(): View
     {
-        return view('layouts.business');
+        return view('layouts.roles.business');
     }
 }

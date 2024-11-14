@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\PasswordController;
-use App\Http\Controllers\BookingController;
 use App\Http\Controllers\Business\BusinessSetupController;
 use App\Http\Controllers\Business\BusinessServiceController;
 use App\Http\Controllers\Client\ClientServiceController;
@@ -24,8 +23,8 @@ function roleBasedRoutes(string $prefix, int $roleId, string $namePrefix, callab
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/get-cities/{countryCode}', [CityController::class, 'getCities']);
 
+Route::get('/get-cities/{countryCode}', [CityController::class, 'getCities']);
 
 // Authenticated and Verified Routes
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -65,21 +64,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     roleBasedRoutes('client', User::ROLE_CLIENT, 'client', function () {
-        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('dashboard', [DashboardController::class, 'clientDashboard'])->name('dashboard');
         Route::get('profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('profile/update', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-
         Route::get('services', [ClientServiceController::class, 'index'])->name('services.index');
         Route::get('services/{service}', [ClientServiceController::class, 'show'])->name('services.show');
-
-        Route::post('services/{service}/reviews', [ReviewController::class, 'store'])
-            ->name('reviews.store');
-
-        Route::get('services/{service}/available-slots', [BookingController::class, 'availableSlots'])
-            ->name('services.available-slots');
-
+        Route::post('services/{service}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
     });
 });
 
