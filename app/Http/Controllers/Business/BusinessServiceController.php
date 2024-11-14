@@ -49,40 +49,37 @@ class BusinessServiceController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'service_category_id' => 'required|exists:service_categories,id',
             'price' => 'required|numeric|min:0',
-            'original_price' => 'nullable|numeric|min:0',
-            'discount_price' => 'nullable|numeric|min:0|lt:original_price',
-            'discount_start_date' => 'nullable|date|before:discount_end_date',
-            'discount_end_date' => 'nullable|date|after:discount_start_date',
             'duration_minutes' => 'required|integer|min:1',
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i|after:start_time',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'required|in:active,inactive,archived',
             'tags' => 'nullable|string',
         ]);
 
-        $data = $request->all();
-
         // Process tags
-        if (!empty($data['tags'])) {
-            $data['tags'] = array_map('trim', explode(',', $data['tags']));
-        } else {
-            $data['tags'] = [];
-        }
+        $validatedData['tags'] = !empty($validatedData['tags'])
+            ? array_map('trim', explode(',', $validatedData['tags']))
+            : [];
 
+        // Add the business ID
+        $validatedData['business_id'] = auth()->user()->business->id;
+
+        // Handle image upload
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('services', 'public');
-            $data['image_path'] = '/storage/' . $path;
+            $validatedData['image_path'] = '/storage/' . $path;
         }
-        auth()->user()->business->services()->create($data);
 
+
+        auth()->user()->business->services()->create($validatedData);
 
         return redirect()->route('business.services.index')->with('success', 'Service created successfully.');
     }
-
 
     public function edit(Service $service)
     {
@@ -96,15 +93,13 @@ class BusinessServiceController extends Controller
             'name' => 'required|string|max:255',
             'service_category_id' => 'required|exists:service_categories,id',
             'price' => 'required|numeric|min:0',
-            'original_price' => 'nullable|numeric|min:0',
-            'discount_price' => 'nullable|numeric|min:0|lt:original_price',
-            'discount_start_date' => 'nullable|date|before:discount_end_date',
-            'discount_end_date' => 'nullable|date|after:discount_start_date',
             'duration_minutes' => 'required|integer|min:1',
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'required|in:active,inactive,archived',
             'tags' => 'nullable|string',
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i|after:start_time',
         ]);
 
         $data = $request->all();
@@ -117,7 +112,7 @@ class BusinessServiceController extends Controller
         }
 
         if ($request->hasFile('image')) {
-            // Remove old image if exists
+
             if ($service->image_path) {
                 Storage::disk('public')->delete(str_replace('/storage/', '', $service->image_path));
             }

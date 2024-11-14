@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\PasswordController;
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\Business\BusinessSetupController;
 use App\Http\Controllers\Business\BusinessServiceController;
 use App\Http\Controllers\Client\ClientServiceController;
@@ -75,6 +76,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::post('services/{service}/reviews', [ReviewController::class, 'store'])
             ->name('reviews.store');
+
+        Route::get('services/{service}/available-slots', [BookingController::class, 'availableSlots'])
+            ->name('services.available-slots');
 
     });
 });

@@ -50,50 +50,6 @@
                             @enderror
                         </div>
 
-                        <!-- Original Price -->
-                        <div class="mb-4">
-                            <x-input-label for="original_price" :value="__('Original Price (€)')"/>
-                            <x-text-input id="original_price" class="block mt-1 w-full" type="number"
-                                          name="original_price"
-                                          value="{{ old('original_price', $service->original_price) }}" step="0.01"/>
-                            @error('original_price')
-                            <span class="text-red-500 text-sm">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                        <!-- Discount Price -->
-                        <div class="mb-4">
-                            <x-input-label for="discount_price" :value="__('Discount Price (€)')"/>
-                            <x-text-input id="discount_price" class="block mt-1 w-full" type="number"
-                                          name="discount_price"
-                                          value="{{ old('discount_price', $service->discount_price) }}" step="0.01"/>
-                            @error('discount_price')
-                            <span class="text-red-500 text-sm">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                        <!-- Discount Start Date -->
-                        <div class="mb-4">
-                            <x-input-label for="discount_start_date" :value="__('Discount Start Date')"/>
-                            <x-text-input id="discount_start_date" class="block mt-1 w-full" type="datetime-local"
-                                          name="discount_start_date"
-                                          value="{{ old('discount_start_date', optional($service->discount_start_date)->format('Y-m-d\TH:i')) }}"/>
-                            @error('discount_start_date')
-                            <span class="text-red-500 text-sm">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                        <!-- Discount End Date -->
-                        <div class="mb-4">
-                            <x-input-label for="discount_end_date" :value="__('Discount End Date')"/>
-                            <x-text-input id="discount_end_date" class="block mt-1 w-full" type="datetime-local"
-                                          name="discount_end_date"
-                                          value="{{ old('discount_end_date', optional($service->discount_end_date)->format('Y-m-d\TH:i')) }}"/>
-                            @error('discount_end_date')
-                            <span class="text-red-500 text-sm">{{ $message }}</span>
-                            @enderror
-                        </div>
-
                         <!-- Duration -->
                         <div class="mb-4">
                             <x-input-label for="duration_minutes" :value="__('Duration (minutes)')"/>
@@ -101,6 +57,23 @@
                                           name="duration_minutes"
                                           value="{{ old('duration_minutes', $service->duration_minutes) }}" required/>
                             @error('duration_minutes')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+
+                        <div class="mb-4">
+                            <x-input-label for="start_time" :value="__('Start Time')" />
+                            <x-text-input id="start_time" class="block mt-1 w-full" type="time" name="start_time" value="{{ old('start_time', $service->start_time) }}" required />
+                            @error('start_time')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="mb-4">
+                            <x-input-label for="end_time" :value="__('End Time')" />
+                            <x-text-input id="end_time" class="block mt-1 w-full" type="time" name="end_time" value="{{ old('end_time', $service->end_time) }}" required />
+                            @error('end_time')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                             @enderror
                         </div>

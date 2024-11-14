@@ -34,12 +34,30 @@
                     <p class="mt-2 text-gray-600">{{ $service->description }}</p>
                 </div>
 
+                <!-- Booking Form -->
+                <div class="mt-6">
+                    <form id="booking-form" method="POST" action="{{ route('client.bookings.store', $service) }}">
+                        @csrf
 
-                @foreach ($service->reviews as $review)
-                    <x-review-card :review="$review" />
-                @endforeach
+                        <!-- Booking Date -->
+                        <div class="mb-4">
+                            <label for="booking_date" class="block text-gray-700">{{ __('Booking Date') }}</label>
+                            <input type="date" id="booking_date" name="booking_date" class="block mt-1 w-full" required>
+                        </div>
 
-                @include('client.services.partial.review-submit')
+                        <!-- Available Slots -->
+                        <div class="mb-4">
+                            <label for="available_slots" class="block text-gray-700">{{ __('Available Slots') }}</label>
+                            <select id="available_slots" name="start_time" class="block mt-1 w-full" required>
+                                <option value="">{{ __('Select a time slot') }}</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            {{ __('Book Now') }}
+                        </button>
+                    </form>
+                </div>
 
                 <!-- Back Button -->
                 <div class="mt-6">
@@ -50,4 +68,25 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('booking_date').addEventListener('change', function() {
+            const date = this.value;
+            const serviceId = {{ $service->id }};
+
+            fetch(`/services/${serviceId}/available-slots?date=${date}`)
+                .then(response => response.json())
+                .then(slots => {
+                    const slotSelect = document.getElementById('available_slots');
+                    slotSelect.innerHTML = '<option value="">{{ __('Select a time slot') }}</option>';
+
+                    slots.forEach(slot => {
+                        const option = document.createElement('option');
+                        option.value = slot;
+                        option.textContent = slot;
+                        slotSelect.appendChild(option);
+                    });
+                });
+        });
+    </script>
 </x-client-layout>
