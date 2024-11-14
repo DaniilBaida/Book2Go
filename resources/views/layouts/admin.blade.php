@@ -7,7 +7,6 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
     
-    
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -27,15 +26,15 @@
 <div class="flex min-h-screen bg-gray-100 h-[100dvh] overflow-hidden">
 
     <!-- Sidebar -->
-    @include('layouts.navigation.sidebar.admin-sidebar')
+    @include('layouts.partials.sidebar.admin-sidebar')
 
     <!-- Page wrapper -->
     <div class="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden @if($attributes['background']){{ $attributes['background'] }}@endif" x-ref="contentarea">
         <!-- Header -->
-        @include('layouts.navigation.header.admin-header')
+        @include('layouts.partials.header.admin-header')
 
         <!-- Page Content -->
-        <main class="grow p-4 sm:px-20">
+        <main class="grow p-4">
             {{ $slot }}
         </main>
     </div>

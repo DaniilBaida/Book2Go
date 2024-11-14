@@ -38,7 +38,7 @@
 
             <!-- Create Service Button -->
             <a href="{{ route('business.services.create') }}">
-                <x-primary-button>{{ __('+ Add New') }}</x-primary-button>
+                <x-button>{{ __('+ Add New') }}</x-button>
             </a>
         </div>
 
