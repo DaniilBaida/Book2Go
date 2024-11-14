@@ -18,16 +18,14 @@
         <!-- Sidebar header -->
         <div class="flex justify-between mb-10 pr-3 sm:px-2">
             <!-- Close button -->
-            <button class="lg:hidden text-gray-500 hover:text-gray-400" @click.stop="sidebarOpen = !sidebarOpen">
+            <button class="lg:hidden text-gray-800 hover:text-gray-400" @click.stop="sidebarOpen = !sidebarOpen">
                 <span class="sr-only">Close sidebar</span>
-                <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
-                    <path d="M10.7 18.7l1.4-1.4L7.8 13H20v-2H7.8l4.3-4.3-1.4-1.4L4 12z" />
-                </svg>
+                <i class="fa-solid fa-arrow-left"></i>
             </button>
 
             <!-- Logo -->
             <a href="{{ $logoRoute }}" class="block">
-                <x-application-logo class="fill-zinc-500" width="45" height="45" loading="lazy" />
+                <x-application-logo/>
             </a>
         </div>
 
