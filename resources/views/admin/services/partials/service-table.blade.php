@@ -7,50 +7,33 @@
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                 </svg>
             </div>
-            <input type="text" id="table-search-users" class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search for users">
+            <input type="text" id="table-search-services" class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search for services">
         </div>
     </div>
 
     <table class="w-full text-sm text-left text-gray-500 mb-4">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
         <tr>
-            <th scope="col" class="px-6 py-3">Name</th>
-            <th scope="col" class="px-6 py-3">Phone Number</th>
-            <th scope="col" class="px-6 py-3">Email Verified</th>
-            <th scope="col" class="px-6 py-3">Online Status</th>
-            <th scope="col" class="px-6 py-3">Role</th>
+            <th scope="col" class="px-6 py-3">Service Name</th>
+            <th scope="col" class="px-6 py-3">Category</th>
+            <th scope="col" class="px-6 py-3">Price</th>
+            <th scope="col" class="px-6 py-3">Duration</th>
             <th scope="col" class="px-6 py-3">Action</th>
         </tr>
         </thead>
         <tbody>
-        @foreach ($users as $user)
+        @foreach ($services as $service)
             <tr class="bg-white border-b hover:bg-gray-50">
-                <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap w-[]">
-                    <img class="w-10 h-10 rounded-full" src="{{ asset($user->avatar_path) }}" alt="{{ $user->name }}">
-                    <div class="ps-3">
-                        <div class="text-base font-semibold">{{ $user->first_name.' '.$user->last_name  }}</div>
-                        <div class="font-normal text-gray-500">{{ $user->email }}</div>
-                    </div>
+                <th scope="row" class="px-6 py-4 text-gray-900 whitespace-nowrap">
+                    <div class="font-semibold">{{ $service->name }}</div>
+                    <div class="text-gray-500">{{ $service->description }}</div>
                 </th>
-
-
-                <td class="px-6 py-4">{{ $user->phone_number ? $user->phone_number : 'N/A'  }}</td>
-                <td class="px-6 py-4">
-                    <div class="flex items-center">
-                        <div class="h-2.5 w-2.5 rounded-full {{ $user->email_verified_at ? 'bg-green-500' : 'bg-red-500' }} me-2"></div>
-                        {{ $user->email_verified_at ? 'Yes' : 'No' }}
-                    </div>
-                </td>
-                <td class="px-6 py-4">
-                    <div class="flex items-center">
-                        <div class="h-2.5 w-2.5 rounded-full {{ $user->is_active ? 'bg-green-500' : 'bg-red-500' }} me-2"></div>
-                        {{ $user->is_active ? 'Yes' : 'No' }}
-                    </div>
-                </td>
-                <td class="px-6 py-4">{{ $user->role->name }}</td>
+                <td class="px-6 py-4">{{ $service->category->name }}</td>
+                <td class="px-6 py-4">€{{ number_format($service->price, 2) }}</td>
+                <td class="px-6 py-4">{{ $service->duration_minutes }} minutes</td>
                 <td class="px-6 py-4 items-center">
-                    <!-- Show Details Button -->
-                    <a href="{{ route('admin.users.show', $user->id) }}" class="font-medium text-blue-600 inline-block ajax-link">
+                    <!-- View Details Button -->
+                    <a href="{{ route('admin.services.show', $service->id) }}" class="font-medium text-blue-600 inline-block">
                         <div class="hover:bg-gray-200 rounded-md p-0.5 transition">
                             <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                 <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z"/>
@@ -59,17 +42,8 @@
                         </div>
                     </a>
 
-                    <!-- Edit Button -->
-                    <a href="{{ route('admin.users.edit', $user->id) }}" class="font-medium text-yellow-500 inline-block ajax-link">
-                        <div class="hover:bg-gray-200 rounded-md p-0.5 transition">
-                            <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                <path stroke="currentColor" stroke-linecap="square" stroke-linejoin="round" stroke-width="2" d="M7 19H5a1 1 0 0 1-1-1v-1a3 3 0 0 1 3-3h1m4-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm7.441 1.559a1.907 1.907 0 0 1 0 2.698l-6.069 6.069L10 19l.674-3.372 6.07-6.07a1.907 1.907 0 0 1 2.697 0Z"/>
-                            </svg>
-                        </div>
-                    </a>
-
                     <!-- Delete Button to Trigger Modal -->
-                    <button onclick="window.dispatchEvent(new CustomEvent('open-modal', { detail: 'delete-confirmation-{{ $user->id }}' }))"
+                    <button onclick="window.dispatchEvent(new CustomEvent('open-modal', { detail: 'delete-confirmation-{{ $service->id }}' }))"
                             class="font-medium text-red-600 inline-block">
                         <div class="hover:bg-gray-200 rounded-md p-0.5 transition">
                             <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -79,10 +53,10 @@
                     </button>
 
                     <!-- Delete Confirmation Modal -->
-                    <x-modal name="delete-confirmation-{{ $user->id }}" :show="false" maxWidth="md">
+                    <x-modal name="delete-confirmation-{{ $service->id }}" :show="false" maxWidth="md">
                         <div class="p-6">
                             <h2 class="text-lg font-medium text-gray-900">
-                                Are you sure you want to delete {{ $user->name }}?
+                                Are you sure you want to delete {{ $service->name }}?
                             </h2>
                             <p class="mt-2 text-sm text-gray-600">
                                 This action cannot be undone.
@@ -96,7 +70,7 @@
                                 </button>
 
                                 <!-- Confirm Deletion Form -->
-                                <form method="POST" action="{{ route('admin.users.destroy', $user->id) }}" class="ml-3">
+                                <form method="POST" action="{{ route('admin.services.destroy', $service->id) }}" class="ml-3">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
@@ -113,7 +87,5 @@
         </tbody>
     </table>
 
-    {{ $users->links('vendor.pagination.tailwind') }}
-
-    
+    {{ $services->links('vendor.pagination.tailwind') }}
 </div>
