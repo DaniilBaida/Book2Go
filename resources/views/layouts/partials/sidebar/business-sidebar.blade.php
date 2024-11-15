@@ -12,13 +12,13 @@
             'route' => route('business.services.index'), 
             'icon' => 'fas fa-briefcase', 
             'label' => 'Services', 
-            'isActive' => Request::is('business/services*')
+            'isActive' => Request::is('business/services')
         ],
         [
             'route' => route('business.details.index'), 
             'icon' => 'fas fa-info-circle', 
             'label' => 'Business Details', 
-            'isActive' => Request::is('business.details.index')
+            'isActive' => Request::is('business/details')
         ],
 
     ]"
