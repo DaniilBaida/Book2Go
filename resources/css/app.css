@@ -12,3 +12,8 @@
 .active a {
     color: #1e3a8a;
 }
+
+/* Prevents components from flashing when refreshing the page */
+[x-cloak] {
+    display: none !important;
+}

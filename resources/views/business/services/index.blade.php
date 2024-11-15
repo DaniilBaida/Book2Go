@@ -1,8 +1,8 @@
 <x-business-layout>
     <div class="flex flex-col gap-y-5">
         <!-- Service actions -->
-        <h1 class="text-3xl text-gray-800 font-bold mb-6">Your Services</h1>
-        <div class="md:flex justify-between items-center mb-6">
+        <h1 class="text-3xl text-gray-800 font-bold">Your Services</h1>
+        <div class="md:flex justify-between items-center">
             <!-- Search Bar -->
             <form method="GET" action="{{ route('business.services.index') }}" class="max-md:mb-6 flex max-md:flex-col md:items-center max-md:gap-y-2">
                 <div class="relative">
@@ -32,7 +32,7 @@
 
             <!-- Create Service Button -->
             <a href="{{ route('business.services.create') }}">
-                <x-button>{{ __('+ Add New') }}</x-button>
+                <x-button>{{ __('Add Service') }}</x-button>
             </a>
         </div>
 

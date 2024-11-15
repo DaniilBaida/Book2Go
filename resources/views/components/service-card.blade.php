@@ -60,7 +60,12 @@
                 <x-danger-button @click="open = true" class="flex-1 w-full justify-center">{{ __('Delete') }}</x-danger-button>
 
                 <!-- Confirmation Modal -->
-                <div x-show="open" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
+                <div 
+                    x-cloak 
+                    x-show="open" 
+                    x-transition 
+                    class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50"
+                >
                     <div class="bg-white p-6 rounded-lg shadow-lg">
                         <h2 class="text-lg font-medium text-gray-900">{{ __('Are you sure you want to delete this service?') }}</h2>
                         <p class="mt-2 text-sm text-gray-600">{{ __('This action cannot be undone.') }}</p>
@@ -77,6 +82,7 @@
                     </div>
                 </div>
             </div>
+
         @elseif ($role == \App\Models\User::ROLE_ADMIN)
             <p class="text-gray-500 text-sm">{{ __('Managed by Business') }}</p>
         @elseif ($role == \App\Models\User::ROLE_CLIENT)
