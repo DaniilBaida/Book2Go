@@ -9,7 +9,7 @@
         <div class="flex items-center justify-between h-16 lg:border-b border-gray-200">
 
             <!-- Header: Left side -->
-            <div class="flex items-center space-x-8">
+            <div class="flex items-center">
                 <!-- Hamburger button for mobile -->
                 <button
                     class="text-gray-500 hover:text-gray-600 lg:hidden"
@@ -20,6 +20,18 @@
                     <span class="sr-only">Open sidebar</span>
                     <i class="fas fa-bars w-6 h-6 fill-current"></i>
                 </button>
+
+                @if(Auth::user()->business && Auth::user()->business->setup_complete)
+                    <hr class="hidden sm:flex lg:hidden w-px h-6 bg-gray-200 border-none mx-5" />
+
+                    <!-- Display Business Name -->
+                    <div class="hidden sm:flex text-gray-500 font-medium text-sm gap-2 items-center">
+                        <i class="fa-solid fa-building"></i>
+                        <div>
+                            {{ Auth::user()->business->name }}
+                        </div>
+                    </div>
+                @endif
             </div>
 
             <!-- Header: Right side -->
