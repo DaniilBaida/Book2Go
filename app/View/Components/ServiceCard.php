@@ -9,18 +9,20 @@ use Illuminate\View\Component;
 class ServiceCard extends Component
 {
     /**
-     * Create a new component instance.
+     * Public properties to be passed into the component.
+     *
+     * @param object $service The service object containing service details.
+     * @param string $role The user's role (e.g., admin, client).
      */
     public function __construct(
         public object $service,
         public string $role,
-        public array $tags = [],
-        public array $add_ons = []
     ) {}
 
-
     /**
-     * Get the view / contents that represent the component.
+     * Get the view that represents the component.
+     *
+     * @return View The blade view for the service card component.
      */
     public function render(): View
     {
