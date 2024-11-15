@@ -22,7 +22,6 @@ return new class extends Migration
             $table->time('start_time');
             $table->time('end_time');
             $table->string('image_path')->nullable();
-            $table->jsonb('tags')->nullable();
             $table->unsignedBigInteger('bookings_count')->default(0);
             $table->enum('status', ['active', 'inactive', 'archived'])->default('active');
             $table->foreignIdFor(Business::class)->constrained()->onDelete('cascade');

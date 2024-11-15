@@ -119,18 +119,6 @@
                             @enderror
                         </div>
 
-                        <!-- Tags -->
-                        <div class="mb-4">
-                            <x-input-label for="tags" :value="__('Tags')"/>
-                            <x-text-input id="tags" class="block mt-1 w-full" type="text" name="tags"
-                                          value="{{ old('tags', implode(', ', $service->tags ?? [])) }}"
-                                          placeholder="e.g., haircut, grooming, spa"/>
-                            <small class="text-gray-500">{{ __('Comma-separated values') }}</small>
-                            @error('tags')
-                            <span class="text-red-500 text-sm">{{ $message }}</span>
-                            @enderror
-                        </div>
-
                         <!-- Submit Button -->
                         <div class="flex items-center justify-end mt-6">
                             <x-primary-button class="ml-4">

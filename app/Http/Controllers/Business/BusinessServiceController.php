@@ -29,10 +29,6 @@ class BusinessServiceController extends Controller
 
         $role = Auth::user()->role_id;
 
-        // Convert tags to array for each service
-        foreach ($services as $service) {
-            $service->tags = explode(',', $service->tags);
-        }
 
         return view('business.services.index', compact('services', 'role'));
     }
@@ -53,10 +49,6 @@ class BusinessServiceController extends Controller
         $data = $this->validateServiceData($request);
 
         $data['image_path'] = $this->handleImageUpload($request);
-
-        // Attach tags as JSON
-        $data['tags'] = !empty($data['tags']) ? json_encode(array_map('trim', explode(',', $data['tags']))) : json_encode([]);
-
         auth()->user()->business->services()->create($data);
 
         return redirect()->route('business.services.index')->with('success', 'Service created successfully.');
@@ -73,9 +65,6 @@ class BusinessServiceController extends Controller
         $data = $this->validateServiceData($request);
 
         $data['image_path'] = $this->handleImageUpload($request, $service);
-
-        // Update tags as JSON
-        $data['tags'] = !empty($data['tags']) ? json_encode(array_map('trim', explode(',', $data['tags']))) : json_encode([]);
 
         $service->update($data);
 
@@ -99,15 +88,13 @@ class BusinessServiceController extends Controller
             'name' => 'required|string|max:255',
             'service_category_id' => 'required|exists:service_categories,id',
             'price' => 'required|numeric|min:0',
-            'original_price' => 'nullable|numeric|min:0',
-            'discount_price' => 'nullable|numeric|min:0|lt:original_price',
-            'discount_start_date' => 'nullable|date|before:discount_end_date',
-            'discount_end_date' => 'nullable|date|after:discount_start_date',
             'duration_minutes' => 'required|integer|min:1',
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i',
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'required|in:active,inactive,archived',
-            'tags' => 'nullable|string',
+
         ]);
     }
 
