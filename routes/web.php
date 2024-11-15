@@ -76,7 +76,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('services/{service}/available-slots', [BookingController::class, 'availableSlots'])
             ->name('services.available-slots');
+
+        Route::post('services/{service}/bookings', [BookingController::class, 'store'])->name('bookings.store');
     });
+
 });
 
 require __DIR__ . '/auth.php';

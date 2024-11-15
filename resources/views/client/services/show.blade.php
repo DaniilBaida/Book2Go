@@ -41,16 +41,30 @@
 
                         <!-- Booking Date -->
                         <div class="mb-4">
-                            <label for="booking_date" class="block text-gray-700">{{ __('Booking Date') }}</label>
-                            <input type="date" id="booking_date" name="booking_date" class="block mt-1 w-full" required>
+                            <label for="date" class="block text-gray-700">{{ __('Booking Date') }}</label>
+                            <input
+                                type="date"
+                                id="date"
+                                name="date"
+                                class="block mt-1 w-full"
+                                min="{{ \Carbon\Carbon::now()->format('Y-m-d') }}"
+                                max="{{ \Carbon\Carbon::now()->addDays(60)->format('Y-m-d') }}"
+                                required>
+                            @error('date')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <!-- Available Slots -->
                         <div class="mb-4">
                             <label for="available_slots" class="block text-gray-700">{{ __('Available Slots') }}</label>
-                            <select id="available_slots" name="start_time" class="block mt-1 w-full" required>
-                                <option value="">{{ __('Select a time slot') }}</option>
-                            </select>
+                            <div id="available_slots" class="flex flex-wrap gap-2">
+                                <!-- Buttons for available slots will be injected here -->
+                            </div>
+                            <input type="hidden" id="selected_slot" name="start_time" required>
+                            @error('start_time')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
@@ -70,23 +84,67 @@
     </div>
 
     <script>
-        document.getElementById('booking_date').addEventListener('change', function() {
+        document.getElementById('date').addEventListener('change', function() {
             const date = this.value;
             const serviceId = {{ $service->id }};
+            const slotsContainer = document.getElementById('available_slots');
+            const selectedSlotInput = document.getElementById('selected_slot');
 
-            fetch(`/services/${serviceId}/available-slots?date=${date}`)
+            slotsContainer.innerHTML = ''; // Clear previous slots
+            selectedSlotInput.value = '';  // Reset hidden input
+
+            if (!date) {
+                // Show default message when no date is selected
+                const noDateMessage = document.createElement('p');
+                noDateMessage.textContent = 'Please select a date to view available slots.';
+                noDateMessage.className = 'text-gray-500 mt-2';
+                slotsContainer.appendChild(noDateMessage);
+                return;
+            }
+
+            fetch(`/client/services/${serviceId}/available-slots?date=${date}`)
                 .then(response => response.json())
                 .then(slots => {
-                    const slotSelect = document.getElementById('available_slots');
-                    slotSelect.innerHTML = '<option value="">{{ __('Select a time slot') }}</option>';
+                    if (slots.length === 0) {
+                        // Display message when no slots are available
+                        const noSlotsMessage = document.createElement('p');
+                        noSlotsMessage.textContent = 'No slots available for the selected date.';
+                        noSlotsMessage.className = 'text-gray-500 mt-2';
+                        slotsContainer.appendChild(noSlotsMessage);
+                    } else {
+                        slots.forEach(slot => {
+                            const button = document.createElement('button');
+                            button.type = 'button';
+                            button.textContent = slot;
+                            button.className = 'text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2';
 
-                    slots.forEach(slot => {
-                        const option = document.createElement('option');
-                        option.value = slot;
-                        option.textContent = slot;
-                        slotSelect.appendChild(option);
-                    });
+                            button.addEventListener('click', () => {
+                                // Unselect other buttons
+                                Array.from(slotsContainer.children).forEach(btn => {
+                                    if (btn.tagName === 'BUTTON') {
+                                        btn.className = 'text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2';
+                                    }
+                                });
+
+                                // Highlight selected button
+                                button.className = 'focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800';
+
+                                // Set hidden input value
+                                selectedSlotInput.value = slot;
+                            });
+
+                            slotsContainer.appendChild(button);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching available slots:', error);
                 });
         });
+
+        // Trigger initial empty state
+        document.getElementById('date').dispatchEvent(new Event('change'));
     </script>
+
+
 </x-client-layout>

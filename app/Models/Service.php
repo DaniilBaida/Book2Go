@@ -60,30 +60,30 @@ class Service extends Model
         $duration = $this->duration_minutes;
 
         $bookings = $this->bookings()
-            ->where('booking_date', $date)
+            ->where('date', $date)
             ->get(['start_time', 'end_time']);
 
         $availableSlots = [];
 
-        while ($startTime->addMinutes($duration)->lte($endTime)) {
+        while ($startTime->lt($endTime)) {
             $slotStart = $startTime->copy();
             $slotEnd = $slotStart->copy()->addMinutes($duration);
 
-            // Check if the slot overlaps with any existing bookings
             $isBooked = $bookings->contains(function ($booking) use ($slotStart, $slotEnd) {
                 $bookingStart = Carbon::parse($booking->start_time);
                 $bookingEnd = Carbon::parse($booking->end_time);
 
-                return $slotStart->between($bookingStart, $bookingEnd) ||
-                    $slotEnd->between($bookingStart, $bookingEnd) ||
-                    ($slotStart->lte($bookingStart) && $slotEnd->gte($bookingEnd));
+                return $slotStart->lt($bookingEnd) && $slotEnd->gt($bookingStart);
             });
 
             if (!$isBooked) {
                 $availableSlots[] = $slotStart->format('H:i');
             }
+
+            $startTime->addMinutes($duration);
         }
 
         return $availableSlots;
     }
+
 }
