@@ -28,19 +28,33 @@
                     <input type="text" id="address" name="address" value="{{ old('address', $business->address) }}" class="form-input" required>
                 </div>
 
+                <!-- Country Dropdown -->
                 <div class="form-group">
-                    <label for="city" class="block">City</label>
-                    <input type="text" id="city" name="city" value="{{ old('city', $business->city) }}" class="form-input" required>
+                    <x-input-label for="country">{{ __('Country') }}</x-input-label>
+                    <select id="country" name="country" class="form-input block w-full p-2.5 bg-gray-50 border text-gray-900 text-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm" required>
+                        <option value="" disabled>{{ __('Select Country') }}</option>
+                        @foreach(config('countries') as $country)
+                            <option value="{{ $country['code'] }}" {{ old('country', $business->country) == $country['code'] ? 'selected' : '' }}>{{ $country['name'] }}</option>
+                        @endforeach
+                    </select>
+                    <x-input-error :messages="$errors->get('country')" class="mt-2" />
+                </div>
+
+                <!-- City Dropdown -->
+                <div class="form-group">
+                    <x-input-label for="city">{{ __('City') }}</x-input-label>
+                    <select id="city" name="city" class="form-input block w-full p-2.5 bg-gray-50 border text-gray-900 text-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm" required>
+                        <option value="" disabled>{{ __('Select City') }}</option>
+                        @if(old('city', $business->city))
+                            <option value="{{ old('city', $business->city) }}" selected>{{ old('city', $business->city) }}</option>
+                        @endif
+                    </select>
+                    <x-input-error :messages="$errors->get('city')" class="mt-2" />
                 </div>
 
                 <div class="form-group">
                     <label for="postal_code" class="block">Postal Code</label>
                     <input type="text" id="postal_code" name="postal_code" value="{{ old('postal_code', $business->postal_code) }}" class="form-input" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="country" class="block">Country</label>
-                    <input type="text" id="country" name="country" value="{{ old('country', $business->country) }}" class="form-input" required>
                 </div>
 
                 <div class="form-group">
@@ -60,3 +74,28 @@
         </form>
     </div>
 </x-business-layout>
+
+<!-- JavaScript to Handle Country Selection and Load Cities -->
+<script>
+        document.getElementById('country').addEventListener('change', function() {
+            var countryCode = this.value;
+            var citySelect = document.getElementById('city');
+            
+            // Clear existing options
+            citySelect.innerHTML = '<option value="" disabled selected>{{ __("Select City") }}</option>';
+
+            if (countryCode) {
+                fetch(`/get-cities/${countryCode}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(city => {
+                            var option = document.createElement('option');
+                            option.value = city;
+                            option.textContent = city;
+                            citySelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching cities:', error));
+            }
+        });
+    </script>
