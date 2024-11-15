@@ -36,11 +36,15 @@
             </h3>
             <ul class="mt-3">
                 @foreach ($links as $link)
-                    <li class="pl-4 pr-3 py-2 rounded-lg mb-0.5 last:mb-0 bg-[linear-gradient(135deg,var(--tw-gradient-stops))] {{ $link['isActive'] ? 'from-blue-300/[0.12] to-blue-500/15' : '' }}">
-                        <a class="block text-gray-600 truncate transition {{ !$link['isActive'] ? 'hover:text-gray-900' : '' }}" href="{{ $link['route'] }}">
+                    <li class="pl-4 pr-3 py-2 rounded-lg mb-0.5 last:mb-0 bg-[linear-gradient(135deg,var(--tw-gradient-stops))]">
+                        <a class="ajax-link block text-gray-600 truncate transition" 
+                        href="{{ $link['route'] }}" 
+                        data-path="{{ parse_url($link['route'], PHP_URL_PATH) }}">
                             <div class="flex items-center">
-                                <i class="{{ $link['icon'] }} shrink-0 {{ $link['isActive'] ? 'text-blue-500/90' : '' }}"></i>
-                                <span class="text-sm font-medium ml-4 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">{{ $link['label'] }}</span>
+                                <i class="{{ $link['icon'] }} shrink-0"></i>
+                                <span class="text-sm font-medium ml-4 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                                    {{ $link['label'] }}
+                                </span>
                             </div>
                         </a>
                     </li>

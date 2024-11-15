@@ -1,5 +1,5 @@
 <x-business-layout>
-    <div class="p-4 gap-5 flex flex-col">
+    <div class="flex flex-col gap-y-5">
         <!-- Dashboard actions -->
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
             <h1 class="text-3xl text-gray-800 font-bold">Business Dashboard</h1>

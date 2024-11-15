@@ -1,11 +1,5 @@
 <x-business-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Service Management') }}
-        </h2>
-    </x-slot>
-
-    <div class="px-4 py-8 max-w-8xl mx-auto">
+    <div class="flex flex-col gap-y-5">
         <!-- Service actions -->
         <h1 class="text-3xl text-gray-800 font-bold mb-6">Your Services</h1>
         <div class="md:flex justify-between items-center mb-6">
