@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\Business\BusinessSetupController;
@@ -40,6 +41,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('profile/edit', [ProfileController::class, 'edit'])->name('profile.edit'); // Edit profile
         Route::patch('profile/update', [ProfileController::class, 'update'])->name('profile.update'); // Update profile
         Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy'); // Delete profile
+
+        Route::resource('services', ServiceController::class)->only(['index', 'show', 'destroy']); // Delete Service
 
         Route::resource('users', UserController::class); // User resource management
         Route::patch('users/{user}/update-password', [PasswordController::class, 'update'])
