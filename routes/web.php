@@ -14,6 +14,7 @@ use App\Http\Controllers\CityController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
+// Helper function to define routes based on user roles
 function roleBasedRoutes(string $prefix, int $roleId, string $namePrefix, callable $routes)
 {
     Route::middleware(["role:$roleId"])
@@ -22,68 +23,72 @@ function roleBasedRoutes(string $prefix, int $roleId, string $namePrefix, callab
         ->group($routes);
 }
 
+// Public route for the welcome page
 Route::get('/', function () {
     return view('welcome');
 });
 
+// Public route to fetch cities based on country code
 Route::get('/get-cities/{countryCode}', [CityController::class, 'getCities']);
 
-// Authenticated and Verified Routes
+// Authenticated and verified routes
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    // Define Role-Based Routes Using the Helper Function
-
+    // Admin-specific routes
     roleBasedRoutes('admin', User::ROLE_ADMIN, 'admin', function () {
-        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-        Route::get('profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-        Route::patch('profile/update', [ProfileController::class, 'update'])->name('profile.update');
-        Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard'); // Admin dashboard
+        Route::get('profile/edit', [ProfileController::class, 'edit'])->name('profile.edit'); // Edit profile
+        Route::patch('profile/update', [ProfileController::class, 'update'])->name('profile.update'); // Update profile
+        Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy'); // Delete profile
 
-        Route::resource('users', UserController::class);
+        Route::resource('users', UserController::class); // User resource management
         Route::patch('users/{user}/update-password', [PasswordController::class, 'update'])
-            ->name('users.update-password');
+            ->name('users.update-password'); // Update user password
         Route::patch('users/{user}/update-avatar', [UserController::class, 'updateUserAvatar'])
-            ->name('users.update-avatar');
+            ->name('users.update-avatar'); // Update user avatar
     });
 
+    // Business-specific routes
     roleBasedRoutes('business', User::ROLE_BUSINESS, 'business', function () {
-        // Routes accessible only after setup is complete
+        // Routes for businesses with complete setup
         Route::middleware('business.setup.complete')->group(function () {
-            Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-            Route::get('profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-            Route::patch('profile/update', [ProfileController::class, 'update'])->name('profile.update');
-            Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-            Route::get('details', [BusinessDetailsController::class, 'index'])->name('details.index');
-            Route::get('details/edit', [BusinessDetailsController::class, 'edit'])->name('details.edit');
-            Route::patch('details/update', [BusinessDetailsController::class, 'update'])->name('details.update');
-            Route::resource('services', BusinessServiceController::class);
+            Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard'); // Business dashboard
+            Route::get('profile/edit', [ProfileController::class, 'edit'])->name('profile.edit'); // Edit profile
+            Route::patch('profile/update', [ProfileController::class, 'update'])->name('profile.update'); // Update profile
+            Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy'); // Delete profile
+            Route::get('details', [BusinessDetailsController::class, 'index'])->name('details.index'); // View business details
+            Route::get('details/edit', [BusinessDetailsController::class, 'edit'])->name('details.edit'); // Edit business details
+            Route::patch('details/update', [BusinessDetailsController::class, 'update'])->name('details.update'); // Update business details
+            Route::resource('services', BusinessServiceController::class); // Manage business services
         });
 
-        // Routes accessible only if setup is not complete
+        // Routes for businesses with incomplete setup
         Route::middleware('business.setup.incomplete')->group(function () {
-            Route::get('setup/step-one', [BusinessSetupController::class, 'stepOne'])->name('setup.stepOne');
-            Route::post('setup/step-one', [BusinessSetupController::class, 'storeStepOne'])->name('setup.storeStepOne');
-            Route::get('setup/step-two', [BusinessSetupController::class, 'stepTwo'])->name('setup.stepTwo');
-            Route::post('setup/step-two', [BusinessSetupController::class, 'storeStepTwo'])->name('setup.storeStepTwo');
+            Route::get('setup/step-one', [BusinessSetupController::class, 'stepOne'])->name('setup.stepOne'); // Setup step 1
+            Route::post('setup/step-one', [BusinessSetupController::class, 'storeStepOne'])->name('setup.storeStepOne'); // Save setup step 1
+            Route::get('setup/step-two', [BusinessSetupController::class, 'stepTwo'])->name('setup.stepTwo'); // Setup step 2
+            Route::post('setup/step-two', [BusinessSetupController::class, 'storeStepTwo'])->name('setup.storeStepTwo'); // Save setup step 2
         });
     });
 
+    // Client-specific routes
     roleBasedRoutes('client', User::ROLE_CLIENT, 'client', function () {
-        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-        Route::get('profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-        Route::patch('profile/update', [ProfileController::class, 'update'])->name('profile.update');
-        Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard'); // Client dashboard
+        Route::get('profile/edit', [ProfileController::class, 'edit'])->name('profile.edit'); // Edit profile
+        Route::patch('profile/update', [ProfileController::class, 'update'])->name('profile.update'); // Update profile
+        Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy'); // Delete profile
 
-        Route::get('services', [ClientServiceController::class, 'index'])->name('services');
-        Route::get('services/{service}', [ClientServiceController::class, 'show'])->name('services.show');
-        Route::post('services/{service}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+        Route::get('services', [ClientServiceController::class, 'index'])->name('services'); // View services
+        Route::get('services/{service}', [ClientServiceController::class, 'show'])->name('services.show'); // View specific service
+        Route::post('services/{service}/reviews', [ReviewController::class, 'store'])->name('reviews.store'); // Submit a review
 
         Route::get('services/{service}/available-slots', [BookingController::class, 'availableSlots'])
-            ->name('services.available-slots');
+            ->name('services.available-slots'); // Check available slots for a service
 
-        Route::post('services/{service}/bookings', [BookingController::class, 'store'])->name('bookings.store');
+        Route::post('services/{service}/bookings', [BookingController::class, 'store'])->name('bookings.store'); // Book a service
     });
 
 });
 
+// Include authentication routes
 require __DIR__ . '/auth.php';

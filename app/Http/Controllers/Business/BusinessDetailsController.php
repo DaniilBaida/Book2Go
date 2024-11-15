@@ -9,7 +9,11 @@ use Illuminate\Support\Facades\Storage;
 
 class BusinessDetailsController extends Controller
 {
-    // Display business details
+    /**
+     * Display business details for the authenticated user.
+     *
+     * @return \Illuminate\View\View The view displaying the business details.
+     */
     public function index()
     {
         // Fetch the authenticated user's business details
@@ -19,7 +23,11 @@ class BusinessDetailsController extends Controller
         return view('business.details.index', compact('business'));
     }
 
-    // Show the form for editing business details
+    /**
+     * Show the form for editing business details.
+     *
+     * @return \Illuminate\View\View The view for editing business details.
+     */
     public function edit()
     {
         // Fetch the authenticated user's business details
@@ -29,7 +37,12 @@ class BusinessDetailsController extends Controller
         return view('business.details.edit', compact('business'));
     }
 
-    // Update business details
+    /**
+     * Update business details for the authenticated user.
+     *
+     * @param Request $request The incoming request with the business details.
+     * @return \Illuminate\Http\RedirectResponse Redirect back with a success message.
+     */
     public function update(Request $request)
     {
         // Fetch the authenticated user's business details

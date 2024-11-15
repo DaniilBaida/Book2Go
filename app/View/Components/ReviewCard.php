@@ -9,12 +9,16 @@ use Illuminate\View\Component;
 class ReviewCard extends Component
 {
     /**
-     * Create a new component instance.
+     * The review data passed to the component.
+     *
+     * @var mixed $review The review object or array containing review details.
      */
-    public function __construct(public $review){}
+    public function __construct(public $review) {}
 
     /**
-     * Get the view / contents that represent the component.
+     * Get the view that represents the component.
+     *
+     * @return View|Closure|string The blade view for the review card component.
      */
     public function render(): View|Closure|string
     {

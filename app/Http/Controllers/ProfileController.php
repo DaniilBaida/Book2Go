@@ -13,6 +13,9 @@ class ProfileController extends Controller
 {
     /**
      * Display the user's profile form.
+     *
+     * @param Request $request The incoming HTTP request.
+     * @return View The view for editing the user's profile.
      */
     public function edit(Request $request): View
     {
@@ -26,25 +29,34 @@ class ProfileController extends Controller
 
     /**
      * Update the user's profile information.
+     *
+     * @param ProfileUpdateRequest $request The validated request data.
+     * @return RedirectResponse The response after the update is successful.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
+        // Fill the user model with validated data
         $request->user()->fill($request->validated());
 
+        // If the email has changed, reset the email verification timestamp
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
         }
 
+        // Save the updated user information
         $request->user()->save();
 
-        // Dynamically determine redirect route
+        // Dynamically determine the redirect route
         $rolePrefix = $this->getRolePrefix();
 
+        // Redirect to the profile edit page with a success message
         return Redirect::route("$rolePrefix.profile.edit")->with('status', 'profile-updated');
     }
 
     /**
      * Get the role prefix for views and routes based on the user's role.
+     *
+     * @return string The role-based prefix for routes and views.
      */
     private function getRolePrefix(): string
     {
