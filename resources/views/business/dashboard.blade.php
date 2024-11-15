@@ -2,7 +2,7 @@
     <div class="p-4 gap-5 flex flex-col">
         <!-- Dashboard actions -->
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
-            <h1 class="text-3xl text-gray-800 font-bold">Dashboard</h1>
+            <h1 class="text-3xl text-gray-800 font-bold">Business Dashboard</h1>
             <div class="mt-4 sm:mt-0 grid grid-flow-col gap-2 justify-start sm:justify-end">
                 <x-button class="flex items-center space-x-2">
                     <span>+ Add View</span>

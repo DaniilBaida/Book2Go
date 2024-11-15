@@ -64,7 +64,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     roleBasedRoutes('client', User::ROLE_CLIENT, 'client', function () {
-        Route::get('dashboard', [DashboardController::class, 'clientDashboard'])->name('dashboard');
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('profile/update', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
