@@ -9,13 +9,27 @@
                 </x-button>
             </div>
         </div>
-        
+
         <!-- Dashboard cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-            <x-dashboard.dashboard-card title="Total Earnings" value="$98,457.20" percentage="3.47%" icon="users" :increase="true"/>
-            <x-dashboard.dashboard-card title="Customers" value="$2,982.54" percentage="9.69%" icon="users" :increase="true"/>
-            <x-dashboard.dashboard-card title="Orders" value="48,982.54" percentage="2.58%" icon="box" :increase="false"/>
-            <x-dashboard.dashboard-card title="Available Balance" value="$98,457.20" percentage="4.23%" icon="wallet" :increase="true"/>
+
+            <!-- Total Bookings Card -->
+            <x-dashboard.dashboard-card
+                title="Bookings This Month"
+                :value="$currentMonthBookings"
+                :percentage="$percentageChangeInBookings . '%'"
+                icon="users"
+                :increase="$percentageChangeInBookings > 0"
+            />
+            <!-- Total Services Card -->
+            <x-dashboard.dashboard-card
+                title="Services This Month"
+                :value="$totalServices"
+                :percentage="$percentageChangeInServices . '%'"
+                icon="box"
+                :increase="$percentageChangeInServices > 0"
+            />
+
         </div>
     </div>
 </x-business-layout>
