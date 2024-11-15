@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Service extends Model
 {
+    use HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -22,7 +23,6 @@ class Service extends Model
         'end_time',
         'duration_minutes',
         'image_path',
-        'tags',
         'bookings_count',
         'status',
         'business_id',
@@ -85,9 +85,17 @@ class Service extends Model
     protected $casts = [
         'discount_start_date' => 'datetime',
         'discount_end_date' => 'datetime',
-        'tags' => 'array',
-        'add_ons' => 'array',
     ];
+
+    /**
+     * Retrieve the allowed durations for service booking.
+     *
+     * @return array<int> Allowed durations in minutes.
+     */
+    public static function allowedDurations()
+    {
+        return [30, 60, 90];
+    }
 
     /**
      * Get the available time slots for a specific date.
@@ -97,40 +105,53 @@ class Service extends Model
      */
     public function getAvailableSlots($date)
     {
-        $startTime = Carbon::parse($this->start_time); // Start time for the service
-        $endTime = Carbon::parse($this->end_time);     // End time for the service
-        $duration = $this->duration_minutes;           // Duration of each slot
+        $start = Carbon::parse('08:00'); // Example start of working day
+        $end = Carbon::parse('17:00'); // Example end of working day
+        $duration = $this->duration_minutes;
 
-        // Fetch all bookings for the specified date
-        $bookings = $this->bookings()
+        $slots = [];
+        // Generate slots by adding duration incrementally within the working hours
+        while ($start->copy()->addMinutes($duration)->lte($end)) {
+            $slots[] = $start->format('H:i');
+            $start->addMinutes($duration);
+        }
+
+        // Filter out slots that overlap with existing bookings
+        return $this->filterBookedSlots($slots, $date);
+    }
+
+    /**
+     * Filter out slots that overlap with existing bookings.
+     *
+     * @param array<int, string> $slots Generated slots for the day.
+     * @param string $date The date to check against existing bookings.
+     * @return array<int, string> Filtered slots with no overlaps.
+     */
+    private function filterBookedSlots($slots, $date)
+    {
+        // Fetch existing bookings for the service on the given date
+        $bookings = Booking::where('service_id', $this->id)
             ->where('date', $date)
             ->get(['start_time', 'end_time']);
 
-        $availableSlots = [];
+        // Filter slots based on booking overlaps
+        return array_filter($slots, function ($slot) use ($bookings) {
+            $slotStart = Carbon::parse($slot);
+            $slotEnd = $slotStart->copy()->addMinutes($this->duration_minutes);
 
-        // Iterate through the time range to find available slots
-        while ($startTime->lt($endTime)) {
-            $slotStart = $startTime->copy();
-            $slotEnd = $slotStart->copy()->addMinutes($duration);
-
-            // Check if the slot overlaps with any existing booking
-            $isBooked = $bookings->contains(function ($booking) use ($slotStart, $slotEnd) {
+            foreach ($bookings as $booking) {
                 $bookingStart = Carbon::parse($booking->start_time);
                 $bookingEnd = Carbon::parse($booking->end_time);
 
-                // Overlap check
-                return $slotStart->lt($bookingEnd) && $slotEnd->gt($bookingStart);
-            });
-
-            // If the slot is not booked, add it to the available slots
-            if (!$isBooked) {
-                $availableSlots[] = $slotStart->format('H:i');
+                // Check if slot overlaps with any existing booking
+                if (
+                    $slotStart->between($bookingStart, $bookingEnd, false) ||
+                    $slotEnd->between($bookingStart, $bookingEnd, false)
+                ) {
+                    return false;
+                }
             }
-
-            // Move to the next potential slot
-            $startTime->addMinutes($duration);
-        }
-
-        return $availableSlots;
+            return true;
+        });
     }
 }
