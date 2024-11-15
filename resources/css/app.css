@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Active link styles */
+.active {
+    background-color: #e0f2ff;
+    border-radius: 0.5rem;
+    display: block;
+}
+
+.active a {
+    color: #1e3a8a;
+}
