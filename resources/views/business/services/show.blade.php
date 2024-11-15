@@ -94,17 +94,6 @@
                             </div>
                         @endif
 
-                        @if($service->tags && count($service->tags) > 0)
-                            <div class="mt-2 flex flex-wrap gap-2">
-                                <strong class="text-gray-700">{{ __('Tags') }}:</strong>
-                                @foreach($service->tags as $tag)
-                                    <span class="px-3 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
-                                        {{ $tag }}
-                                    </span>
-                                @endforeach
-                            </div>
-                        @endif
-
                         <div>
                             <strong class="text-gray-700">{{ __('Bookings Count') }}:</strong>
                             <span>{{ $service->bookings_count }}</span>

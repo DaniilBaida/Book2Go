@@ -45,7 +45,7 @@
         <!-- Service Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse ($services as $service)
-                <x-service-card :service="$service" :role="$role" :tags="$service->tags ?? []" />
+                <x-service-card :service="$service" :role="$role" />
 
             @empty
                 <p>{{ __('No services found.') }}</p>

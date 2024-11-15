@@ -14,17 +14,7 @@
         @if($service->description)
             <p class="text-gray-700 mt-2">{{ $service->description }}</p>
         @endif
-
-        <!-- Tags Section -->
-        @if($service->tags && count($service->tags) > 0)
-            <div class="mt-2 flex flex-wrap gap-2">
-                @foreach($service->tags as $tag)
-                    <span class="px-3 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
-                        {{ $tag }}
-                    </span>
-                @endforeach
-            </div>
-        @endif
+        
 
         <!-- Reviews and Bookings -->
         <div class="mt-4 flex items-center space-x-4 align-middle">
@@ -74,10 +64,10 @@
                     <div class="bg-white p-6 rounded-lg shadow-lg">
                         <h2 class="text-lg font-medium text-gray-900">{{ __('Are you sure you want to delete this service?') }}</h2>
                         <p class="mt-2 text-sm text-gray-600">{{ __('This action cannot be undone.') }}</p>
-                        
+
                         <div class="mt-4 flex justify-end space-x-3">
                             <x-secondary-button @click="open = false">{{ __('Cancel') }}</x-secondary-button>
-                            
+
                             <form method="POST" action="{{ route('business.services.destroy', $service->id) }}" class="inline">
                                 @csrf
                                 @method('DELETE')
