@@ -4,11 +4,11 @@
 
 /* Active link styles */
 .active {
-    background-color: #e0f2ff; /* Light blue background */
-    border-radius: 0.5rem; /* Optional: add rounded corners */
-    display: block; /* Ensures the style is applied to the whole link */
+    background-color: #e0f2ff;
+    border-radius: 0.5rem;
+    display: block;
 }
 
 .active a {
-    color: #1e3a8a; /* Dark blue text color */
+    color: #1e3a8a;
 }
