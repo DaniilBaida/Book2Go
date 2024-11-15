@@ -48,10 +48,10 @@
     <!-- View/Edit/Delete Buttons -->
     <div class="p-4 border-t border-gray-200/80 flex justify-between items-center gap-3">
         @if ($role == \App\Models\User::ROLE_BUSINESS)
-            <a href="{{ route('business.services.show', $service->id) }}" class="w-1/3">
+            <a href="{{ route('business.services.show', $service->id) }}" class="w-1/3 ajax-link">
                 <x-primary-button class="flex-1 w-full justify-center">{{ __('View') }}</x-primary-button>
             </a>
-            <a href="{{ route('business.services.edit', $service->id) }}" class="w-1/3">
+            <a href="{{ route('business.services.edit', $service->id) }}" class="w-1/3 ajax-link">
                 <x-secondary-button class="flex-1 w-full justify-center">{{ __('Edit') }}</x-secondary-button>
             </a>
 
@@ -86,7 +86,7 @@
         @elseif ($role == \App\Models\User::ROLE_ADMIN)
             <p class="text-gray-500 text-sm">{{ __('Managed by Business') }}</p>
         @elseif ($role == \App\Models\User::ROLE_CLIENT)
-            <a type="button" href="{{ route('client.services.show', $service) }}" class="cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">{{ __('View') }}</a>
+            <a type="button" href="{{ route('client.services.show', $service) }}" class="cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 ajax-link">{{ __('View') }}</a>
         @endif
     </div>
 </div>

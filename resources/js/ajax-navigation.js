@@ -1,35 +1,5 @@
 $(document).ready(function () {
-    // Function to set the active class on both sidebar and header links
-    function setActiveLink() {
-        let currentPath = window.location.pathname;
-
-        // Sidebar links
-        $(".ajax-link").each(function () {
-            let linkPath = $(this).data("path");
-            if (linkPath === currentPath) {
-                $(this).closest("li").addClass("active");
-            } else {
-                $(this).closest("li").removeClass("active");
-            }
-        });
-
-        // Header links
-        $(".header-link").each(function () {
-            let linkPath = $(this).data("path");
-            if (linkPath === currentPath) {
-                $(this).addClass("active");
-            } else {
-                $(this).removeClass("active");
-            }
-        });
-    }
-
-    // Listen for clicks on sidebar and header links
-    $(".ajax-link, .header-link").click(function (e) {
-        e.preventDefault();
-
-        let url = $(this).attr("href");
-
+    function loadContent(url) {
         $.ajax({
             url: url,
             method: "GET",
@@ -38,22 +8,23 @@ $(document).ready(function () {
                     $(response).find("#main-content").html()
                 );
                 window.history.pushState(null, "", url);
-                setActiveLink(); // Update active link for both sidebar and header
+                $(document).trigger("content:loaded"); // Trigger custom event for other scripts
             },
             error: function () {
                 console.error("Failed to load content.");
             },
         });
+    }
+
+    // Listen for clicks on AJAX links
+    $(document).on("click", ".ajax-link", function (e) {
+        e.preventDefault();
+        let url = $(this).attr("href");
+        loadContent(url);
     });
 
     // Handle browser back/forward navigation
     window.onpopstate = function () {
-        $.get(location.href, function (response) {
-            $("#main-content").html($(response).find("#main-content").html());
-            setActiveLink(); // Update active link for both sidebar and header
-        });
+        loadContent(location.href);
     };
-
-    // Initial call to set the active link on page load
-    setActiveLink();
 });

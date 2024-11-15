@@ -67,7 +67,7 @@
 
         <!-- Back Button -->
         <div class="mt-6">
-            <a href="{{ route('client.services') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+            <a href="{{ route('client.services') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded ajax-link">
                 {{ __('Back to Services') }}
             </a>
         </div>
@@ -140,7 +140,4 @@
         // Trigger initial empty state to show default message if no date is selected
         document.getElementById('date').dispatchEvent(new Event('change'));
     </script>
-
-
-
 </x-client-layout>

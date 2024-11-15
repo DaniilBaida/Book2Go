@@ -1,5 +1,6 @@
 <x-business-layout>
     <div class="flex flex-col gap-y-5">
+        <h1 class="text-3xl text-gray-800 font-bold">Your Service</h1>
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6 text-gray-900">
                 <div class="flex items-center justify-between">

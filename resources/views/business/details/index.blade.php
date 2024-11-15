@@ -17,7 +17,7 @@
             </ul>
 
             <div class="mt-6">
-                <a href="{{ route('business.details.edit') }}" class="px-4 py-2 bg-blue-500 text-white rounded-md">
+                <a href="{{ route('business.details.edit') }}" class="ajax-link px-4 py-2 bg-blue-500 text-white rounded-md">
                     Edit Details
                 </a>
             </div>

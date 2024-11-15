@@ -58,7 +58,7 @@
                         </div>
                         
                         <!-- Profile Button -->
-                        <x-dropdown-link :href="$profileRoute" class="header-link" data-path="{{ parse_url($profileRoute, PHP_URL_PATH) }}">
+                        <x-dropdown-link :href="$profileRoute" class="ajax-link" data-path="{{ parse_url($profileRoute, PHP_URL_PATH) }}">
                             {{ __('Profile') }}
                         </x-dropdown-link>
 

@@ -1,5 +1,8 @@
 <x-business-layout>
     <div class="flex flex-col gap-y-5">
+        <!-- Title -->
+        <h1 class="text-3xl text-gray-800 font-bold">Edit Service</h1>
+        <!-- Service Content -->
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6 text-gray-900">
                 <form method="POST" action="{{ route('business.services.update', $service) }}"
