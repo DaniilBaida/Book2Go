@@ -85,7 +85,6 @@ class BusinessSetupController extends Controller
         $request->session()->forget('business_step_one');
 
         return redirect()->route('business.dashboard')->with('success', 'Business setup completed successfully.');
-    }
-
-
+    }   
+    
 }
