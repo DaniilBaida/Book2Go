@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\Business\BusinessSetupController;
 use App\Http\Controllers\Business\BusinessServiceController;
+use App\Http\Controllers\Business\BusinessDetailsController;
 use App\Http\Controllers\Client\ClientServiceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
@@ -52,6 +53,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
             Route::patch('profile/update', [ProfileController::class, 'update'])->name('profile.update');
             Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+            Route::get('details', [BusinessDetailsController::class, 'index'])->name('details.index');
+            Route::get('details/edit', [BusinessDetailsController::class, 'edit'])->name('details.edit');
+            Route::patch('details/update', [BusinessDetailsController::class, 'update'])->name('details.update');
             Route::resource('services', BusinessServiceController::class);
         });
 
