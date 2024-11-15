@@ -16,8 +16,8 @@ class BookingController extends Controller
             'date' => [
                 'required',
                 'date',
-                'after:yesterday',       // Ensure the booking date is after today
-                'before_or_equal:' . now()->addDays(60)->format('Y-m-d'), // Limit to max 30 days from today
+                'after:yesterday', // Ensure the booking date is today or in the future
+                'before_or_equal:' . now()->addDays(60)->format('Y-m-d'), // Limit to max 60 days from today
             ],
             'start_time' => 'required|date_format:H:i',
         ]);
@@ -29,15 +29,17 @@ class BookingController extends Controller
         $exists = Booking::where('service_id', $service->id)
             ->where('date', $validated['date'])
             ->where(function ($query) use ($startTime, $endTime) {
-                $query->whereBetween('start_time', [$startTime, $endTime])
-                    ->orWhereBetween('end_time', [$startTime, $endTime]);
-            })->exists();
+                $query->whereBetween('start_time', [$startTime, $endTime->subMinute()]) // Ensure start time doesn't fall within any booking
+                ->orWhereBetween('end_time', [$startTime->addMinute(), $endTime]); // Ensure end time doesn't fall within any booking
+            })
+            ->exists();
 
         if ($exists) {
-            return redirect()->back()->withErrors(['start_time' => 'Selected time slot is not available.']);
+            return redirect()->back()->withErrors(['start_time' => 'The selected time slot is not available.']);
         }
 
-        $booking = Booking::create([
+        // Create the booking
+        Booking::create([
             'service_id' => $service->id,
             'user_id' => auth()->id(),
             'date' => $validated['date'],
@@ -47,6 +49,7 @@ class BookingController extends Controller
 
         return redirect()->route('client.services.index')->with('success', 'Booking confirmed!');
     }
+
 
     public function availableSlots(Request $request, Service $service)
     {

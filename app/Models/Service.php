@@ -59,6 +59,7 @@ class Service extends Model
         $endTime = Carbon::parse($this->end_time);
         $duration = $this->duration_minutes;
 
+        // Fetch all bookings for the given date
         $bookings = $this->bookings()
             ->where('date', $date)
             ->get(['start_time', 'end_time']);
@@ -69,10 +70,12 @@ class Service extends Model
             $slotStart = $startTime->copy();
             $slotEnd = $slotStart->copy()->addMinutes($duration);
 
+            // Check if the slot overlaps with any booking
             $isBooked = $bookings->contains(function ($booking) use ($slotStart, $slotEnd) {
                 $bookingStart = Carbon::parse($booking->start_time);
                 $bookingEnd = Carbon::parse($booking->end_time);
 
+                // Overlap check
                 return $slotStart->lt($bookingEnd) && $slotEnd->gt($bookingStart);
             });
 
