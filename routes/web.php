@@ -70,7 +70,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::patch('profile/update', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-        Route::get('services', [ClientServiceController::class, 'index'])->name('services.index');
+        Route::get('services', [ClientServiceController::class, 'index'])->name('services');
         Route::get('services/{service}', [ClientServiceController::class, 'show'])->name('services.show');
         Route::post('services/{service}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
 

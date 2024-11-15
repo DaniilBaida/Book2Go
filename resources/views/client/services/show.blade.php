@@ -75,7 +75,7 @@
 
                 <!-- Back Button -->
                 <div class="mt-6">
-                    <a href="{{ route('client.services.index') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                    <a href="{{ route('client.services') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
                         {{ __('Back to Services') }}
                     </a>
                 </div>

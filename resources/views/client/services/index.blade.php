@@ -10,7 +10,7 @@
             <!-- Search Bar -->
             <div class="flex justify-between items-center mb-6">
                 <!-- Search Bar -->
-                <form method="GET" action="{{ route('client.services.index') }}" class="mb-6 flex items-center">
+                <form method="GET" action="{{ route('client.services') }}" class="mb-6 flex items-center">
                     <div class="relative">
                         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                             <svg class="w-4 h-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
@@ -28,7 +28,7 @@
                     </div>
                     <button type="submit" class="ml-2 text-blue-600 hover:text-blue-800">Search</button>
                     @if(request('search'))
-                        <a href="{{ route('client.services.index') }}" class="ml-2 text-red-600 hover:text-red-800">Clear</a>
+                        <a href="{{ route('client.services') }}" class="ml-2 text-red-600 hover:text-red-800">Clear</a>
                     @endif
                 </form>
             </div>

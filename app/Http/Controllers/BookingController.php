@@ -47,7 +47,7 @@ class BookingController extends Controller
             'end_time' => $endTime,
         ]);
 
-        return redirect()->route('client.services.index')->with('success', 'Booking confirmed!');
+        return redirect()->route('client.services')->with('success', 'Booking confirmed!');
     }
 
 
