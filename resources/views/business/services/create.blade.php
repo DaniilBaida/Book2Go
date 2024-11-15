@@ -38,10 +38,16 @@
                         @enderror
                     </div>
 
-                    <!-- Duration -->
+                    <!-- Replace the input with a dropdown for predefined durations -->
                     <div class="mb-4">
                         <x-input-label for="duration_minutes" :value="__('Duration (minutes)')" />
-                        <x-text-input id="duration_minutes" class="block mt-1 w-full" type="number" name="duration_minutes" value="{{ old('duration_minutes') }}" required />
+                        <select id="duration_minutes" name="duration_minutes" class="block mt-1 w-full" required>
+                            @foreach(\App\Models\Service::allowedDurations() as $duration)
+                                <option value="{{ $duration }}" {{ old('duration_minutes') == $duration ? 'selected' : '' }}>
+                                    {{ $duration }} minutes
+                                </option>
+                            @endforeach
+                        </select>
                         @error('duration_minutes')
                         <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror

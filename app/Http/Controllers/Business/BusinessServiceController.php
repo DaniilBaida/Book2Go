@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class BusinessServiceController extends Controller
@@ -147,7 +148,7 @@ class BusinessServiceController extends Controller
             'name' => 'required|string|max:255',
             'service_category_id' => 'required|exists:service_categories,id',
             'price' => 'required|numeric|min:0',
-            'duration_minutes' => 'required|integer|min:1',
+            'duration_minutes' => ['required', 'integer', Rule::in(Service::allowedDurations())],
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i',
             'description' => 'nullable|string',
