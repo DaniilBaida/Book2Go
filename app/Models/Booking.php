@@ -18,6 +18,11 @@ class Booking extends Model
         'start_time',
         'end_time',
     ];
+    protected $casts = [
+        'date' => 'date:Y-m-d',
+        'start_time' => 'datetime:H:i',
+        'end_time' => 'datetime:H:i',
+    ];
 
     /**
      * Define the relationship with the Service model.

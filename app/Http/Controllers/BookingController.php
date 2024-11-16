@@ -22,36 +22,45 @@ class BookingController extends Controller
      */
     public function store(Request $request, Service $service)
     {
-        // Validate the incoming request for date and time
         $validated = $request->validate([
             'date' => [
                 'required',
                 'date',
-                'after:yesterday', // Ensure the booking date is today or in the future
-                'before_or_equal:' . now()->addDays(60)->format('Y-m-d'), // Limit to max 60 days from today
+                'after:yesterday',
+                function ($attribute, $value, $fail) use ($service) {
+                    $dayName = Carbon::parse($value)->format('l');
+                    if (!in_array($dayName, $service->available_days)) {
+                        $fail('The selected date is not available for this service.');
+                    }
+                },
             ],
-            'start_time' => 'required|date_format:H:i', // Ensure start time is in correct format
+            'start_time' => 'required|date_format:H:i',
         ]);
 
-        // Parse start time and calculate end time based on service duration
+        // Ensure client has not already booked this service
+        $existingUserBooking = Booking::where('service_id', $service->id)
+            ->where('user_id', auth()->id())
+            ->exists();
+
+        if ($existingUserBooking) {
+            return redirect()->back()->withErrors(['error' => 'You have already booked this service.']);
+        }
+
         $startTime = Carbon::parse($validated['start_time']);
         $endTime = $startTime->copy()->addMinutes($service->duration_minutes);
 
-        // Check if the selected time slot overlaps with an existing booking
         $exists = Booking::where('service_id', $service->id)
             ->where('date', $validated['date'])
             ->where(function ($query) use ($startTime, $endTime) {
-                $query->whereBetween('start_time', [$startTime, $endTime->subMinute()]) // Ensure start time doesn't fall within any booking
-                ->orWhereBetween('end_time', [$startTime->addMinute(), $endTime]); // Ensure end time doesn't fall within any booking
+                $query->where('start_time', '<', $endTime)
+                    ->where('end_time', '>', $startTime);
             })
             ->exists();
 
-        // If the time slot is not available, return an error
         if ($exists) {
             return redirect()->back()->withErrors(['start_time' => 'The selected time slot is not available.']);
         }
 
-        // Create the new booking if time slot is available
         Booking::create([
             'service_id' => $service->id,
             'user_id' => auth()->id(),
@@ -60,7 +69,6 @@ class BookingController extends Controller
             'end_time' => $endTime,
         ]);
 
-        // Redirect to the services page with a success message
         return redirect()->route('client.services')->with('success', 'Booking confirmed!');
     }
 
@@ -77,10 +85,19 @@ class BookingController extends Controller
         // Validate the date parameter
         $request->validate(['date' => 'required|date']);
 
-        // Get available time slots for the given date
-        $slots = $service->getAvailableSlots($request->input('date'));
+        // Parse the date and get the day name
+        $date = Carbon::parse($request->input('date'));
+        $dayName = $date->format('l'); // E.g., 'Monday'
 
-        // Return available slots as a JSON response
+        // Check if the selected day is in the service's available days
+        if (!in_array($dayName, $service->available_days)) {
+            return response()->json([]); // Return an empty array for unavailable days
+        }
+
+        // Get available slots
+        $slots = $service->getAvailableSlots($date->format('Y-m-d'));
+
+        // Always return a JSON array
         return response()->json($slots);
     }
 }

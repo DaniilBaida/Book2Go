@@ -7,6 +7,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\Business\BusinessSetupController;
 use App\Http\Controllers\Business\BusinessServiceController;
 use App\Http\Controllers\Business\BusinessDetailsController;
+use App\Http\Controllers\Client\ClientBookingController;
 use App\Http\Controllers\Client\ClientServiceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
@@ -89,6 +90,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('services.available-slots'); // Check available slots for a service
 
         Route::post('services/{service}/bookings', [BookingController::class, 'store'])->name('bookings.store'); // Book a service
+
+        Route::get('/client/bookings', [ClientBookingController::class, 'index'])->name('bookings'); // View bookings
+        Route::get('/client/bookings/{booking}', [ClientBookingController::class, 'show'])->name('bookings.show');  // View specific booking
     });
 
 });

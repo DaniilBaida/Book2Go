@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Models\Booking;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -38,7 +39,11 @@ class ClientServiceController extends Controller
      */
     public function show(Service $service)
     {
+        // Check if the authenticated user has an existing booking for this service
+        $existingBooking = Booking::where('service_id', $service->id)
+            ->where('user_id', auth()->id())
+            ->first();
         // Return the view for showing a specific service
-        return view('client.services.show', compact('service'));
+        return view('client.services.show', compact('service', 'existingBooking'));
     }
 }

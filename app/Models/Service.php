@@ -19,12 +19,12 @@ class Service extends Model
         'name',
         'price',
         'description',
+        'duration_minutes',
         'start_time',
         'end_time',
-        'duration_minutes',
-        'image_path',
-        'bookings_count',
+        'available_days',
         'status',
+        'image_path',
         'business_id',
         'service_category_id',
     ];
@@ -85,6 +85,7 @@ class Service extends Model
     protected $casts = [
         'discount_start_date' => 'datetime',
         'discount_end_date' => 'datetime',
+        'available_days' => 'array',
     ];
 
     /**
@@ -105,19 +106,18 @@ class Service extends Model
      */
     public function getAvailableSlots($date)
     {
-        $start = Carbon::parse('08:00'); // Example start of working day
-        $end = Carbon::parse('17:00'); // Example end of working day
+        $start = Carbon::parse($this->start_time);
+        $end = Carbon::parse($this->end_time);
         $duration = $this->duration_minutes;
 
         $slots = [];
-        // Generate slots by adding duration incrementally within the working hours
         while ($start->copy()->addMinutes($duration)->lte($end)) {
-            $slots[] = $start->format('H:i');
+            $slots[] = $start->format('H:i'); // Collect slots as an array
             $start->addMinutes($duration);
         }
 
-        // Filter out slots that overlap with existing bookings
-        return $this->filterBookedSlots($slots, $date);
+        // Return a zero-indexed array (simple array)
+        return array_values($this->filterBookedSlots($slots, $date));
     }
 
     /**
@@ -129,12 +129,10 @@ class Service extends Model
      */
     private function filterBookedSlots($slots, $date)
     {
-        // Fetch existing bookings for the service on the given date
         $bookings = Booking::where('service_id', $this->id)
             ->where('date', $date)
             ->get(['start_time', 'end_time']);
 
-        // Filter slots based on booking overlaps
         return array_filter($slots, function ($slot) use ($bookings) {
             $slotStart = Carbon::parse($slot);
             $slotEnd = $slotStart->copy()->addMinutes($this->duration_minutes);
@@ -143,10 +141,10 @@ class Service extends Model
                 $bookingStart = Carbon::parse($booking->start_time);
                 $bookingEnd = Carbon::parse($booking->end_time);
 
-                // Check if slot overlaps with any existing booking
                 if (
                     $slotStart->between($bookingStart, $bookingEnd, false) ||
-                    $slotEnd->between($bookingStart, $bookingEnd, false)
+                    $slotEnd->between($bookingStart, $bookingEnd, false) ||
+                    ($slotStart->lte($bookingStart) && $slotEnd->gte($bookingEnd))
                 ) {
                     return false;
                 }
