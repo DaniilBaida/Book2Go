@@ -8,6 +8,7 @@ use App\Models\ServiceCategory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
@@ -78,6 +79,10 @@ class BusinessServiceController extends Controller
         // Handle image upload and assign path
         $data['image_path'] = $this->handleImageUpload($request);
 
+        // Ensure available_days is set as an empty array if no days are selected
+        $data['available_days'] = $request->input('available_days', []);
+
+
         // Create the new service for the authenticated business
         auth()->user()->business->services()->create($data);
 
@@ -110,6 +115,10 @@ class BusinessServiceController extends Controller
 
         // Handle image upload if there's a new one
         $data['image_path'] = $this->handleImageUpload($request, $service);
+
+        // Ensure available_days is set as an empty array if no days are selected
+        $data['available_days'] = $request->input('available_days', []);
+
 
         // Update the service with the new data
         $service->update($data);
@@ -148,9 +157,11 @@ class BusinessServiceController extends Controller
             'name' => 'required|string|max:255',
             'service_category_id' => 'required|exists:service_categories,id',
             'price' => 'required|numeric|min:0',
-            'duration_minutes' => ['required', 'integer', Rule::in(Service::allowedDurations())],
+            'duration_minutes' => 'required|integer',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i',
+            'available_days' => 'nullable|array',
+            'available_days.*' => 'in:Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday',
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'required|in:active,inactive,archived',

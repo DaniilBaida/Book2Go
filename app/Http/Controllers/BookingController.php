@@ -22,15 +22,19 @@ class BookingController extends Controller
      */
     public function store(Request $request, Service $service)
     {
-        // Validate the incoming request for date and time
         $validated = $request->validate([
             'date' => [
                 'required',
                 'date',
-                'after:yesterday', // Ensure the booking date is today or in the future
-                'before_or_equal:' . now()->addDays(60)->format('Y-m-d'), // Limit to max 60 days from today
+                'after:yesterday',
+                function ($attribute, $value, $fail) use ($service) {
+                    $dayName = Carbon::parse($value)->format('l');
+                    if (!in_array($dayName, $service->available_days)) {
+                        $fail('The selected date is not available for this service.');
+                    }
+                },
             ],
-            'start_time' => 'required|date_format:H:i', // Ensure start time is in correct format
+            'start_time' => 'required|date_format:H:i',
         ]);
 
         // Parse start time and calculate end time based on service duration
@@ -77,10 +81,19 @@ class BookingController extends Controller
         // Validate the date parameter
         $request->validate(['date' => 'required|date']);
 
-        // Get available time slots for the given date
-        $slots = $service->getAvailableSlots($request->input('date'));
+        // Parse the date and get the day name
+        $date = Carbon::parse($request->input('date'));
+        $dayName = $date->format('l'); // E.g., 'Monday'
 
-        // Return available slots as a JSON response
+        // Check if the selected day is in the service's available days
+        if (!in_array($dayName, $service->available_days)) {
+            return response()->json([]); // Return an empty array for unavailable days
+        }
+
+        // Get available slots
+        $slots = $service->getAvailableSlots($date->format('Y-m-d'));
+
+        // Always return a JSON array
         return response()->json($slots);
     }
 }

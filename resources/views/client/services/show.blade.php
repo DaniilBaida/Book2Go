@@ -80,51 +80,39 @@
             const slotsContainer = document.getElementById('available_slots');
             const selectedSlotInput = document.getElementById('selected_slot');
 
-            // Clear previous slots and reset hidden input
             slotsContainer.innerHTML = '';
             selectedSlotInput.value = '';
 
             if (!date) {
-                // Show default message when no date is selected
-                const noDateMessage = document.createElement('p');
-                noDateMessage.textContent = 'Please select a date to view available slots.';
-                noDateMessage.className = 'text-gray-500 mt-2';
-                slotsContainer.appendChild(noDateMessage);
+                slotsContainer.innerHTML = '<p class="text-gray-500 mt-2">Please select a date to view available slots.</p>';
                 return;
             }
 
-            // Fetch available slots for the selected date
             fetch(`/client/services/${serviceId}/available-slots?date=${date}`)
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Invalid date for booking or server error.');
+                    }
+                    return response.json();
+                })
                 .then(slots => {
-                    if (slots.length === 0) {
-                        const noSlotsMessage = document.createElement('p');
-                        noSlotsMessage.textContent = 'No slots available for the selected date.';
-                        noSlotsMessage.className = 'text-gray-500 mt-2';
-                        slotsContainer.appendChild(noSlotsMessage);
-                    } else {
-                        slots.forEach((slot, index) => {
-                            console.log(`Creating button for slot: ${slot}`); // Debugging line
+                    console.log('Slots fetched:', slots); // Debugging
+                    if (!Array.isArray(slots)) {
+                        throw new Error('Slots data is not an array.');
+                    }
 
+                    if (slots.length === 0) {
+                        slotsContainer.innerHTML = '<p class="text-gray-500 mt-2">No slots available for the selected date.</p>';
+                    } else {
+                        slots.forEach(slot => {
                             const button = document.createElement('button');
                             button.type = 'button';
                             button.textContent = slot;
                             button.className = 'text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2';
 
                             button.addEventListener('click', () => {
-                                console.log(`Selected slot: ${slot}`); // Debugging line
-
-                                // Unselect other buttons
-                                Array.from(slotsContainer.children).forEach(btn => {
-                                    if (btn.tagName === 'BUTTON') {
-                                        btn.className = 'text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2';
-                                    }
-                                });
-
-                                // Highlight selected button
-                                button.className = 'focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800';
-
-                                // Set hidden input value
+                                document.querySelectorAll('#available_slots button').forEach(btn => btn.classList.remove('bg-green-700', 'text-white'));
+                                button.classList.add('bg-green-700', 'text-white');
                                 selectedSlotInput.value = slot;
                             });
 
@@ -133,11 +121,14 @@
                     }
                 })
                 .catch(error => {
-                    console.error('Error fetching available slots:', error);
+                    slotsContainer.innerHTML = `<p class="text-red-500 mt-2">${error.message}</p>`;
                 });
         });
 
         // Trigger initial empty state to show default message if no date is selected
         document.getElementById('date').dispatchEvent(new Event('change'));
+
     </script>
+
 </x-client-layout>
+
