@@ -68,11 +68,33 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Pass available days from the service model to JavaScript
+        $(document).ready(function () {
+            // Initialize the booking form when the page is ready
+            initializeBookingForm();
+
+            // Listen for changes when content is loaded dynamically
+            $(document).on('ajaxComplete', function () {
+                // Reinitialize Flatpickr every time new content is loaded via AJAX or other methods
+                initializeBookingForm();
+            });
+
+            // Or if you're using Turbo (Turbo.js for SPA-style navigation):
+            document.addEventListener('turbo:frame-load', function () {
+                // Reinitialize Flatpickr when Turbo loads new content
+                initializeBookingForm();
+            });
+        });
+
+        function initializeBookingForm() {
+            // Ensure Flatpickr is only initialized once by checking for the instance
+            if ($('#date').data('flatpickr')) {
+                // If Flatpickr is already initialized, return
+                return;
+            }
+
+            // Get available days for the service
             const availableDays = @json($service->available_days);
 
-            // Map day names to indices for comparison
             const dayIndices = {
                 'Sunday': 0,
                 'Monday': 1,
@@ -85,7 +107,7 @@
 
             const enabledDays = availableDays.map(day => dayIndices[day]);
 
-            // Initialize Flatpickr with working days logic
+            // Initialize Flatpickr
             flatpickr("#date", {
                 dateFormat: "Y-m-d",
                 disable: [
@@ -100,7 +122,11 @@
                 maxDate: new Date().fp_incr(60) // Allow booking within the next 60 days
             });
 
-            document.getElementById('date').addEventListener('change', function () {
+            // Mark Flatpickr as initialized by storing the instance in the data attribute
+            $('#date').data('flatpickr', true);
+
+            // Add change event listener for the date input field
+            $('#date').on('change', function () {
                 const date = this.value;
                 const slotsContainer = document.getElementById('available_slots');
                 const selectedSlotInput = document.getElementById('selected_slot');
@@ -145,8 +171,9 @@
             });
 
             // Trigger initial event for empty state
-            document.getElementById('date').dispatchEvent(new Event('change'));
-        });
+            $('#date').trigger('change');
+        }
+
     </script>
 
 </x-client-layout>

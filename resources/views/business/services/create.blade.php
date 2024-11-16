@@ -144,7 +144,31 @@
 
     <!-- Script to initialize Flatpickr for time range selection -->
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        $(document).ready(function () {
+            // Initialize the time range picker when the page is ready
+            initializeTimeRangePicker();
+
+            // Listen for changes when content is loaded dynamically
+            $(document).on('ajaxComplete', function () {
+                // Reinitialize the time range picker every time new content is loaded via AJAX or other methods
+                initializeTimeRangePicker();
+            });
+
+            // Or if you're using Turbo (Turbo.js for SPA-style navigation):
+            document.addEventListener('turbo:frame-load', function () {
+                // Reinitialize the time range picker when Turbo loads new content
+                initializeTimeRangePicker();
+            });
+        });
+
+        function initializeTimeRangePicker() {
+            // Ensure Flatpickr is only initialized once by checking for the instance
+            if ($('#time_range').data('flatpickr')) {
+                // If Flatpickr is already initialized, return
+                return;
+            }
+
+            // Initialize Flatpickr for the time range input
             flatpickr("#time_range", {
                 enableTime: true,
                 noCalendar: true,
@@ -152,7 +176,7 @@
                 time_24hr: true,
                 mode: "range",
                 defaultDate: ["09:00", "18:00"],
-                onClose: function(selectedDates) {
+                onClose: function (selectedDates) {
                     if (selectedDates.length === 2) {
                         document.getElementById('start_time').value = flatpickr.formatDate(selectedDates[0], "H:i");
                         document.getElementById('end_time').value = flatpickr.formatDate(selectedDates[1], "H:i");
@@ -162,6 +186,10 @@
                     rangeSeparator: " to "
                 }
             });
-        });
+
+            // Mark Flatpickr as initialized by storing the instance in the data attribute
+            $('#time_range').data('flatpickr', true);
+        }
+
     </script>
 </x-business-layout>
