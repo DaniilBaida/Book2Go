@@ -13,5 +13,11 @@
             'label' => 'Services',
             'isActive' => Request::is('client/services')
         ],
+        [
+            'route' => route('client.bookings'),
+            'icon' => 'fas fa-calendar',
+            'label' => 'Bookings',
+            'isActive' => Request::is('client/bookings')
+        ],
     ]"
 />

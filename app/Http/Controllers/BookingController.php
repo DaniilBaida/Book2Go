@@ -37,25 +37,30 @@ class BookingController extends Controller
             'start_time' => 'required|date_format:H:i',
         ]);
 
-        // Parse start time and calculate end time based on service duration
+        // Ensure client has not already booked this service
+        $existingUserBooking = Booking::where('service_id', $service->id)
+            ->where('user_id', auth()->id())
+            ->exists();
+
+        if ($existingUserBooking) {
+            return redirect()->back()->withErrors(['error' => 'You have already booked this service.']);
+        }
+
         $startTime = Carbon::parse($validated['start_time']);
         $endTime = $startTime->copy()->addMinutes($service->duration_minutes);
 
-        // Check if the selected time slot overlaps with an existing booking
         $exists = Booking::where('service_id', $service->id)
             ->where('date', $validated['date'])
             ->where(function ($query) use ($startTime, $endTime) {
-                $query->whereBetween('start_time', [$startTime, $endTime->subMinute()]) // Ensure start time doesn't fall within any booking
-                ->orWhereBetween('end_time', [$startTime->addMinute(), $endTime]); // Ensure end time doesn't fall within any booking
+                $query->where('start_time', '<', $endTime)
+                    ->where('end_time', '>', $startTime);
             })
             ->exists();
 
-        // If the time slot is not available, return an error
         if ($exists) {
             return redirect()->back()->withErrors(['start_time' => 'The selected time slot is not available.']);
         }
 
-        // Create the new booking if time slot is available
         Booking::create([
             'service_id' => $service->id,
             'user_id' => auth()->id(),
@@ -64,7 +69,6 @@ class BookingController extends Controller
             'end_time' => $endTime,
         ]);
 
-        // Redirect to the services page with a success message
         return redirect()->route('client.services')->with('success', 'Booking confirmed!');
     }
 
