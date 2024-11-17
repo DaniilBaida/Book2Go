@@ -17,6 +17,7 @@ class Booking extends Model
         'date',
         'start_time',
         'end_time',
+        'status',
     ];
     protected $casts = [
         'date' => 'date:Y-m-d',

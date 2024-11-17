@@ -21,7 +21,7 @@
             <!-- Message and button for users who already booked -->
             <div class="mt-6 p-4 bg-green-100 text-green-800 rounded">
                 <p>You have already booked this service for {{ $existingBooking->date->format('d M Y') }} at {{ $existingBooking->start_time->format('H:i') }}.</p>
-                <a href="{{ route('client.bookings', $existingBooking) }}" class="mt-4 inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                <a href="{{ route('client.bookings.show', $existingBooking) }}" class="mt-4 inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                     View Booking
                 </a>
             </div>

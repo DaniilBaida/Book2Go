@@ -57,7 +57,6 @@
                         </td>
                         <td class="py-3 px-6 space-x-2">
                             <a href="{{ route('business.bookings.show', $booking) }}" class="text-blue-500 hover:text-blue-700">Show</a>
-                            @if($booking->status == 'pending')
                                 <form action="{{ route('business.bookings.accept', $booking) }}" method="POST" class="inline-block">
                                     @csrf
                                     @method('PATCH')
@@ -68,7 +67,6 @@
                                     @method('PATCH')
                                     <button type="submit" class="text-white bg-red-500 hover:bg-red-700 py-1 px-3 rounded">Deny</button>
                                 </form>
-                            @endif
                         </td>
                     </tr>
                 @endforeach

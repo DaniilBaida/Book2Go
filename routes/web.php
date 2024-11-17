@@ -70,7 +70,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('bookings/{booking}', [BusinessBookingController::class, 'show'])->name('bookings.show');  // Booking details page
             Route::patch('bookings/{booking}/accept', [BusinessBookingController::class, 'accept'])->name('bookings.accept');  // Accept a booking
             Route::patch('bookings/{booking}/deny', [BusinessBookingController::class, 'deny'])->name('bookings.deny');  // Deny a booking
-            Route::patch('business/bookings/bulk', [BusinessBookingController::class, 'bulkUpdate'])->name('bookings.bulk');
+            Route::patch('business/bookings/bulk', [BusinessBookingController::class, 'bulkUpdate'])->name('bookings.bulk'); // Bulk Update
 
 
         });
@@ -100,8 +100,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::post('services/{service}/bookings', [BookingController::class, 'store'])->name('bookings.store'); // Book a service
 
-        Route::get('/client/bookings', [ClientBookingController::class, 'index'])->name('bookings'); // View bookings
-        Route::get('/client/bookings/{booking}', [ClientBookingController::class, 'show'])->name('bookings.show');  // View specific booking
+        Route::get('bookings', [ClientBookingController::class, 'index'])->name('bookings'); // View bookings
+        Route::get('bookings/{booking}', [ClientBookingController::class, 'show'])->name('bookings.show');  // View specific booking
+        Route::delete('bookings/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
     });
 
 });

@@ -27,17 +27,13 @@ class BookingController extends Controller
             'start_time' => 'required|date_format:H:i',
         ]);
 
-        // Get the business owner of the service
-        $business = $service->business;
+        // Fetch the business associated with the service
+        $autoAccept = $service->business->auto_accept_bookings;
 
-        // Automatically set auto_accept for the business if it's enabled
-        $autoAccept = $business ? $business->auto_accept_bookings : false;
-
-        // Calculate the end time for the booking
         $startTime = Carbon::parse($validated['start_time']);
         $endTime = $startTime->copy()->addMinutes($service->duration_minutes);
 
-        // Check if the slot is available (doesn't conflict with other bookings)
+        // Check if slot is available
         $exists = Booking::where('service_id', $service->id)
             ->where('date', $validated['date'])
             ->where(function ($query) use ($startTime, $endTime) {
@@ -50,19 +46,17 @@ class BookingController extends Controller
             return redirect()->back()->withErrors(['start_time' => 'The selected time slot is not available.']);
         }
 
-        // If auto_accept is enabled for the business, automatically accept the booking
-        // For clients, bookings will always be pending
+        // Set booking status based on auto-accept
         $status = $autoAccept ? 'accepted' : 'pending';
 
-        // Create the booking with the correct status
-        $booking = Booking::create([
+        // Create the booking
+        Booking::create([
             'service_id' => $service->id,
-            'user_id' => auth()->id(), // This is the client
+            'user_id' => auth()->id(),
             'date' => $validated['date'],
             'start_time' => $startTime,
             'end_time' => $endTime,
             'status' => $status,
-            'auto_accept' => $autoAccept,
         ]);
 
         return redirect()->route('client.bookings')->with('success', 'Booking created successfully.');
@@ -117,10 +111,6 @@ class BookingController extends Controller
      */
     public function show(Booking $booking)
     {
-        // Check if the booking belongs to the authenticated user
-        if ($booking->user_id != auth()->id()) {
-            return redirect()->route('client.bookings')->with('error', 'Unauthorized access.');
-        }
 
         return view('client.bookings.show', compact('booking'));
     }
@@ -133,11 +123,6 @@ class BookingController extends Controller
      */
     public function acceptBooking(Booking $booking)
     {
-        // Check if the business is authorized to accept the booking
-        if ($booking->service->business_id != auth()->user()->business->id) {
-            return redirect()->route('business.bookings.index')->with('error', 'Unauthorized action.');
-        }
-
         // Change the booking status to accepted
         $booking->update(['status' => 'accepted']);
 
@@ -152,14 +137,17 @@ class BookingController extends Controller
      */
     public function denyBooking(Booking $booking)
     {
-        // Check if the business is authorized to deny the booking
-        if ($booking->service->business_id != auth()->user()->business->id) {
-            return redirect()->route('business.bookings.index')->with('error', 'Unauthorized action.');
-        }
-
         // Change the booking status to denied
         $booking->update(['status' => 'denied']);
 
         return redirect()->route('business.bookings.index')->with('success', 'Booking denied.');
+    }
+
+    public function cancel(Booking $booking)
+    {
+
+        $booking->delete();
+
+        return redirect()->route('client.bookings')->with('success', 'Booking cancelled successfully.');
     }
 }
