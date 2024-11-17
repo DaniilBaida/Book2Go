@@ -14,10 +14,16 @@
             'isActive' => Route::is('admin.users.index')
         ],
         [
+            'route' => route('admin.businesses.index'),
+            'icon' => 'fas fa-building',
+            'label' => 'Business Management',
+            'isActive' => Route::is('admin.businesses.index')
+        ],
+        [
             'route' => route('admin.services.index'),
-    'icon' => 'fas fa-briefcase',
-    'label' => 'Service Management',
-    'isActive' => Route::is('admin.services.index')
+            'icon' => 'fas fa-briefcase',
+            'label' => 'Service Management',
+            'isActive' => Route::is('admin.services.index')
         ],
     ]"
 />
