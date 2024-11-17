@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\Admin\BusinessController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\Business\BusinessBookingController;
@@ -51,6 +52,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('users.update-password'); // Update user password
         Route::patch('users/{user}/update-avatar', [UserController::class, 'updateUserAvatar'])
             ->name('users.update-avatar'); // Update user avatar
+
+        // Business Management Routes
+        Route::resource('businesses', BusinessController::class);
+        Route::patch('businesses/{business}/update-logo', [BusinessController::class, 'updateLogo'])
+            ->name('businesses.update-logo');
+        Route::patch('admin/businesses/{business}/update-general-info', [BusinessController::class, 'updateGeneralInfo'])
+            ->name('businesses.update-general-info');
+        Route::patch('businesses/{business}/update-contact', [BusinessController::class, 'updateContact'])
+            ->name('businesses.update-contact');
     });
 
     // Business-specific routes
