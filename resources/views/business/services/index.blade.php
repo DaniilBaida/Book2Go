@@ -16,12 +16,12 @@
                         name="search"
                         id="table-search-services"
                         value="{{ request('search') }}"
-                        class="block w-full ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                        class="block w-full ps-10 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="Search for services"
                     >
                 </div>
                 <div class="flex gap-2 justify-start">
-                    <x-secondary-button type="submit" class="md:ml-2 text-blue-600 hover:text-blue-800">Search</x-secondary-button>
+                    <x-button-secondary type="submit" class="md:ml-2 text-blue-600 hover:text-blue-800">Search</x-button-secondary>
                     @if(request('search'))
                         <a href="{{ route('business.services.index') }}">
                             <x-danger-button type="button">Clear</x-danger-button>
@@ -37,7 +37,7 @@
         </div>
 
         <!-- Service Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
             @forelse ($services as $service)
                 <x-service-card :service="$service" :role="$role" />
 

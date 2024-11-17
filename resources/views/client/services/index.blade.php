@@ -22,7 +22,7 @@
                 </div>
                 <div class="flex gap-2 justify-start">
                     <!-- AJAX Search Button -->
-                    <x-secondary-button type="button" class="ajax-search-button md:ml-2 text-blue-600 hover:text-blue-800">Search</x-secondary-button>
+                    <x-button-secondary type="button" class="ajax-search-button md:ml-2 text-blue-600 hover:text-blue-800">Search</x-button-secondary>
                     
                     <!-- Clear Button -->
                     @if(request('search'))
@@ -35,7 +35,7 @@
         </div>
 
         <!-- Service Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
             @forelse ($services as $service)
                 <x-service-card :service="$service" role="1" />
             @empty

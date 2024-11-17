@@ -4,85 +4,108 @@
          alt="{{ $service->name }}"
          onerror="this.onerror=null; this.src='{{ asset('images/default-service.png') }}';">
 
-    <div class="p-4">
-        <h3 class="font-bold text-lg">{{ $service->name }}</h3>
-        <p class="text-gray-600 text-sm">{{ $service->category->name }}</p>
-        <p class="text-gray-800 font-semibold mt-2">{{ __('€') . number_format($service->price, 2) }} / {{ __('session') }}</p>
-        <p class="text-sm text-gray-500">{{ $service->duration_minutes }} {{ __('minutes') }}</p>
+    <div class="p-4 flex flex-col gap-2">
+        <!-- INFORMATION -->
+        <div class="gap-2 flex flex-col">
+            <div class="flex justify-between">
+                <!-- INFORMATION -->
+                <span class="px-2 py-1 text-xs rounded-full bg-zinc-800 text-white font-bold w-fit">
+                    {{ $service->category->name }}
+                </span>
+                <!-- Status Badge -->
+                <div>
+                    <span class="px-2 py-1 text-xs rounded-full
+                        {{ $service->status === 'active' ? 'bg-green-100 text-green-800' :
+                        ($service->status === 'inactive' ? 'bg-red-100 text-red-800' :
+                        ($service->status === 'archived' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800')) }}">
+                        {{ ucfirst($service->status) }}
+                    </span>
+                </div>
+            </div>
+            <h3 class="font-bold text-xl">{{ $service->name }}</h3>
+        </div>
+
+        <!-- REVIEWS -->
+        <div class="flex items-center">
+            <!-- Star Rating -->
+            <div class="flex">
+                @for ($i = 1; $i <= 5; $i++)
+                    <i class="fas fa-star text-base mr-1"
+                    style="color: {{ $i <= floor($service->reviews_avg_rating) ? '#FFC107' : '#E0E0E0' }};">
+                    </i>
+                @endfor
+            </div>
+            <!-- Average Rating -->
+            <p class="text-sm font-bold text-gray-900 ml-2">
+                {{ number_format($service->reviews_avg_rating, 1) }}
+            </p>
+        </div>
+        
+        <!-- BOOKINGS -->
+        <div class="flex items-center">
+            <i class="fas fa-user text-gray-800 text-base mr-2 flex items-center"></i>
+            <span class="text-sm text-gray-600">{{ $service->bookings_count }} {{ __('Bookings') }}</span>
+        </div>
 
         <!-- Description -->
         @if($service->description)
-            <p class="text-gray-700 mt-2">{{ $service->description }}</p>
+            <p class="text-gray-700">{{ $service->description }}</p>
         @endif
-        
-
-        <!-- Reviews and Bookings -->
-        <div class="mt-4 flex items-center space-x-4 align-middle">
-            <div class="flex items-center">
-                <i class="fas fa-star text-yellow-300 text-base mr-1 flex items-center"></i>
-                <p class="text-sm font-bold text-gray-900">
-                    {{ number_format($service->reviews_avg_rating, 1) }}
-                </p>
-                <span class="w-1 h-1 mx-1.5 bg-gray-500 rounded-full"></span>
-                <a href="#" class="text-sm font-medium text-gray-900 underline hover:no-underline">
-                    {{ $service->reviews_count }} reviews
-                </a>
-            </div>
-            <div class="flex items-center border-l border-gray-200/80 pl-4">
-                <i class="fas fa-user text-gray-800 text-base mr-2 flex items-center"></i>
-                <span class="text-sm text-gray-600">{{ $service->bookings_count }} {{ __('Bookings') }}</span>
-            </div>
-        </div>
-
-        <!-- Status Badge -->
-        <div class="mt-4">
-            <span class="px-2 py-1 text-xs rounded-full
-                {{ $service->status === 'active' ? 'bg-green-100 text-green-800' :
-                   ($service->status === 'inactive' ? 'bg-red-100 text-red-800' :
-                   ($service->status === 'archived' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800')) }}">
-                {{ ucfirst($service->status) }}
-            </span>
-        </div>
+ 
+        <p class="text-gray-800 font-semibold">{{ __('€') . number_format($service->price, 2) }} / {{ __('session') }}</p>
+        <p class="text-sm text-gray-500">{{ $service->duration_minutes }} {{ __('minutes') }}</p>
     </div>
 
     <!-- View/Edit/Delete Buttons -->
-    <div class="p-4 border-t border-gray-200/80 flex justify-between items-center gap-3">
+    <div class="p-4 border-t border-gray-200/80 flex items-center gap-3">
         @if ($role == \App\Models\User::ROLE_BUSINESS)
-            <a href="{{ route('business.services.show', $service->id) }}" class="w-1/3 ajax-link">
-                <x-primary-button class="flex-1 w-full justify-center">{{ __('View') }}</x-primary-button>
+            <a href="{{ route('business.services.show', $service->id) }}" class="ajax-link">
+                <x-button class="text-sm">{{ __('View') }}</x-button>
             </a>
-            <a href="{{ route('business.services.edit', $service->id) }}" class="w-1/3 ajax-link">
-                <x-secondary-button class="flex-1 w-full justify-center">{{ __('Edit') }}</x-secondary-button>
+            <a href="{{ route('business.services.edit', $service->id) }}" class="ajax-link">
+                <x-button-secondary class="text-sm hover:text-blue-800">{{ __('Edit') }}</x-button-secondary>
             </a>
 
             <!-- Delete Button with Confirmation Modal -->
-            <div x-data="{ open: false }" class="w-1/3">
-                <x-danger-button @click="open = true" class="flex-1 w-full justify-center">{{ __('Delete') }}</x-danger-button>
+            <div x-data="{ open: false }">
+                <x-danger-button 
+                    class="flex-1 w-full justify-center text-sm"         
+                    x-data=""
+                    x-on:click.prevent="$dispatch('open-modal', 'confirm-service-deletion')">{{ __('Delete') }}</x-danger-button>
 
                 <!-- Confirmation Modal -->
-                <div 
-                    x-cloak 
-                    x-show="open" 
-                    x-transition 
-                    class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50"
-                >
-                    <div class="bg-white p-6 rounded-lg shadow-lg">
-                        <h2 class="text-lg font-medium text-gray-900">{{ __('Are you sure you want to delete this service?') }}</h2>
-                        <p class="mt-2 text-sm text-gray-600">{{ __('This action cannot be undone.') }}</p>
+                <x-modal name="confirm-service-deletion" :show="$errors->serviceDeletion->isNotEmpty()" maxWidth="md">
+                    <div>
+                        <div class="rounded-full bg-zinc-500/10 p-2 flex">
+                            <i class="fa-solid fa-exclamation rounded-full text-[10px] bg-red-500 py-1 px-2 text-white"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-medium text-black">
+                            {{ __('Delete Service?') }}
+                        </h2>
 
-                        <div class="mt-4 flex justify-end space-x-3">
-                            <x-secondary-button @click="open = false">{{ __('Cancel') }}</x-secondary-button>
+                        <p class="mt-2 text-sm text-gray-600">
+                            {{ __('This action cannot be undone.') }}
+                        </p>
 
-                            <form method="POST" action="{{ route('business.services.destroy', $service->id) }}" class="inline">
+                        <div class="mt-6 flex justify-end">
+                            <x-button-secondary x-on:click="$dispatch('close-modal', 'confirm-service-deletion')" class="text-sm">
+                                {{ __('Cancel') }}
+                            </x-button-secondary>
+
+                            <form method="POST" action="{{ route('business.services.destroy', $service->id) }}" class="inline text-sm ms-3">
                                 @csrf
                                 @method('DELETE')
-                                <x-danger-button type="submit">{{ __('Confirm Delete') }}</x-danger-button>
+                                <x-danger-button type="submit">
+                                    {{ __('Yes, Delete it') }}
+                                </x-danger-button>
                             </form>
                         </div>
                     </div>
-                </div>
-            </div>
+                </x-modal>
 
+            </div>
         @elseif ($role == \App\Models\User::ROLE_ADMIN)
             <p class="text-gray-500 text-sm">{{ __('Managed by Business') }}</p>
         @elseif ($role == \App\Models\User::ROLE_CLIENT)

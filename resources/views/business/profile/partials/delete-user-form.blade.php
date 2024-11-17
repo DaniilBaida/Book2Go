@@ -15,7 +15,12 @@
     >{{ __('Delete Account') }}</x-danger-button>
 
     <x-modal name="confirm-user-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
-        <form method="post" action="{{ route('business.profile.destroy') }}" class="p-6">
+        <div>
+            <div class="rounded-full bg-zinc-500/10 p-2 flex">
+                <i class="fa-solid fa-exclamation rounded-full text-[10px] bg-red-500 py-1 px-2 text-white"></i>
+            </div>
+        </div>
+        <form method="post" action="{{ route('business.profile.destroy') }}">
             @csrf
             @method('delete')
 
@@ -42,9 +47,9 @@
             </div>
 
             <div class="mt-6 flex justify-end">
-                <x-secondary-button x-on:click="$dispatch('close')">
+                <x-button-secondary x-on:click="$dispatch('close')">
                     {{ __('Cancel') }}
-                </x-secondary-button>
+                </x-button-secondary>
 
                 <x-danger-button class="ms-3">
                     {{ __('Delete Account') }}
