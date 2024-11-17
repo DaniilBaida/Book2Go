@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\Business\BusinessBookingController;
 use App\Http\Controllers\Business\BusinessSetupController;
 use App\Http\Controllers\Business\BusinessServiceController;
 use App\Http\Controllers\Business\BusinessDetailsController;
@@ -64,6 +65,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('details/edit', [BusinessDetailsController::class, 'edit'])->name('details.edit'); // Edit business details
             Route::patch('details/update', [BusinessDetailsController::class, 'update'])->name('details.update'); // Update business details
             Route::resource('services', BusinessServiceController::class); // Manage business services
+
+            Route::get('bookings', [BusinessBookingController::class, 'index'])->name('bookings');  // List of all bookings
+            Route::get('bookings/{booking}', [BusinessBookingController::class, 'show'])->name('bookings.show');  // Booking details page
+            Route::patch('bookings/{booking}/accept', [BusinessBookingController::class, 'accept'])->name('bookings.accept');  // Accept a booking
+            Route::patch('bookings/{booking}/deny', [BusinessBookingController::class, 'deny'])->name('bookings.deny');  // Deny a booking
+            Route::patch('business/bookings/bulk', [BusinessBookingController::class, 'bulkUpdate'])->name('bookings.bulk');
+
+
         });
 
         // Routes for businesses with incomplete setup
