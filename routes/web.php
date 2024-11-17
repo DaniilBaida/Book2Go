@@ -2,12 +2,14 @@
 
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\Admin\DiscountController as AdminDiscountController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\Business\BusinessBookingController;
 use App\Http\Controllers\Business\BusinessSetupController;
 use App\Http\Controllers\Business\BusinessServiceController;
 use App\Http\Controllers\Business\BusinessDetailsController;
+use App\Http\Controllers\Business\BusinessDiscountController;
 use App\Http\Controllers\Client\ClientBookingController;
 use App\Http\Controllers\Client\ClientServiceController;
 use App\Http\Controllers\DashboardController;
@@ -44,13 +46,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::patch('profile/update', [ProfileController::class, 'update'])->name('profile.update'); // Update profile
         Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy'); // Delete profile
 
-        Route::resource('services', ServiceController::class)->only(['index', 'show', 'destroy']); // Delete Service
+        Route::resource('services', ServiceController::class)->only(['index', 'show', 'destroy']); // Service management
 
         Route::resource('users', UserController::class); // User resource management
-        Route::patch('users/{user}/update-password', [PasswordController::class, 'update'])
-            ->name('users.update-password'); // Update user password
-        Route::patch('users/{user}/update-avatar', [UserController::class, 'updateUserAvatar'])
-            ->name('users.update-avatar'); // Update user avatar
+        Route::patch('users/{user}/update-password', [PasswordController::class, 'update'])->name('users.update-password'); // Update user password
+        Route::patch('users/{user}/update-avatar', [UserController::class, 'updateUserAvatar'])->name('users.update-avatar'); // Update user avatar
+
+        // Discount Codes for Admin
+        Route::resource('discounts', AdminDiscountController::class)->except(['show']);
     });
 
     // Business-specific routes
@@ -61,18 +64,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('profile/edit', [ProfileController::class, 'edit'])->name('profile.edit'); // Edit profile
             Route::patch('profile/update', [ProfileController::class, 'update'])->name('profile.update'); // Update profile
             Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy'); // Delete profile
+
             Route::get('details', [BusinessDetailsController::class, 'index'])->name('details'); // View business details
             Route::get('details/edit', [BusinessDetailsController::class, 'edit'])->name('details.edit'); // Edit business details
             Route::patch('details/update', [BusinessDetailsController::class, 'update'])->name('details.update'); // Update business details
+
             Route::resource('services', BusinessServiceController::class); // Manage business services
 
-            Route::get('bookings', [BusinessBookingController::class, 'index'])->name('bookings');  // List of all bookings
-            Route::get('bookings/{booking}', [BusinessBookingController::class, 'show'])->name('bookings.show');  // Booking details page
-            Route::patch('bookings/{booking}/accept', [BusinessBookingController::class, 'accept'])->name('bookings.accept');  // Accept a booking
-            Route::patch('bookings/{booking}/deny', [BusinessBookingController::class, 'deny'])->name('bookings.deny');  // Deny a booking
-            Route::patch('business/bookings/bulk', [BusinessBookingController::class, 'bulkUpdate'])->name('bookings.bulk'); // Bulk Update
+            Route::get('bookings', [BusinessBookingController::class, 'index'])->name('bookings'); // List of all bookings
+            Route::get('bookings/{booking}', [BusinessBookingController::class, 'show'])->name('bookings.show'); // Booking details
+            Route::patch('bookings/{booking}/accept', [BusinessBookingController::class, 'accept'])->name('bookings.accept'); // Accept booking
+            Route::patch('bookings/{booking}/deny', [BusinessBookingController::class, 'deny'])->name('bookings.deny'); // Deny booking
+            Route::patch('bookings/bulk', [BusinessBookingController::class, 'bulkUpdate'])->name('bookings.bulk'); // Bulk update bookings
 
-
+            // Discount Codes for Business
+            Route::resource('discounts', BusinessDiscountController::class)->except(['show']);
         });
 
         // Routes for businesses with incomplete setup
@@ -95,13 +101,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('services/{service}', [ClientServiceController::class, 'show'])->name('services.show'); // View specific service
         Route::post('services/{service}/reviews', [ReviewController::class, 'store'])->name('reviews.store'); // Submit a review
 
-        Route::get('services/{service}/available-slots', [BookingController::class, 'availableSlots'])
-            ->name('services.available-slots'); // Check available slots for a service
+        Route::get('services/{service}/available-slots', [BookingController::class, 'availableSlots'])->name('services.available-slots'); // Check available slots
 
         Route::post('services/{service}/bookings', [BookingController::class, 'store'])->name('bookings.store'); // Book a service
 
         Route::get('bookings', [ClientBookingController::class, 'index'])->name('bookings'); // View bookings
-        Route::get('bookings/{booking}', [ClientBookingController::class, 'show'])->name('bookings.show');  // View specific booking
+        Route::get('bookings/{booking}', [ClientBookingController::class, 'show'])->name('bookings.show'); // View specific booking
         Route::delete('bookings/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
     });
 
