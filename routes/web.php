@@ -61,7 +61,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('profile/edit', [ProfileController::class, 'edit'])->name('profile.edit'); // Edit profile
             Route::patch('profile/update', [ProfileController::class, 'update'])->name('profile.update'); // Update profile
             Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy'); // Delete profile
-            Route::get('details', [BusinessDetailsController::class, 'index'])->name('details.index'); // View business details
+            Route::get('details', [BusinessDetailsController::class, 'index'])->name('details'); // View business details
             Route::get('details/edit', [BusinessDetailsController::class, 'edit'])->name('details.edit'); // Edit business details
             Route::patch('details/update', [BusinessDetailsController::class, 'update'])->name('details.update'); // Update business details
             Route::resource('services', BusinessServiceController::class); // Manage business services
