@@ -17,7 +17,6 @@ class Booking extends Model
         'status',
         'completed_at',
     ];
-
     protected $casts = [
         'date' => 'date:Y-m-d',
         'start_time' => 'datetime:H:i',
@@ -69,5 +68,20 @@ class Booking extends Model
     public function scopeCompleted($query)
     {
         return $query->where('status', 'completed');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Increment bookings_count when a booking is created
+        static::created(function ($booking) {
+            $booking->service->increment('bookings_count');
+        });
+
+        // Decrement bookings_count when a booking is deleted
+        static::deleted(function ($booking) {
+            $booking->service->decrement('bookings_count');
+        });
     }
 }

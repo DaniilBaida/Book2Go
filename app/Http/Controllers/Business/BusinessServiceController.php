@@ -141,15 +141,23 @@ class BusinessServiceController extends Controller
      */
     public function destroy(Service $service)
     {
-        // Delete the image file if it exists
-        if ($service->image_path) {
-            Storage::disk('public')->delete(str_replace('/storage/', '', $service->image_path));
+        try {
+            // Delete the image file if it exists
+            if ($service->image_path) {
+                Storage::disk('public')->delete(str_replace('/storage/', '', $service->image_path));
+            }
+
+            // Delete the service from the database
+            $service->delete();
+
+            return redirect()->route('business.services.index')->with('success', 'Service deleted successfully.');
+        } catch (Exception $e) {
+            // Log the error for debugging
+            Log::error('Error deleting service: ' . $e->getMessage());
+
+            // Redirect back with an error message
+            return redirect()->route('business.services.index')->with('error', 'An error occurred while deleting the service.');
         }
-
-        // Delete the service from the database
-        $service->delete();
-
-        return redirect()->route('business.services.index')->with('success', 'Service deleted successfully.');
     }
 
     /**

@@ -9,7 +9,7 @@
 @endsection
 
 @section('content')
-    <main class="p-4">
+    <main class="p-4 sm:p-8">
         {{ $slot }}
     </main>
 @endsection

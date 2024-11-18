@@ -1,7 +1,9 @@
 <x-business-layout>
     <div class="flex flex-col gap-y-5">
-        <!-- Service actions -->
+        <!-- Page Header -->
         <h1 class="text-3xl text-gray-800 font-bold">Your Services</h1>
+
+        <!-- Service Actions -->
         <div class="md:flex justify-between items-center">
             <!-- Search Bar -->
             <form method="GET" action="{{ route('business.services.index') }}" class="max-md:mb-6 flex max-md:flex-col md:items-center max-md:gap-y-2">
@@ -16,12 +18,12 @@
                         name="search"
                         id="table-search-services"
                         value="{{ request('search') }}"
-                        class="block w-full ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                        class="block w-full ps-10 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="Search for services"
                     >
                 </div>
                 <div class="flex gap-2 justify-start">
-                    <x-secondary-button type="submit" class="md:ml-2 text-blue-600 hover:text-blue-800">Search</x-secondary-button>
+                    <x-button-secondary type="submit" class="md:ml-2 text-blue-600 hover:text-blue-800">Search</x-button-secondary>
                     @if(request('search'))
                         <a href="{{ route('business.services.index') }}">
                             <x-danger-button type="button">Clear</x-danger-button>
@@ -37,10 +39,9 @@
         </div>
 
         <!-- Service Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
             @forelse ($services as $service)
                 <x-service-card :service="$service" :role="$role" />
-
             @empty
                 <p>{{ __('No services found.') }}</p>
             @endforelse
@@ -51,4 +52,33 @@
             {{ $services->appends(['search' => request('search')])->links('vendor.pagination.tailwind') }}
         </div>
     </div>
+
+    <!-- Toast Notifications -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            @if (session('success'))
+                Toastify({
+                    text: "{{ session('success') }}",
+                    duration: 5000, // Display for 5 seconds
+                    close: true,
+                    gravity: "bottom", // Display at the top
+                    position: "right", // Align to the right
+                    backgroundColor: "#4caf50", // Green for success
+                    stopOnFocus: true // Pause on hover
+                }).showToast();
+            @endif
+
+            @if (session('error'))
+                Toastify({
+                    text: "{{ session('error') }}",
+                    duration: 5000, // Display for 5 seconds
+                    close: true,
+                    gravity: "bottom", // Display at the top
+                    position: "right", // Align to the right
+                    backgroundColor: "#f44336", // Red for error
+                    stopOnFocus: true // Pause on hover
+                }).showToast();
+            @endif
+        });
+    </script>
 </x-business-layout>

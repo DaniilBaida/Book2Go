@@ -16,13 +16,13 @@
                         name="search"
                         id="table-search-services"
                         value="{{ request('search') }}"
-                        class="block w-full ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                        class="block w-full ps-10 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="Search for services"
                     >
                 </div>
                 <div class="flex gap-2 justify-start">
                     <!-- AJAX Search Button -->
-                    <x-secondary-button type="button" class="ajax-search-button md:ml-2 text-blue-600 hover:text-blue-800">Search</x-secondary-button>
+                    <x-button-secondary type="button" class="ajax-search-button md:ml-2 text-blue-600 hover:text-blue-800">Search</x-button-secondary>
                     
                     <!-- Clear Button -->
                     @if(request('search'))
@@ -32,10 +32,36 @@
                     @endif
                 </div>
             </form>
+
+            <!-- Filter Dropdown -->
+            <x-dropdown align="right" width="auto">
+                <x-slot:trigger>
+                    <x-button-secondary type="button" class="text-blue-600 hover:text-blue-800">
+                        <i class="fa-solid fa-filter text-zinc-600"></i>
+                    </x-button-secondary>
+                </x-slot:trigger>
+
+                <x-slot:content>
+                    <form id="filter-form" method="GET" action="{{ route('client.services') }}" class="p-4">
+                        <div class="flex items-center gap-2">
+                            <input
+                                type="checkbox"
+                                id="hide-booked"
+                                name="hide_booked"
+                                value="1"
+                                {{ request('hide_booked') ? 'checked' : '' }}
+                                class="form-checkbox h-5 w-5 text-blue-600 rounded-full"
+                                onchange="document.getElementById('filter-form').submit()"
+                            >
+                            <label for="hide-booked" class="text-gray-700 text-sm whitespace-nowrap">Hide Booked Services</label>
+                        </div>
+                    </form>
+                </x-slot:content>
+            </x-dropdown>
         </div>
 
         <!-- Service Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
             @forelse ($services as $service)
                 <x-service-card :service="$service" role="1" />
             @empty
@@ -45,7 +71,7 @@
 
         <!-- Pagination -->
         <div class="mt-6">
-            {{ $services->appends(['search' => request('search')])->links('vendor.pagination.tailwind') }}
+            {{ $services->appends(['search' => request('search'), 'hide_booked' => request('hide_booked')])->links('vendor.pagination.tailwind') }}
         </div>
     </div>
 </x-client-layout>

@@ -17,11 +17,17 @@ class ClientServiceController extends Controller
      */
     public function index()
     {
-        // Retrieve active services, applying optional search and calculating review count and average rating
+        // Retrieve active services, applying optional search, hiding booked services, and calculating review count and average rating
         $services = Service::where('status', 'active')
             ->when(request('search'), function ($query) {
                 // Apply search filter if the 'search' query parameter is provided
                 $query->where('name', 'like', '%' . request('search') . '%');
+            })
+            ->when(request('hide_booked'), function ($query) {
+                // Apply filter to hide booked services if 'hide_booked' is set
+                $query->whereDoesntHave('bookings', function ($q) {
+                    $q->where('user_id', auth()->id());
+                });
             })
             ->withCount('reviews') // Include review count for each service
             ->withAvg('reviews', 'rating') // Calculate average rating for each service
@@ -30,6 +36,7 @@ class ClientServiceController extends Controller
         // Return the view with the services data
         return view('client.services.index', compact('services'));
     }
+
 
     /**
      * Display a specific service.
