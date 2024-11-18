@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\Admin\BusinessController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\Business\BusinessBookingController;
 use App\Http\Controllers\Business\BusinessSetupController;
 use App\Http\Controllers\Business\BusinessServiceController;
 use App\Http\Controllers\Business\BusinessDetailsController;
@@ -50,6 +52,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('users.update-password'); // Update user password
         Route::patch('users/{user}/update-avatar', [UserController::class, 'updateUserAvatar'])
             ->name('users.update-avatar'); // Update user avatar
+
+        // Business Management Routes
+        Route::resource('businesses', BusinessController::class);
+        Route::patch('businesses/{business}/update-logo', [BusinessController::class, 'updateLogo'])
+            ->name('businesses.update-logo');
+        Route::patch('admin/businesses/{business}/update-general-info', [BusinessController::class, 'updateGeneralInfo'])
+            ->name('businesses.update-general-info');
+        Route::patch('businesses/{business}/update-contact', [BusinessController::class, 'updateContact'])
+            ->name('businesses.update-contact');
     });
 
     // Business-specific routes
@@ -60,10 +71,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('profile/edit', [ProfileController::class, 'edit'])->name('profile.edit'); // Edit profile
             Route::patch('profile/update', [ProfileController::class, 'update'])->name('profile.update'); // Update profile
             Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy'); // Delete profile
-            Route::get('details', [BusinessDetailsController::class, 'index'])->name('details.index'); // View business details
+            Route::get('details', [BusinessDetailsController::class, 'index'])->name('details'); // View business details
             Route::get('details/edit', [BusinessDetailsController::class, 'edit'])->name('details.edit'); // Edit business details
             Route::patch('details/update', [BusinessDetailsController::class, 'update'])->name('details.update'); // Update business details
             Route::resource('services', BusinessServiceController::class); // Manage business services
+
+            Route::get('bookings', [BusinessBookingController::class, 'index'])->name('bookings');  // List of all bookings
+            Route::get('bookings/{booking}', [BusinessBookingController::class, 'show'])->name('bookings.show');  // Booking details page
+            Route::patch('bookings/{booking}/accept', [BusinessBookingController::class, 'accept'])->name('bookings.accept');  // Accept a booking
+            Route::patch('bookings/{booking}/deny', [BusinessBookingController::class, 'deny'])->name('bookings.deny');  // Deny a booking
+            Route::patch('business/bookings/bulk', [BusinessBookingController::class, 'bulkUpdate'])->name('bookings.bulk'); // Bulk Update
+
+
         });
 
         // Routes for businesses with incomplete setup
@@ -91,8 +110,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::post('services/{service}/bookings', [BookingController::class, 'store'])->name('bookings.store'); // Book a service
 
-        Route::get('/client/bookings', [ClientBookingController::class, 'index'])->name('bookings'); // View bookings
-        Route::get('/client/bookings/{booking}', [ClientBookingController::class, 'show'])->name('bookings.show');  // View specific booking
+        Route::get('bookings', [ClientBookingController::class, 'index'])->name('bookings'); // View bookings
+        Route::get('bookings/{booking}', [ClientBookingController::class, 'show'])->name('bookings.show');  // View specific booking
+        Route::delete('bookings/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
     });
 
 });
