@@ -15,10 +15,11 @@
                 <!-- Status Badge -->
                 <div>
                     <span class="px-2 py-1 text-xs rounded-full
-                        {{ $service->status === 'active' ? 'bg-green-100 text-green-800' :
+                        {{ $service->bookings->contains('user_id', auth()->id()) ? 'bg-blue-100 text-blue-800' :
+                        ($service->status === 'active' ? 'bg-green-100 text-green-800' :
                         ($service->status === 'inactive' ? 'bg-red-100 text-red-800' :
-                        ($service->status === 'archived' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800')) }}">
-                        {{ ucfirst($service->status) }}
+                        ($service->status === 'archived' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'))) }}">
+                        {{ $service->bookings->contains('user_id', auth()->id()) ? __('Booked') : ucfirst($service->status) }}
                     </span>
                 </div>
             </div>
@@ -109,7 +110,8 @@
         @elseif ($role == \App\Models\User::ROLE_ADMIN)
             <p class="text-gray-500 text-sm">{{ __('Managed by Business') }}</p>
         @elseif ($role == \App\Models\User::ROLE_CLIENT)
-            <a type="button" href="{{ route('client.services.show', $service) }}" class="cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 ajax-link">{{ __('View') }}</a>
+            <a type="button" href="{{ route('client.services.show', $service) }}" class="ajax-link">
+                <x-button class="text-sm">{{ __('View') }}</x-button></a>
         @endif
     </div>
 </div>
