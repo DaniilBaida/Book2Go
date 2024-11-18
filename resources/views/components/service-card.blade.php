@@ -69,33 +69,39 @@
 
             <!-- Delete Button with Confirmation Modal -->
             <div x-data="{ open: false }" class="ml-auto">
-                <x-danger-button 
-                    class="flex-1 w-full justify-center text-sm"         
-                    x-data=""
-                    x-on:click.prevent="$dispatch('open-modal', 'confirm-service-deletion')"><i class="fa-solid fa-trash"></i></x-danger-button>
+                <!-- Trigger Button -->
+                <x-danger-button
+                    class="flex-1 w-full justify-center text-sm"
+                    @click="$dispatch('open-modal', 'confirm-service-deletion-{{ $service->id }}')">
+                    <i class="fa-solid fa-trash"></i>
+                </x-danger-button>
 
                 <!-- Confirmation Modal -->
-                <x-modal name="confirm-service-deletion" :show="$errors->serviceDeletion->isNotEmpty()" maxWidth="md">
+                <x-modal name="confirm-service-deletion-{{ $service->id }}" :show="false" maxWidth="md">
+                    <!-- Modal Icon -->
                     <div>
                         <div class="rounded-full bg-zinc-500/10 p-2 flex">
                             <i class="fa-solid fa-exclamation rounded-full text-[10px] bg-red-500 py-1 px-2 text-white"></i>
                         </div>
                     </div>
+                    <!-- Modal Text -->
                     <div>
                         <h2 class="text-xl font-medium text-black">
                             {{ __('Delete Service?') }}
                         </h2>
-
                         <p class="mt-2 text-sm text-gray-600">
-                            {{ __('This action cannot be undone.') }}
+                            {{ __('Are you sure you want to delete this service? This action cannot be undone.') }}
                         </p>
-
-                        <div class="mt-6 flex justify-end">
-                            <x-button-secondary x-on:click="$dispatch('close-modal', 'confirm-service-deletion')" class="text-sm">
+                        <div class="mt-6 flex justify-end gap-4">
+                            <!-- Cancel Button -->
+                            <x-button-secondary 
+                                @click="$dispatch('close-modal', 'confirm-service-deletion-{{ $service->id }}')" 
+                                class="text-sm">
                                 {{ __('Cancel') }}
                             </x-button-secondary>
 
-                            <form method="POST" action="{{ route('business.services.destroy', $service->id) }}" class="inline text-sm ms-3">
+                            <!-- Confirm Delete Form -->
+                            <form method="POST" action="{{ route('business.services.destroy', $service->id) }}" class="inline text-sm">
                                 @csrf
                                 @method('DELETE')
                                 <x-danger-button type="submit">
@@ -105,8 +111,8 @@
                         </div>
                     </div>
                 </x-modal>
-
             </div>
+
         @elseif ($role == \App\Models\User::ROLE_ADMIN)
             <p class="text-gray-500 text-sm">{{ __('Managed by Business') }}</p>
         @elseif ($role == \App\Models\User::ROLE_CLIENT)
