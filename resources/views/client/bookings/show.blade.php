@@ -43,18 +43,29 @@
                     <div class="sm:col-span-2 mt-6">
                         <h3 class="text-xl font-semibold text-gray-800">Business Information</h3>
                     </div>
+                    <!-- Business Name -->
                     <div>
                         <p class="text-gray-600"><strong>Business Name:</strong></p>
                         <p class="text-gray-800">{{ $booking->service->business->name }}</p>
                     </div>
+                    <!-- Business Email -->
                     <div>
                         <p class="text-gray-600"><strong>Contact Email:</strong></p>
                         <p class="text-gray-800">{{ $booking->service->business->email }}</p>
                     </div>
+                    <!-- Business Phone -->
                     <div>
                         <p class="text-gray-600"><strong>Phone:</strong></p>
                         <p class="text-gray-800">{{ $booking->service->business->phone_number ?? 'Not provided' }}</p>
                     </div>
+                    <!-- Booking Status -->
+                    <div>
+                        <p class="text-gray-600"><strong>Status:</strong></p>
+                        <span class="px-2 py-1 rounded-full text-white text-xs {{ $booking->status === 'accepted' ? 'bg-green-500' : ($booking->status === 'denied' ? 'bg-red-500' : 'bg-yellow-500') }}">
+                            {{ ucfirst($booking->status) }}
+                        </span>
+                    </div>
+                    <!-- Business Address -->
                     <div class="sm:col-span-2">
                         <p class="text-gray-600"><strong>Address:</strong></p>
                         <p class="text-gray-800">
@@ -64,31 +75,64 @@
                             {{ $booking->service->business->postal_code }}
                         </p>
                     </div>
-
-                    <!-- Booking Status -->
-                    <div class="sm:col-span-2">
-                        <p class="text-gray-600"><strong>Status:</strong></p>
-                        <span class="px-2 py-1 rounded-full text-white {{ $booking->status === 'accepted' ? 'bg-green-500' : ($booking->status === 'denied' ? 'bg-red-500' : 'bg-yellow-500') }}">
-                            {{ ucfirst($booking->status) }}
-                        </span>
-                    </div>
                 </div>
 
                 <!-- Actions -->
-                <div class="mt-6 flex space-x-4">
+                <div class="mt-3 flex space-x-4">
+                    <!-- Back -->
                     <a href="{{ route('client.bookings') }}">
-                        <x-button>Back to Bookings</x-button>
+                        <x-button class="text-sm">Back to Bookings</x-button>
                     </a>
+                    <!-- Cancel Booking -->
                     @if($booking->status === 'pending')
-                        <form action="{{ route('client.bookings.cancel', $booking) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                        <!-- Cancel Button with Confirmation Modal -->
+                        <div x-data="{ open: false }" class="ml-auto">
+                            <!-- Trigger Button -->
+                            <x-danger-button 
+                                class="flex-1 w-full justify-center text-sm"
+                                x-on:click.prevent="$dispatch('open-modal', 'confirm-cancel-booking')">
                                 Cancel Booking
-                            </button>
-                        </form>
+                            </x-danger-button>
+
+                            <!-- Confirmation Modal -->
+                            <x-modal name="confirm-cancel-booking" :show="$errors->bookingCancellation->isNotEmpty()" maxWidth="md">
+                                <div>
+                                    <div class="rounded-full bg-zinc-500/10 p-2 flex">
+                                        <i class="fa-solid fa-exclamation rounded-full text-[10px] bg-red-500 py-1 px-2 text-white"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h2 class="text-xl font-medium text-black">
+                                        {{ __('Cancel Booking?') }}
+                                    </h2>
+
+                                    <p class="mt-2 text-sm text-gray-600">
+                                        {{ __('Are you sure you want to cancel this booking? This action cannot be undone.') }}
+                                    </p>
+
+                                    <div class="mt-6 flex justify-end">
+                                        <!-- Cancel Modal Button -->
+                                        <x-button-secondary 
+                                            x-on:click="$dispatch('close-modal', 'confirm-cancel-booking')" 
+                                            class="text-sm">
+                                            {{ __('No, Go Back') }}
+                                        </x-button-secondary>
+
+                                        <!-- Confirm Cancellation Form -->
+                                        <form method="POST" action="{{ route('client.bookings.cancel', $booking) }}" class="inline text-sm ms-3">
+                                            @csrf
+                                            @method('DELETE')
+                                            <x-danger-button type="submit">
+                                                {{ __('Yes, Cancel it') }}
+                                            </x-danger-button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </x-modal>
+                        </div>
                     @endif
                 </div>
+
             </div>
         </div>
     </div>
