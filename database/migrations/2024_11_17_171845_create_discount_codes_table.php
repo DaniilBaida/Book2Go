@@ -12,17 +12,20 @@ return new class extends Migration {
     {
         Schema::create('discount_codes', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique(); // Código único do desconto
-            $table->unsignedBigInteger('admin_id')->nullable(); // Para descontos criados pelo admin
-            $table->unsignedBigInteger('user_id')->nullable();  // Para descontos atribuídos a usuários
-            $table->enum('type', ['percentage', 'fixed']); // Tipo: porcentagem ou valor fixo
-            $table->decimal('value', 10, 2); // Valor do desconto
-            $table->foreignId('created_by')->constrained('users')->onDelete('cascade'); // Criado por (admin ou business)
-            $table->foreignId('business_id')->nullable()->constrained('businesses')->onDelete('cascade'); // Relacionado a um negócio (opcional)
-            $table->timestamp('expires_at')->nullable(); // Data de expiração
-            $table->timestamp('applied_at')->nullable(); // Quando foi utilizado
-            $table->foreignId('applied_to')->nullable()->constrained('bookings')->onDelete('cascade'); // Relacionado a uma reserva (opcional no futuro)
-            $table->timestamps(); // Campos created_at e updated_at
+            $table->string('code')->unique(); // Unique discount code
+            $table->string('type'); // Discount type (percentage, fixed)
+            $table->decimal('value', 15, 8); // Discount value
+            $table->unsignedInteger('max_uses')->nullable(); // Maximum number of uses
+            $table->unsignedInteger('uses')->default(0); // Current usage count
+            $table->enum('status', ['active', 'used', 'expired'])->default('active'); // Discount status
+            $table->foreignIdFor(\App\Models\User::class, 'admin_id')->nullable()->constrained('users')->cascadeOnDelete();
+            $table->foreignIdFor(\App\Models\Business::class)->nullable()->constrained()->cascadeOnDelete(); // Permitir NULL
+            $table->foreignIdFor(\App\Models\Service::class)->nullable()->constrained()->cascadeOnDelete(); // Optional service-specific discount
+            $table->foreignIdFor(\App\Models\User::class, 'used_by')->nullable()->constrained()->nullOnDelete(); // Client who used the discount
+            $table->timestamp('expires_at')->nullable(); // Expiry date
+            $table->timestamp('applied_at')->nullable(); // When the discount was used
+            $table->foreignIdFor(\App\Models\Booking::class)->nullable()->constrained()->cascadeOnDelete(); // Booking reference
+            $table->timestamps(); // Created and updated timestamps
         });
     }
 
