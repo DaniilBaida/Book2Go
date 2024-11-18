@@ -26,4 +26,16 @@ class ClientBookingController extends Controller
         return view('client.bookings.show', compact('booking'));
     }
 
+    public function cancel(Booking $booking)
+    {
+        // Ensure the booking belongs to the authenticated user
+        if ($booking->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $booking->delete();
+
+        return redirect()->route('client.bookings')->with('success', 'Booking cancelled successfully.');
+    }
+
 }
