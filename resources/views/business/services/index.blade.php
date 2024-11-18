@@ -1,7 +1,9 @@
 <x-business-layout>
     <div class="flex flex-col gap-y-5">
-        <!-- Service actions -->
+        <!-- Page Header -->
         <h1 class="text-3xl text-gray-800 font-bold">Your Services</h1>
+
+        <!-- Service Actions -->
         <div class="md:flex justify-between items-center">
             <!-- Search Bar -->
             <form method="GET" action="{{ route('business.services.index') }}" class="max-md:mb-6 flex max-md:flex-col md:items-center max-md:gap-y-2">
@@ -40,7 +42,6 @@
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
             @forelse ($services as $service)
                 <x-service-card :service="$service" :role="$role" />
-
             @empty
                 <p>{{ __('No services found.') }}</p>
             @endforelse
@@ -51,4 +52,33 @@
             {{ $services->appends(['search' => request('search')])->links('vendor.pagination.tailwind') }}
         </div>
     </div>
+
+    <!-- Toast Notifications -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            @if (session('success'))
+                Toastify({
+                    text: "{{ session('success') }}",
+                    duration: 5000, // Display for 5 seconds
+                    close: true,
+                    gravity: "bottom", // Display at the top
+                    position: "right", // Align to the right
+                    backgroundColor: "#4caf50", // Green for success
+                    stopOnFocus: true // Pause on hover
+                }).showToast();
+            @endif
+
+            @if (session('error'))
+                Toastify({
+                    text: "{{ session('error') }}",
+                    duration: 5000, // Display for 5 seconds
+                    close: true,
+                    gravity: "bottom", // Display at the top
+                    position: "right", // Align to the right
+                    backgroundColor: "#f44336", // Red for error
+                    stopOnFocus: true // Pause on hover
+                }).showToast();
+            @endif
+        });
+    </script>
 </x-business-layout>

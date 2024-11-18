@@ -19,7 +19,11 @@
                         ($service->status === 'active' ? 'bg-green-100 text-green-800' :
                         ($service->status === 'inactive' ? 'bg-red-100 text-red-800' :
                         ($service->status === 'archived' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'))) }}">
-                        {{ $service->bookings->contains('user_id', auth()->id()) ? __('Booked') : ucfirst($service->status) }}
+                        @if($service->bookings->contains('user_id', auth()->id()))
+                            <i class="fa-solid fa-check"></i> {{ __('Booked') }}
+                        @else
+                            {{ ucfirst($service->status) }}
+                        @endif
                     </span>
                 </div>
             </div>
@@ -87,7 +91,7 @@
                     <!-- Modal Text -->
                     <div>
                         <h2 class="text-xl font-medium text-black">
-                            {{ __('Delete Service?') }}
+                            {{ __('Delete Service:') }} <span class="font-bold">{{ $service->name }}</span>?
                         </h2>
                         <p class="mt-2 text-sm text-gray-600">
                             {{ __('Are you sure you want to delete this service? This action cannot be undone.') }}
@@ -105,7 +109,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <x-danger-button type="submit">
-                                    {{ __('Yes, Delete it') }}
+                                    {{ __('Yes, Delete') }} <span class="font-bold">{{ $service->name }}</span>
                                 </x-danger-button>
                             </form>
                         </div>
