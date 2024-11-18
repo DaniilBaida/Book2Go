@@ -82,13 +82,6 @@
 
                 <!-- Confirmation Modal -->
                 <x-modal name="confirm-service-deletion-{{ $service->id }}" :show="false" maxWidth="md">
-                    <!-- Modal Icon -->
-                    <div>
-                        <div class="rounded-full bg-zinc-500/10 p-2 flex">
-                            <i class="fa-solid fa-exclamation rounded-full text-[10px] bg-red-500 py-1 px-2 text-white"></i>
-                        </div>
-                    </div>
-                    <!-- Modal Text -->
                     <div>
                         <h2 class="text-xl font-medium text-black">
                             {{ __('Delete Service:') }} <span class="font-bold">{{ $service->name }}</span>?

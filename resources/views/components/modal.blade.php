@@ -1,7 +1,8 @@
 @props([
     'name',
     'show' => false,
-    'maxWidth' => '2xl'
+    'maxWidth' => '2xl',
+    'type' => 'default', // Options: 'deletion', 'confirmation', 'default'
 ])
 
 @php
@@ -12,6 +13,19 @@
         'xl' => 'sm:max-w-xl',
         '2xl' => 'sm:max-w-2xl',
     ][$maxWidth];
+
+    // Determine icon and colors based on type
+    $iconColor = match ($type) {
+        'deletion' => 'bg-red-500 text-white',
+        'confirmation' => 'bg-green-500 text-white',
+        default => 'bg-gray-500 text-white',
+    };
+
+    $buttonColor = match ($type) {
+        'deletion' => 'bg-red-500 hover:bg-red-600 text-white',
+        'confirmation' => 'bg-green-500 hover:bg-green-600 text-white',
+        default => 'bg-gray-500 hover:bg-gray-600 text-white',
+    };
 @endphp
 
 <div
@@ -61,8 +75,7 @@
     <!-- Modal content -->
     <div
         x-show="show"
-        class="relative bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:w-full {{ $maxWidth }} sm:mx-auto flex p-4
-        gap-4"
+        class="relative bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:w-full {{ $maxWidth }} sm:mx-auto flex p-6 gap-4 items-start"
         x-transition:enter="ease-out duration-300"
         x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
         x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
@@ -70,6 +83,16 @@
         x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
         x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
     >
-        {{ $slot }}
+        <!-- Modal Icon -->
+        <div>
+            <div class="rounded-full bg-zinc-500/10 p-2 flex">
+                <i class="fa-solid fa-exclamation rounded-full text-[10px] bg-red-500 py-1 px-2 text-white"></i>
+            </div>
+        </div>
+
+        <!-- Modal Content -->
+        <div class="flex-1">
+            {{ $slot }}
+        </div>
     </div>
 </div>
