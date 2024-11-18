@@ -32,77 +32,7 @@
             </form>
 
             <!-- Table -->
-            <div class="relative overflow-x-auto">
-                <table class="w-full text-sm text-left text-gray-500">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3">Code</th>
-                            <th class="px-6 py-3">Type</th>
-                            <th class="px-6 py-3">Value</th>
-                            <th class="px-6 py-3">Max Uses</th>
-                            <th class="px-6 py-3">Current Uses</th>
-                            <th class="px-6 py-3">Status</th>
-                            <th class="px-6 py-3">Expires At</th>
-                            <th class="px-6 py-3">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($discountCodes as $code)
-                            <tr class="bg-white border-b hover:bg-gray-50">
-                                <td class="px-6 py-4">{{ $code->code }}</td>
-                                <td class="px-6 py-4">{{ ucfirst($code->type) }}</td>
-                                <td class="px-6 py-4">{{ $code->value }}</td>
-                                <td class="px-6 py-4">{{ $code->max_uses ?? 'Unlimited' }}</td>
-                                <td class="px-6 py-4">{{ $code->uses }}</td>
-                                <td class="px-6 py-4">{{ ucfirst($code->status) }}</td>
-                                <td class="px-6 py-4">
-                                    {{ $code->expires_at ? \Carbon\Carbon::parse($code->expires_at)->format('Y-m-d') : 'No Expiry' }}
-                                </td>
-                                <td class="px-6 py-4 flex space-x-2">
-                                    <a href="{{ route('admin.discounts.edit', $code->id) }}" class="text-yellow-500 hover:underline">Edit</a>
-                                    <button onclick="window.dispatchEvent(new CustomEvent('open-modal', { detail: 'delete-confirmation-{{ $code->id }}' }))"
-                                            class="text-red-600 hover:underline">
-                                        Delete
-                                    </button>
-
-                                    <!-- Delete Confirmation Modal -->
-                                    <x-modal name="delete-confirmation-{{ $code->id }}" :show="false" maxWidth="md">
-                                        <div class="p-6">
-                                            <h2 class="text-lg font-medium text-gray-900">
-                                                Are you sure you want to delete the discount code "{{ $code->code }}"?
-                                            </h2>
-                                            <p class="mt-2 text-sm text-gray-600">
-                                                This action cannot be undone.
-                                            </p>
-                                            <div class="mt-6 flex justify-end">
-                                                <!-- Cancel Button -->
-                                                <button x-on:click="show = false"
-                                                        class="py-2 px-4 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500">
-                                                    Cancel
-                                                </button>
-                                                <!-- Confirm Delete Form -->
-                                                <form method="POST" action="{{ route('business.discounts.destroy', $code->id) }}" class="ml-3">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                            class="py-2 px-4 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">
-                                                        Yes, delete
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </x-modal>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Pagination -->
-            <div class="mt-6">
-                {{ $discountCodes->appends(['search' => request('search')])->links('vendor.pagination.tailwind') }}
-            </div>
+            @include('business.discounts.partials.discount-table')
         </div>
     </div>
 </x-business-layout>

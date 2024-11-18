@@ -40,9 +40,9 @@
                 @else
                     <!-- Log in Button for Guests -->
                     <a href="{{ route('login') }}">
-                        <x-secondary-button>
+                        <x-button-secondary>
                             Log in
-                        </x-secondary-button>
+                        </x-button-secondary>
                     </a>
                 @endauth
             </div>

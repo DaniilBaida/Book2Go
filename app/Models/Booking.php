@@ -48,4 +48,19 @@ class Booking extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Increment bookings_count when a booking is created
+        static::created(function ($booking) {
+            $booking->service->increment('bookings_count');
+        });
+
+        // Decrement bookings_count when a booking is deleted
+        static::deleted(function ($booking) {
+            $booking->service->decrement('bookings_count');
+        });
+    }
 }

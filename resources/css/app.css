@@ -17,3 +17,7 @@
 [x-cloak] {
     display: none !important;
 }
+
+.toastify .toast-close svg {
+    fill: white !important; /* Ensures the close button icon is white */
+}

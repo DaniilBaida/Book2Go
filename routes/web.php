@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\DiscountController as AdminDiscountController;
+use App\Http\Controllers\Admin\BusinessController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\Business\BusinessBookingController;
@@ -46,13 +47,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::patch('profile/update', [ProfileController::class, 'update'])->name('profile.update'); // Update profile
         Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy'); // Delete profile
 
+        Route::resource('businesses', BusinessController::class);
+
         Route::resource('services', ServiceController::class)->only(['index', 'show', 'destroy']); // Service management
 
         Route::resource('users', UserController::class); // User resource management
-        Route::patch('users/{user}/update-password', [PasswordController::class, 'update'])->name('users.update-password'); // Update user password
-        Route::patch('users/{user}/update-avatar', [UserController::class, 'updateUserAvatar'])->name('users.update-avatar'); // Update user avatar
+        Route::patch('users/{user}/update-password', [PasswordController::class, 'update'])
+            ->name('users.update-password'); // Update user password
+        Route::patch('users/{user}/update-avatar', [UserController::class, 'updateUserAvatar'])
+            ->name('users.update-avatar'); // Update user avatar
 
-        // Discount Codes for Admin
         Route::resource('discounts', AdminDiscountController::class)->except(['show']);
     });
 

@@ -14,6 +14,12 @@
             'isActive' => Route::is('admin.users.index')
         ],
         [
+            'route' => route('admin.businesses.index'),
+            'icon' => 'fas fa-building',
+            'label' => 'Business Management',
+            'isActive' => Route::is('admin.businesses.index')
+        ],
+        [
             'route' => route('admin.services.index'),
             'icon' => 'fas fa-briefcase',
             'label' => 'Service Management',
@@ -23,7 +29,7 @@
             'route' => route('admin.discounts.index'),
             'icon' => 'fas fa-tags',
             'label' => 'Manage Discounts',
-            'isActive' => Request::is('admin/discounts*')
+            'isActive' => Request::is('admin/discounts*'),
         ],
     ]"
 />
