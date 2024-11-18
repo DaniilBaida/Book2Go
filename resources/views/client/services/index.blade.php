@@ -37,7 +37,7 @@
             <x-dropdown align="right" width="auto">
                 <x-slot:trigger>
                     <x-button-secondary type="button" class="text-blue-600 hover:text-blue-800">
-                        Filters
+                        <i class="fa-solid fa-filter text-zinc-600"></i>
                     </x-button-secondary>
                 </x-slot:trigger>
 
