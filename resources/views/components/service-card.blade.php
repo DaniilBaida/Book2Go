@@ -67,11 +67,11 @@
             </a>
 
             <!-- Delete Button with Confirmation Modal -->
-            <div x-data="{ open: false }">
+            <div x-data="{ open: false }" class="ml-auto">
                 <x-danger-button 
                     class="flex-1 w-full justify-center text-sm"         
                     x-data=""
-                    x-on:click.prevent="$dispatch('open-modal', 'confirm-service-deletion')">{{ __('Delete') }}</x-danger-button>
+                    x-on:click.prevent="$dispatch('open-modal', 'confirm-service-deletion')"><i class="fa-solid fa-trash"></i></x-danger-button>
 
                 <!-- Confirmation Modal -->
                 <x-modal name="confirm-service-deletion" :show="$errors->serviceDeletion->isNotEmpty()" maxWidth="md">
