@@ -25,5 +25,11 @@
             'label' => 'Service Management',
             'isActive' => Route::is('admin.services.index')
         ],
+        [
+            'route' => route('admin.discounts.index'),
+            'icon' => 'fas fa-tags',
+            'label' => 'Manage Discounts',
+            'isActive' => Request::is('admin/discounts*'),
+        ],
     ]"
 />
