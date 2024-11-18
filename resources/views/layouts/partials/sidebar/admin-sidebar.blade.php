@@ -1,4 +1,4 @@
-<x-sidebar 
+<x-sidebar
     logoRoute="{{ route('admin.dashboard') }}"
     :links="[
         [
@@ -24,6 +24,12 @@
             'icon' => 'fas fa-briefcase',
             'label' => 'Service Management',
             'isActive' => Route::is('admin.services.index')
+        ],
+        [
+            'route' => route('admin.reviews.index'),
+            'icon' => 'fa-solid fa-list-check',
+            'label' => 'Reviews Management',
+            'isActive' => Route::is('admin.reviews.index')
         ],
     ]"
 />

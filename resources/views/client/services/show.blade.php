@@ -1,65 +1,109 @@
 <x-client-layout>
     <div class="bg-white shadow-md rounded-lg p-6">
-        <h3 class="text-2xl font-bold">{{ $service->name }}</h3>
-
-        @if($service->image_path)
-            <div class="mt-4">
-                <img src="{{ asset($service->image_path) }}" alt="{{ $service->name }}" class="w-40 max-w-md mt-2 rounded">
+        <!-- Service Header -->
+        <div class="flex items-center space-x-4">
+            @if($service->image_path)
+                <img src="{{ asset($service->image_path) }}" alt="{{ $service->name }}" class="w-24 h-24 rounded">
+            @endif
+            <div>
+                <h3 class="text-2xl font-bold">{{ $service->name }}</h3>
+                <p class="text-gray-800 font-bold">€{{ number_format($service->price, 2) }}</p>
+                <p class="text-gray-600">{{ $service->category->name }}</p>
             </div>
-        @endif
-
-        <p class="text-gray-800 font-bold mt-4">€{{ number_format($service->price, 2) }}</p>
-        <div class="mt-2">
-            <strong>{{ __('Category') }}:</strong> <span>{{ $service->category->name }}</span>
         </div>
+
+        <!-- Service Description -->
         <div class="mt-4">
-            <strong>{{ __('Description') }}:</strong>
+            <h4 class="text-lg font-semibold">{{ __('Description') }}</h4>
             <p class="mt-2 text-gray-600">{{ $service->description }}</p>
         </div>
 
-        @if($existingBooking)
-            <!-- Message and button for users who already booked -->
-            <div class="mt-6 p-4 bg-green-100 text-green-800 rounded">
-                <p>You have already booked this service for {{ $existingBooking->date->format('d M Y') }} at {{ $existingBooking->start_time->format('H:i') }}.</p>
-                <a href="{{ route('client.bookings.show', $existingBooking) }}" class="mt-4 inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    View Booking
-                </a>
-            </div>
-        @else
-            <!-- Booking form for users who haven't booked yet -->
-            <div class="mt-6">
-                <form method="POST" action="{{ route('client.bookings.store', $service) }}">
+        <!-- Booking Section -->
+        <div class="mt-6">
+            @if($existingBooking)
+                <!-- Existing Booking Message -->
+                <div class="p-4 bg-green-100 text-green-800 rounded">
+                    <p>{{ __('You have already booked this service for :date at :time.', ['date' => $existingBooking->date->format('d M Y'), 'time' => $existingBooking->start_time->format('H:i')]) }}</p>
+                    <a href="{{ route('client.bookings.show', $existingBooking) }}" class="mt-4 inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        {{ __('View Booking') }}
+                    </a>
+                </div>
+            @else
+                <!-- Booking Form -->
+                <form method="POST" action="{{ route('client.bookings.store', $service) }}" class="space-y-4">
                     @csrf
-
-                    <div class="mb-4">
+                    <!-- Date Picker -->
+                    <div>
                         <label for="date" class="block text-gray-700">{{ __('Booking Date') }}</label>
                         <input
                             type="text"
                             id="date"
                             name="date"
-                            class="block mt-1 w-full"
+                            class="block mt-1 w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
                             required>
                         @error('date')
                         <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
 
-                    <div class="mb-4">
+                    <!-- Available Slots -->
+                    <div>
                         <label for="available_slots" class="block text-gray-700">{{ __('Available Slots') }}</label>
-                        <div id="available_slots" class="flex flex-wrap gap-2"></div>
+                        <div id="available_slots" class="flex flex-wrap gap-2 mt-2"></div>
                         <input type="hidden" id="selected_slot" name="start_time" required>
                         @error('start_time')
                         <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
 
-                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    <!-- Submit Button -->
+                    <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                         {{ __('Book Now') }}
                     </button>
                 </form>
-            </div>
-        @endif
+            @endif
+        </div>
 
+        <!-- Reviews Section -->
+        <div class="mt-8">
+            <h3 class="text-xl font-semibold text-gray-800">Reviews</h3>
+
+            @php
+                // Filter reviews specifically for the service (from clients)
+                $serviceReviews = $service->reviews->where('review_type', 'service');
+            @endphp
+
+            @if($serviceReviews->isEmpty())
+                <p class="text-gray-600 mt-4">No reviews available for this service yet.</p>
+            @else
+                <div class="space-y-4 mt-4">
+                    @foreach($serviceReviews as $review)
+                        <div class="bg-gray-100 p-4 rounded">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">
+                                        {{ $review->reviewer->first_name }} {{ $review->reviewer->last_name }}
+                                    </h4>
+                                    <p class="text-sm text-gray-600">{{ $review->created_at->format('d M Y') }}</p>
+                                </div>
+                                <div class="text-yellow-500">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        @if($i <= $review->rating)
+                                            ★
+                                        @else
+                                            ☆
+                                        @endif
+                                    @endfor
+                                </div>
+                            </div>
+                            <p class="mt-2 text-gray-700">{{ $review->comment ?? 'No comment provided.' }}</p>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+        </div>
+
+        <!-- Back Button -->
         <div class="mt-6">
             <a href="{{ route('client.services') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
                 {{ __('Back to Services') }}
@@ -67,6 +111,7 @@
         </div>
     </div>
 
+    <!-- Script Section -->
     <script>
         $(document).ready(function () {
             // Initialize the booking form when the page is ready
@@ -88,7 +133,6 @@
         function initializeBookingForm() {
             // Ensure Flatpickr is only initialized once by checking for the instance
             if ($('#date').data('flatpickr')) {
-                // If Flatpickr is already initialized, return
                 return;
             }
 
@@ -110,28 +154,19 @@
             // Initialize Flatpickr
             flatpickr("#date", {
                 dateFormat: "Y-m-d",
-                disable: [
-                    function (date) {
-                        return !enabledDays.includes(date.getDay()); // Disable non-working days
-                    }
-                ],
-                locale: {
-                    firstDayOfWeek: 1 // Start the week on Monday
-                },
-                minDate: "today", // Prevent past dates
-                maxDate: new Date().fp_incr(60) // Allow booking within the next 60 days
+                disable: [date => !enabledDays.includes(date.getDay())],
+                locale: { firstDayOfWeek: 1 },
+                minDate: "today",
+                maxDate: new Date().fp_incr(60)
             });
 
-            // Mark Flatpickr as initialized by storing the instance in the data attribute
             $('#date').data('flatpickr', true);
 
-            // Add change event listener for the date input field
             $('#date').on('change', function () {
                 const date = this.value;
                 const slotsContainer = document.getElementById('available_slots');
                 const selectedSlotInput = document.getElementById('selected_slot');
 
-                // Reset available slots
                 slotsContainer.innerHTML = '';
                 selectedSlotInput.value = '';
 
@@ -140,7 +175,6 @@
                     return;
                 }
 
-                // Fetch available slots via API
                 fetch(`/client/services/{{ $service->id }}/available-slots?date=${date}`)
                     .then(response => response.json())
                     .then(slots => {
@@ -154,7 +188,6 @@
                                 button.className = 'text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2';
 
                                 button.addEventListener('click', () => {
-                                    // Highlight the selected slot
                                     document.querySelectorAll('#available_slots button').forEach(btn => btn.classList.remove('bg-green-700', 'text-white'));
                                     button.classList.add('bg-green-700', 'text-white');
                                     selectedSlotInput.value = slot;
@@ -170,11 +203,7 @@
                     });
             });
 
-            // Trigger initial event for empty state
             $('#date').trigger('change');
         }
-
     </script>
-
 </x-client-layout>
-

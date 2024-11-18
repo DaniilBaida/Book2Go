@@ -14,7 +14,7 @@
         @if($service->description)
             <p class="text-gray-700 mt-2">{{ $service->description }}</p>
         @endif
-        
+
 
         <!-- Reviews and Bookings -->
         <div class="mt-4 flex items-center space-x-4 align-middle">
@@ -60,10 +60,10 @@
                 <x-danger-button @click="open = true" class="flex-1 w-full justify-center">{{ __('Delete') }}</x-danger-button>
 
                 <!-- Confirmation Modal -->
-                <div 
-                    x-cloak 
-                    x-show="open" 
-                    x-transition 
+                <div
+                    x-cloak
+                    x-show="open"
+                    x-transition
                     class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50"
                 >
                     <div class="bg-white p-6 rounded-lg shadow-lg">

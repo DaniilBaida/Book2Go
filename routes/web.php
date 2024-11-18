@@ -1,17 +1,21 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\BusinessController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\Business\BusinessBookingController;
+use App\Http\Controllers\Business\BusinessReviewController;
 use App\Http\Controllers\Business\BusinessSetupController;
 use App\Http\Controllers\Business\BusinessServiceController;
 use App\Http\Controllers\Business\BusinessDetailsController;
 use App\Http\Controllers\Client\ClientBookingController;
+use App\Http\Controllers\Client\ClientReviewController;
 use App\Http\Controllers\Client\ClientServiceController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\CityController;
@@ -35,8 +39,12 @@ Route::get('/', function () {
 // Public route to fetch cities based on country code
 Route::get('/get-cities/{countryCode}', [CityController::class, 'getCities']);
 
+
 // Authenticated and verified routes
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index'); // View notifications
+    Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead'); // Mark all as read
+    Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead'); // Mark a specific notification as read
 
     // Admin-specific routes
     roleBasedRoutes('admin', User::ROLE_ADMIN, 'admin', function () {
@@ -61,6 +69,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('businesses.update-general-info');
         Route::patch('businesses/{business}/update-contact', [BusinessController::class, 'updateContact'])
             ->name('businesses.update-contact');
+
+        Route::resource('reviews', AdminReviewController::class)->only(['index', 'show']);
+        Route::patch('reviews/{review}/approve', [AdminReviewController::class, 'approve'])->name('reviews.approve');
+        Route::patch('reviews/{review}/reject', [AdminReviewController::class, 'reject'])->name('reviews.reject');
     });
 
     // Business-specific routes
@@ -81,8 +93,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::patch('bookings/{booking}/accept', [BusinessBookingController::class, 'accept'])->name('bookings.accept');  // Accept a booking
             Route::patch('bookings/{booking}/deny', [BusinessBookingController::class, 'deny'])->name('bookings.deny');  // Deny a booking
             Route::patch('business/bookings/bulk', [BusinessBookingController::class, 'bulkUpdate'])->name('bookings.bulk'); // Bulk Update
+            Route::patch('bookings/{booking}/complete', [BusinessBookingController::class, 'complete'])->name('bookings.complete');
 
-
+            Route::get('bookings/{booking}/reviews/create', [BusinessReviewController::class, 'create'])->name('reviews.create');
+            Route::post('bookings/{booking}/reviews', [BusinessReviewController::class, 'store'])->name('reviews.store');
+            Route::patch('reviews/{review}/report', [BusinessReviewController::class, 'report'])->name('reviews.report');
         });
 
         // Routes for businesses with incomplete setup
@@ -103,16 +118,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('services', [ClientServiceController::class, 'index'])->name('services'); // View services
         Route::get('services/{service}', [ClientServiceController::class, 'show'])->name('services.show'); // View specific service
-        Route::post('services/{service}/reviews', [ReviewController::class, 'store'])->name('reviews.store'); // Submit a review
 
-        Route::get('services/{service}/available-slots', [BookingController::class, 'availableSlots'])
+        Route::get('bookings/{booking}/reviews/create', [ClientReviewController::class, 'create'])->name('reviews.create');
+        Route::post('bookings/{booking}/reviews', [ClientReviewController::class, 'store'])->name('reviews.store');
+        Route::patch('reviews/{review}/report', [ClientReviewController::class, 'report'])->name('reviews.report');
+
+        Route::get('services/{service}/available-slots', [ClientBookingController::class, 'availableSlots'])
             ->name('services.available-slots'); // Check available slots for a service
 
-        Route::post('services/{service}/bookings', [BookingController::class, 'store'])->name('bookings.store'); // Book a service
+        Route::post('services/{service}/bookings', [ClientBookingController::class, 'store'])->name('bookings.store'); // Book a service
 
         Route::get('bookings', [ClientBookingController::class, 'index'])->name('bookings'); // View bookings
         Route::get('bookings/{booking}', [ClientBookingController::class, 'show'])->name('bookings.show');  // View specific booking
-        Route::delete('bookings/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
+        Route::delete('bookings/{booking}/cancel', [ClientBookingController::class, 'cancel'])->name('bookings.cancel');
     });
 
 });

@@ -1,3 +1,12 @@
+@php
+    $statusClasses = [
+        'pending' => 'bg-yellow-500',
+        'accepted' => 'bg-green-500',
+        'denied' => 'bg-red-500',
+        'completed' => 'bg-blue-500'
+    ];
+@endphp
+
 <x-client-layout>
     <div class="bg-white shadow-md rounded-lg p-6">
         <h2 class="text-2xl font-bold mb-4">Booking Details</h2>
@@ -49,10 +58,10 @@
 
             <!-- Booking Status -->
             <div class="sm:col-span-2 mt-6">
-                <p class="text-gray-600"><strong>Status:</strong></p>
-                <span class="px-2 py-1 rounded text-white {{ $booking->status === 'accepted' ? 'bg-green-500' : ($booking->status === 'denied' ? 'bg-red-500' : 'bg-yellow-500') }}">
+                <h3 class="text-xl font-semibold text-gray-800">Booking Status</h3>
+                <dd class="px-2 py-1 rounded text-white {{ $statusClasses[$booking->status] ?? 'bg-gray-500' }}">
                     {{ ucfirst($booking->status) }}
-                </span>
+                </dd>
             </div>
         </div>
 

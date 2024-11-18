@@ -7,34 +7,87 @@ use Illuminate\Database\Eloquent\Model;
 
 class Review extends Model
 {
+
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string> Attributes that can be set via mass assignment.
+     * @var array<int, string>
      */
-    protected $fillable = ['service_id', 'user_id', 'rating', 'comment'];
+    protected $fillable = [
+        'booking_id',
+        'rating',
+        'comment',
+        'reviewer_type',
+        'is_approved',
+        'reported_at',
+    ];
 
     /**
-     * Define the relationship with the Service model.
-     *
-     * A Review belongs to a specific Service.
+     * Get the booking associated with the review.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function booking()
+    {
+        return $this->belongsTo(Booking::class);
+    }
+
+    /**
+     * Get the service through the booking.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOneThrough
      */
     public function service()
     {
-        return $this->belongsTo(Service::class);
+        return $this->hasOneThrough(
+            Service::class,
+            Booking::class,
+            'id', // Foreign key on Bookings table
+            'id', // Foreign key on Services table
+            'booking_id', // Local key on Reviews table
+            'service_id' // Local key on Bookings table
+        );
     }
 
     /**
-     * Define the relationship with the User model.
+     * Get the user through the booking.
      *
-     * A Review is authored by a specific User.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasOneThrough
      */
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->hasOneThrough(User::class, Booking::class, 'id', 'id', 'booking_id', 'user_id');
     }
+
+    // Determine the reviewer through booking's user (client or business)
+    public function reviewer()
+    {
+        if ($this->reviewer_type === 'client') {
+            return $this->booking->user; // User associated with booking
+        }
+
+        return $this->booking->service->business; // Business owner via booking->service
+    }
+
+    // Simplified accessor for reviewing entity
+    public function reviewedEntity()
+    {
+        if ($this->reviewer_type === 'client') {
+            return $this->booking->service->business;
+        }
+
+        return $this->booking->user;
+    }
+
+    public function isReported()
+    {
+        return !is_null($this->reported_at);
+    }
+
+    public function markAsReported()
+    {
+        $this->update(['reported_at' => now()]);
+    }
+
+
 }

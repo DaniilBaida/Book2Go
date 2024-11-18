@@ -58,11 +58,12 @@ class Service extends Model
      *
      * A Service can have many Reviews.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
     public function reviews()
     {
-        return $this->hasMany(Review::class);
+        return $this->hasManyThrough(Review::class, Booking::class, 'service_id', 'booking_id')
+            ->where('reviews.reviewer_type', 'client');
     }
 
     /**

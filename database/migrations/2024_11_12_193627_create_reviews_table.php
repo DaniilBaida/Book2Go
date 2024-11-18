@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('service_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->unsignedTinyInteger('rating')->comment('Rating from 1 to 5');
-            $table->text('comment')->nullable();
+            $table->foreignId('booking_id')->constrained()->onDelete('cascade'); // Link to booking
+            $table->unsignedTinyInteger('rating');   // Rating between 1 and 5
+            $table->text('comment')->nullable();     // Optional review comment
+            $table->enum('reviewer_type', ['client', 'business']); // Who wrote the review
+            $table->boolean('is_approved')->default(false); // Admin approval flag
+            $table->timestamp('reported_at')->nullable();
             $table->timestamps();
         });
     }

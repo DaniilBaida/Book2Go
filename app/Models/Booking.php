@@ -3,14 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
 class Booking extends Model
 {
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string> Attributes that can be set via mass assignment.
-     */
+    use Notifiable;
     protected $fillable = [
         'service_id',
         'user_id',
@@ -18,7 +15,9 @@ class Booking extends Model
         'start_time',
         'end_time',
         'status',
+        'completed_at',
     ];
+
     protected $casts = [
         'date' => 'date:Y-m-d',
         'start_time' => 'datetime:H:i',
@@ -47,5 +46,28 @@ class Booking extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Define the relationship with the Review model.
+     *
+     * A Booking can have multiple reviews (from client and business).
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    /**
+     * Scope for completed bookings.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCompleted($query)
+    {
+        return $query->where('status', 'completed');
     }
 }
