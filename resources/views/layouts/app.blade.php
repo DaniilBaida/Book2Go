@@ -28,7 +28,7 @@
         @yield('sidebar')
         <div class="flex flex-col flex-1 overflow-y-auto">
             @yield('header')
-            <main id="main-content" class="grow p-4">
+            <main id="main-content" class="grow">
                 @yield('content')
             </main>
         </div>
