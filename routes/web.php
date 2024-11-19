@@ -79,7 +79,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('bookings/{booking}', [BusinessBookingController::class, 'show'])->name('bookings.show'); // Booking details
             Route::patch('bookings/{booking}/accept', [BusinessBookingController::class, 'accept'])->name('bookings.accept'); // Accept booking
             Route::patch('bookings/{booking}/deny', [BusinessBookingController::class, 'deny'])->name('bookings.deny'); // Deny booking
-            Route::patch('bookings/bulk', [BusinessBookingController::class, 'bulkUpdate'])->name('bookings.bulk'); // Bulk update bookings
+            Route::post('bookings/bulk', [BusinessBookingController::class, 'bulkUpdate'])->name('bookings.bulk'); // Bulk update bookings
 
             // Discount Codes for Business
             Route::resource('discounts', BusinessDiscountController::class)->except(['show']);
