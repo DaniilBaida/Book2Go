@@ -99,7 +99,7 @@ class BookingController extends Controller
     public function index()
     {
         // Get all bookings for the current client (user)
-        $bookings = Booking::where('user_id', auth()->id())->get();
+        $bookings = Booking::where('user_id', auth()->id())->paginate(10); // Paginate with 10 results per page
         return view('client.bookings.index', compact('bookings'));
     }
 
