@@ -2,14 +2,14 @@
 <form method="POST" action="{{ route('business.bookings.accept', $booking) }}">
     @csrf
     @method('PATCH')
-    <x-button class="bg-green-600 hover:bg-green-500">
-        <i class="fa-solid fa-check"></i>
+    <x-button class="bg-green-500/40 hover:bg-green-500/60 duration-300 h-full">
+        <i class="fa-solid fa-check text-green-500"></i>
     </x-button>
 </form>
 
 <!-- BUSINESS: Deny Booking Button -->
-<x-danger-button x-on:click="$dispatch('open-modal', 'deny-booking-{{ $booking->id }}')">
-    <i class="fa-solid fa-x"></i>
+<x-danger-button x-on:click="$dispatch('open-modal', 'deny-booking-{{ $booking->id }}')" class="bg-red-500/60 hover:bg-red-500/70 duration-300">
+    <i class="fa-solid fa-x text-red-500"></i>
 </x-danger-button>
 
 <!-- BUSINESS: Deny Booking Modal -->

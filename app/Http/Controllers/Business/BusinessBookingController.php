@@ -39,7 +39,7 @@ class BusinessBookingController extends Controller
 
         $query->select('bookings.*');
 
-        $bookings = $query->with(['user', 'service'])->paginate(10);
+        $bookings = $query->with(['user', 'service'])->paginate(9);
 
         return view('business.bookings.index', compact('bookings'));
     }

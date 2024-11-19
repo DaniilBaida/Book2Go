@@ -15,7 +15,7 @@ class ClientBookingController extends Controller
             ->with('service') // Eager load the related service
             ->orderBy('date', 'desc')
             ->orderBy('start_time', 'desc')
-            ->get();
+            ->paginate(9);
 
         return view('client.bookings.index', compact('bookings'));
     }
