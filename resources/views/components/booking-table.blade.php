@@ -2,7 +2,7 @@
     <!-- Booking Actions -->
     <div class="md:flex justify-between items-center mb-4">
         <!-- Search Bar -->
-        <form method="GET" action="{{ route($role . '.bookings') }}" class="max-md:mb-6 flex max-md:flex-col md:items-center max-md:gap-y-2 w-full md:w-auto">
+        <form method="GET" action="{{ route($role . '.bookings') }}" class="max-md:mb-6 flex items-center max-md:gap-y-2 w-full md:w-auto">
             <div class="relative">
                 <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                     <svg class="w-4 h-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
@@ -14,13 +14,13 @@
                     name="search"
                     id="table-search-bookings"
                     value="{{ request('search') }}"
-                    class="text-sm block w-full ps-10 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                    class="text-sm block w-full ps-10 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 max-sm:flex-1"
                     placeholder="Search for bookings"
                 >
             </div>
-            <div class="flex gap-2 justify-start mt-2 md:mt-0">
+            <div class="flex gap-2 justify-start mt-0">
                 <!-- Search Button -->
-                <x-button-secondary type="submit" class="text-sm md:ml-2 text-blue-600 hover:text-blue-800">
+                <x-button-secondary type="submit" class="text-sm ml-2 text-blue-600 hover:text-blue-800">
                     Search
                 </x-button-secondary>
 
@@ -43,7 +43,7 @@
                 <!-- Selected bookings will be appended here dynamically -->
                 <div id="selected-bookings"></div>
 
-                <div class="flex items-center gap-2 mt-2 md:mt-0">
+                <div class="max-sm:flex-col flex sm:items-center gap-2 mt-2 md:mt-0">
                     <!-- Approve Selected Button -->
                     <x-button id="approve-button" type="button" class="text-sm bg-green-500 hover:bg-green-400 disabled:opacity-50 disabled:pointer-events-none"
                             disabled onclick="submitBulkUpdate('accept')">
