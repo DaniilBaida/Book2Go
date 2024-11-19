@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminNotificationController;
 use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ServiceController;
@@ -7,12 +8,14 @@ use App\Http\Controllers\Admin\DiscountController as AdminDiscountController;
 use App\Http\Controllers\Admin\BusinessController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Business\BusinessBookingController;
+use App\Http\Controllers\Business\BusinessNotificationController;
 use App\Http\Controllers\Business\BusinessReviewController;
 use App\Http\Controllers\Business\BusinessSetupController;
 use App\Http\Controllers\Business\BusinessServiceController;
 use App\Http\Controllers\Business\BusinessDetailsController;
 use App\Http\Controllers\Business\BusinessDiscountController;
 use App\Http\Controllers\Client\ClientBookingController;
+use App\Http\Controllers\Client\ClientNotificationController;
 use App\Http\Controllers\Client\ClientReviewController;
 use App\Http\Controllers\Client\ClientServiceController;
 use App\Http\Controllers\DashboardController;
@@ -41,9 +44,6 @@ Route::get('/get-cities/{countryCode}', [CityController::class, 'getCities']);
 
 // Authenticated and verified routes
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index'); // View notifications
-    Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead'); // Mark all as read
-    Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead'); // Mark a specific notification as read
 
     // Admin-specific routes
     roleBasedRoutes('admin', User::ROLE_ADMIN, 'admin', function () {
@@ -74,6 +74,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::patch('reviews/{review}/reject', [AdminReviewController::class, 'reject'])->name('reviews.reject');
 
         Route::resource('discounts', AdminDiscountController::class)->except(['show']);
+
+        Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('notifications.index'); // View notifications
+        Route::post('/notifications/mark-all-as-read', [AdminNotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead'); // Mark all as read
+        Route::post('/notifications/{id}/mark-as-read', [AdminNotificationController::class, 'markAsRead'])->name('notifications.markAsRead'); // Mark a specific notification as read
+
     });
 
     // Business-specific routes
@@ -104,6 +109,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('bookings/{booking}/reviews/create', [BusinessReviewController::class, 'create'])->name('reviews.create');
             Route::post('bookings/{booking}/reviews', [BusinessReviewController::class, 'store'])->name('reviews.store');
             Route::patch('reviews/{review}/report', [BusinessReviewController::class, 'report'])->name('reviews.report');
+
+            Route::get('/notifications', [BusinessNotificationController::class, 'index'])->name('notifications.index'); // View notifications
+            Route::post('/notifications/mark-all-as-read', [BusinessNotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead'); // Mark all as read
+            Route::post('/notifications/{id}/mark-as-read', [BusinessNotificationController::class, 'markAsRead'])->name('notifications.markAsRead'); // Mark a specific notification as read
+
         });
 
         // Routes for businesses with incomplete setup
@@ -137,8 +147,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('bookings', [ClientBookingController::class, 'index'])->name('bookings'); // View bookings
         Route::get('bookings/{booking}', [ClientBookingController::class, 'show'])->name('bookings.show');  // View specific booking
         Route::delete('bookings/{booking}/cancel', [ClientBookingController::class, 'cancel'])->name('bookings.cancel');
-    });
 
+        Route::get('/notifications', [ClientNotificationController::class, 'index'])->name('notifications.index'); // View notifications
+        Route::post('/notifications/mark-all-as-read', [ClientNotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead'); // Mark all as read
+        Route::post('/notifications/{id}/mark-as-read', [ClientNotificationController::class, 'markAsRead'])->name('notifications.markAsRead'); // Mark a specific notification as read
+
+    });
 });
 
 // Include authentication routes

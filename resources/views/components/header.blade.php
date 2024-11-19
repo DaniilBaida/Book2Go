@@ -67,7 +67,15 @@
                             </a>
                         </div>
                         <div class="p-4 border-t border-gray-200 text-center">
-                            <a href="{{route('notifications.index')}}"
+                            @php
+                                $notificationRoute = match(auth()->user()->role_id) {
+                                    App\Models\User::ROLE_ADMIN => route('admin.notifications.index'),
+                                    App\Models\User::ROLE_BUSINESS => route('business.notifications.index'),
+                                    App\Models\User::ROLE_CLIENT => route('client.notifications.index'),
+                                    default => route('notifications.index'),
+                                };
+                            @endphp
+                            <a href="{{ $notificationRoute }}"
                                class="text-sm text-blue-500 hover:underline"
                                id="view-all-notifications">
                                 View All Notifications
@@ -97,10 +105,6 @@
                             <div class="text-xs text-gray-500 italic">{{ $roleLabel }}</div>
                         </div>
 
-                        <x-dropdown-link :href="$profileRoute" class="ajax-link" data-path="{{ parse_url($profileRoute, PHP_URL_PATH) }}">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
-
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
@@ -114,19 +118,25 @@
     </div>
     <script>
         $('#mark-all-read').on('click', function () {
+            let markAllReadRoute = @json([
+            App\Models\User::ROLE_ADMIN => route('admin.notifications.markAllAsRead'),
+            App\Models\User::ROLE_BUSINESS => route('business.notifications.markAllAsRead'),
+            App\Models\User::ROLE_CLIENT => route('client.notifications.markAllAsRead'),
+        ][auth()->user()->role_id] ?? route('notifications.markAllAsRead'));
+
             $.ajax({
-                url: '{{ route('notifications.markAllAsRead') }}',
+                url: markAllReadRoute,
                 type: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
                 success: function(response) {
                     // Update the UI to reflect that notifications are read
-                    $('.notification-count').text(''); // Clear the notification count
+                    $('.notification-count').text('');
                     $('.max-h-60').html(`
-                    <div class="px-4 py-2 text-sm text-gray-500">
-                        No new notifications.
-                    </div>`);
+                <div class="px-4 py-2 text-sm text-gray-500">
+                    No new notifications.
+                </div>`);
                 },
                 error: function(xhr) {
                     console.error('Failed to mark notifications as read');
