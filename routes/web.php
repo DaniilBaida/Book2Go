@@ -44,6 +44,9 @@ Route::get('/get-cities/{countryCode}', [CityController::class, 'getCities']);
 
 // Authenticated and verified routes
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead'); // Mark all as read
+    Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead'); // Mark a specific notification as read
+
 
     // Admin-specific routes
     roleBasedRoutes('admin', User::ROLE_ADMIN, 'admin', function () {
@@ -76,8 +79,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('discounts', AdminDiscountController::class)->except(['show']);
 
         Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('notifications.index'); // View notifications
-        Route::post('/notifications/mark-all-as-read', [AdminNotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead'); // Mark all as read
-        Route::post('/notifications/{id}/mark-as-read', [AdminNotificationController::class, 'markAsRead'])->name('notifications.markAsRead'); // Mark a specific notification as read
 
     });
 
@@ -111,9 +112,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::patch('reviews/{review}/report', [BusinessReviewController::class, 'report'])->name('reviews.report');
 
             Route::get('/notifications', [BusinessNotificationController::class, 'index'])->name('notifications.index'); // View notifications
-            Route::post('/notifications/mark-all-as-read', [BusinessNotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead'); // Mark all as read
-            Route::post('/notifications/{id}/mark-as-read', [BusinessNotificationController::class, 'markAsRead'])->name('notifications.markAsRead'); // Mark a specific notification as read
-
         });
 
         // Routes for businesses with incomplete setup
@@ -149,8 +147,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('bookings/{booking}/cancel', [ClientBookingController::class, 'cancel'])->name('bookings.cancel');
 
         Route::get('/notifications', [ClientNotificationController::class, 'index'])->name('notifications.index'); // View notifications
-        Route::post('/notifications/mark-all-as-read', [ClientNotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead'); // Mark all as read
-        Route::post('/notifications/{id}/mark-as-read', [ClientNotificationController::class, 'markAsRead'])->name('notifications.markAsRead'); // Mark a specific notification as read
 
     });
 });
