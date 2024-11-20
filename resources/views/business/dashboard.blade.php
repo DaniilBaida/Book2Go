@@ -31,5 +31,10 @@
             />
 
         </div>
+        @if(auth()->user()->unreadNotifications->count() > 0)
+            <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4">
+                <p>You have {{ auth()->user()->unreadNotifications->count() }} new notification(s).</p>
+            </div>
+        @endif
     </div>
 </x-business-layout>

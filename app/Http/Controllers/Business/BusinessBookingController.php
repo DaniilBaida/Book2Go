@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Business;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Notifications\ReviewRequestNotification;
 use Illuminate\Http\Request;
 
 class BusinessBookingController extends Controller
@@ -63,6 +64,7 @@ class BusinessBookingController extends Controller
      */
     public function show(Booking $booking)
     {
+
         return view('business.bookings.show', compact('booking'));
     }
 
@@ -104,6 +106,21 @@ class BusinessBookingController extends Controller
             ->update(['status' => $status]);
 
         return redirect()->route('business.bookings')->with('success', 'Bookings updated successfully.');
+    }
+
+    public function complete(Booking $booking)
+    {
+        if ($booking->status !== 'accepted') {
+            return redirect()->back()->withErrors(['error' => 'Only accepted bookings can be marked as completed.']);
+        }
+
+        $booking->update(['status' => 'completed']);
+
+        // Notify both client and business
+        $booking->user->notify(new ReviewRequestNotification($booking)); // Notify client
+        $booking->service->business->user->notify(new ReviewRequestNotification($booking)); // Notify business
+
+        return redirect()->route('business.bookings')->with('success', 'Booking marked as completed. Both parties can now leave a review.');
     }
 
 }

@@ -45,7 +45,7 @@
                 {{ number_format($service->reviews_avg_rating, 1) }}
             </p>
         </div>
-        
+
         <!-- BOOKINGS -->
         <div class="flex items-center">
             <i class="fas fa-user text-gray-800 text-base mr-2 flex items-center"></i>
@@ -56,7 +56,7 @@
         @if($service->description)
             <p class="text-gray-700">{{ $service->description }}</p>
         @endif
- 
+
         <p class="text-gray-800 font-semibold">{{ __('€') . number_format($service->price, 2) }} / {{ __('session') }}</p>
         <p class="text-sm text-gray-500">{{ $service->duration_minutes }} {{ __('minutes') }}</p>
     </div>
@@ -91,8 +91,8 @@
                         </p>
                         <div class="mt-6 flex justify-end gap-4">
                             <!-- Cancel Button -->
-                            <x-button-secondary 
-                                @click="$dispatch('close-modal', 'confirm-service-deletion-{{ $service->id }}')" 
+                            <x-button-secondary
+                                @click="$dispatch('close-modal', 'confirm-service-deletion-{{ $service->id }}')"
                                 class="text-sm">
                                 {{ __('Cancel') }}
                             </x-button-secondary>

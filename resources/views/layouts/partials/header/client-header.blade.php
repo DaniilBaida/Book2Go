@@ -1,4 +1,4 @@
-<x-header 
-    profileRoute="{{ route('client.profile.edit') }}" 
-    roleLabel="Client" 
+<x-header
+    profileRoute="{{ route('client.profile.edit') }}"
+    roleLabel="Client"
 />

@@ -12,6 +12,18 @@
             </a>
         </div>
 
+        <!-- Alerts -->
+        @if(session('success'))
+            <div class="mt-4 p-4 bg-green-100 text-green-800 rounded">
+                {{ session('success') }}
+            </div>
+        @endif
+        @if(session('error'))
+            <div class="mt-4 p-4 bg-red-100 text-red-800 rounded">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <!-- Booking Information -->
         <div class="mt-6 border-t pt-4">
             <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -32,11 +44,15 @@
                 </div>
                 <div>
                     <dt class="font-medium text-gray-600">Client Details</dt>
-                    <dd class="text-gray-800">{{ $booking->user->first_name }} {{ $booking->user->last_name }} | {{ $booking->user->email }}</dd>
+                    <dd class="text-gray-800">
+                        {{ $booking->user->first_name }} {{ $booking->user->last_name }} <br>
+                        <strong>Email:</strong> {{ $booking->user->email }} <br>
+                        <strong>Phone:</strong> {{ $booking->user->phone_number ?? 'Not provided' }}
+                    </dd>
                 </div>
                 <div>
                     <dt class="font-medium text-gray-600">Status</dt>
-                    <dd class="px-2 py-1 rounded text-white {{ $booking->status === 'accepted' ? 'bg-green-500' : ($booking->status === 'denied' ? 'bg-red-500' : 'bg-yellow-500') }}">
+                    <dd class="px-2 py-1 rounded text-white {{ $statusClasses[$booking->status] ?? 'bg-gray-500' }}">
                         {{ ucfirst($booking->status) }}
                     </dd>
                 </div>
@@ -47,24 +63,40 @@
             </dl>
         </div>
 
-        <!-- Actions for Pending Bookings -->
-        @if($booking->status === 'pending')
-            <div class="mt-6 flex space-x-4">
-                <form action="{{ route('business.bookings.accept', $booking) }}" method="POST">
-                    @csrf
-                    @method('PATCH')
-                    <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-                        Accept Booking
-                    </button>
-                </form>
-                <form action="{{ route('business.bookings.deny', $booking) }}" method="POST">
-                    @csrf
-                    @method('PATCH')
-                    <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                        Deny Booking
-                    </button>
-                </form>
-            </div>
-        @endif
+        <!-- Conditional Actions -->
+        <div class="mt-6">
+            @if($booking->status === 'pending')
+                <div class="flex space-x-4">
+                    <form action="{{ route('business.bookings.accept', $booking) }}" method="POST">
+                        @csrf
+                        @method('PATCH')
+                        <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                            Accept Booking
+                        </button>
+                    </form>
+                    <form action="{{ route('business.bookings.deny', $booking) }}" method="POST">
+                        @csrf
+                        @method('PATCH')
+                        <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                            Deny Booking
+                        </button>
+                    </form>
+                </div>
+            @elseif($booking->status === 'accepted')
+                <div class="flex space-x-4">
+                    <form action="{{ route('business.bookings.complete', $booking) }}" method="POST">
+                        @csrf
+                        @method('PATCH')
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Mark as Completed
+                        </button>
+                    </form>
+                </div>
+            @elseif($booking->status === 'completed' && !$booking->reviews->where('type', 'client')->count())
+                <a href="{{ route('business.reviews.create', $booking) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Leave a Review for Client
+                </a>
+            @endif
+        </div>
     </div>
 </x-business-layout>

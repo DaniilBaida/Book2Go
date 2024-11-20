@@ -28,17 +28,24 @@ class BusinessServiceController extends Controller
     {
         $search = $request->input('search');
 
-        // Fetch services for the authenticated user's business with optional search filtering
         $services = Auth::user()->business->services()
             ->when($search, function ($query) use ($search) {
                 $query->where('name', 'LIKE', "%{$search}%");
             })
-            ->withCount('reviews') // Include review count for each service
-            ->withAvg('reviews', 'rating') // Include average rating for each service
+            ->withCount([
+                'reviews as reviews_count' => function ($query) {
+                    $query->where('reviewer_type', 'client'); // Only reviews from clients
+                }
+            ])
+            ->withAvg([
+                'reviews as reviews_avg_rating' => function ($query) {
+                    $query->where('reviewer_type', 'client'); // Calculate avg only from client reviews
+                }
+            ], 'rating')
             ->with('category') // Include the service category
-            ->paginate(self::PAGINATION_COUNT); // Paginate results with a defined count
+            ->paginate(self::PAGINATION_COUNT);
 
-        $role = Auth::user()->role_id; // Retrieve the user's role
+        $role = Auth::user()->role_id;
 
         return view('business.services.index', compact('services', 'role'));
     }

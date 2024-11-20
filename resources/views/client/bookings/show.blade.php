@@ -5,9 +5,9 @@
             <!-- Right Column: Service Image (comes first on mobile) -->
             <div class="flex items-center justify-center order-1 sm:order-2">
                 @if($booking->service->image_path)
-                    <img 
-                        src="{{ asset($booking->service->image_path) }}" 
-                        alt="{{ $booking->service->name }}" 
+                    <img
+                        src="{{ asset($booking->service->image_path) }}"
+                        alt="{{ $booking->service->name }}"
                         class="w-full max-w-md h-auto object-contain rounded-lg"
                     />
                 @else
@@ -88,7 +88,7 @@
                         <!-- Cancel Button with Confirmation Modal -->
                         <div x-data="{ open: false }" class="ml-auto">
                             <!-- Trigger Button -->
-                            <x-danger-button 
+                            <x-danger-button
                                 class="flex-1 w-full justify-center text-sm"
                                 x-on:click.prevent="$dispatch('open-modal', 'confirm-cancel-booking')">
                                 Cancel Booking
@@ -112,8 +112,8 @@
 
                                     <div class="mt-6 flex justify-end">
                                         <!-- Cancel Modal Button -->
-                                        <x-button-secondary 
-                                            x-on:click="$dispatch('close-modal', 'confirm-cancel-booking')" 
+                                        <x-button-secondary
+                                            x-on:click="$dispatch('close-modal', 'confirm-cancel-booking')"
                                             class="text-sm">
                                             {{ __('No, Go Back') }}
                                         </x-button-secondary>
