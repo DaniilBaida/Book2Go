@@ -12,11 +12,49 @@ class BusinessBookingController extends Controller
     /**
      * Show the list of bookings for the business.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $bookings = Booking::whereHas('service', function ($query) {
+        $query = Booking::whereHas('service', function ($query) {
             $query->where('business_id', auth()->user()->business->id);
-        })->get();
+        });
+
+        // Add search filter
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($query) use ($search) {
+                $query->whereHas('user', function ($userQuery) use ($search) {
+                    $userQuery->where('first_name', 'LIKE', "%{$search}%")
+                            ->orWhere('last_name', 'LIKE', "%{$search}%");
+                })->orWhereHas('service', function ($serviceQuery) use ($search) {
+                    $serviceQuery->where('name', 'LIKE', "%{$search}%");
+                });
+            });
+        }
+
+        // Sorting logic
+        $sortableColumns = [
+            'user' => 'users.first_name', // Sort by user's first name
+            'service' => 'services.name', // Sort by service name
+            'date' => 'date',             // Sort by booking date
+            'start_time' => 'start_time', // Sort by start time
+            'status' => 'status',         // Sort by booking status
+        ];
+
+        if ($request->has('sort') && $request->has('direction')) {
+            $sortColumn = $sortableColumns[$request->get('sort')] ?? null;
+            $direction = $request->get('direction') === 'asc' ? 'asc' : 'desc';
+
+            if ($sortColumn) {
+                $query->join('services', 'bookings.service_id', '=', 'services.id')
+                    ->join('users', 'bookings.user_id', '=', 'users.id')
+                    ->orderBy($sortColumn, $direction);
+            }
+        }
+
+        $query->select('bookings.*');
+
+        // Get paginated bookings
+        $bookings = $query->with(['user', 'service'])->paginate(9);
 
         return view('business.bookings.index', compact('bookings'));
     }
@@ -67,7 +105,7 @@ class BusinessBookingController extends Controller
             })
             ->update(['status' => $status]);
 
-        return response()->json(['success' => true, 'message' => 'Bookings updated successfully.']);
+        return redirect()->route('business.bookings')->with('success', 'Bookings updated successfully.');
     }
 
     public function complete(Booking $booking)

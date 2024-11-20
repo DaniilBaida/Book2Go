@@ -12,15 +12,26 @@ use Illuminate\Http\Request;
 
 class ClientBookingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Get current user's bookings with related service data using Eloquent
-        $bookings = auth()->user()->bookings()
+        // Build query to fetch bookings for the authenticated user
+        $query = auth()->user()->bookings()
             ->with('service') // Eager load the related service
             ->orderBy('date', 'desc')
-            ->orderBy('start_time', 'desc')
-            ->get();
+            ->orderBy('start_time', 'desc');
 
+        // Add search logic
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->whereHas('service', function ($serviceQuery) use ($search) {
+                $serviceQuery->where('name', 'like', '%' . $search . '%');
+            });
+        }
+
+        // Paginate results
+        $bookings = $query->paginate(9);
+
+        // Return the view with the bookings
         return view('client.bookings.index', compact('bookings'));
     }
 
@@ -73,7 +84,6 @@ class ClientBookingController extends Controller
 
         return redirect()->route('client.bookings')->with('success', 'Booking created successfully.');
     }
-
     public function show(Booking $booking)
     {
 

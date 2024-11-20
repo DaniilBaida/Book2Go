@@ -118,25 +118,19 @@
     </div>
     <script>
         $('#mark-all-read').on('click', function () {
-            let markAllReadRoute = @json([
-            App\Models\User::ROLE_ADMIN => route('admin.notifications.markAllAsRead'),
-            App\Models\User::ROLE_BUSINESS => route('business.notifications.markAllAsRead'),
-            App\Models\User::ROLE_CLIENT => route('client.notifications.markAllAsRead'),
-        ][auth()->user()->role_id] ?? route('notifications.markAllAsRead'));
-
             $.ajax({
-                url: markAllReadRoute,
+                url: '{{ route('notifications.markAllAsRead') }}',
                 type: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
                 success: function(response) {
                     // Update the UI to reflect that notifications are read
-                    $('.notification-count').text('');
+                    $('.notification-count').text(''); // Clear the notification count
                     $('.max-h-60').html(`
-                <div class="px-4 py-2 text-sm text-gray-500">
-                    No new notifications.
-                </div>`);
+                    <div class="px-4 py-2 text-sm text-gray-500">
+                        No new notifications.
+                    </div>`);
                 },
                 error: function(xhr) {
                     console.error('Failed to mark notifications as read');
