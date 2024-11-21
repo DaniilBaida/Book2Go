@@ -158,6 +158,7 @@
                                         name="bookings[]"
                                         value="{{ $booking->id }}"
                                         class="form-checkbox h-4 w-4 text-blue-500 booking-checkbox rounded-md"
+                                        {{ $booking->status === 'completed' ? 'disabled' : '' }}
                                     >
                                 </td>
                                 <!-- User Column for Business -->
@@ -234,14 +235,20 @@
 
     // Select All toggle
     document.getElementById('select-all').addEventListener('change', function () {
+        const selectAllState = this.checked; // Get the state of the "Select All" checkbox
         checkboxes.forEach(checkbox => {
-            checkbox.checked = this.checked;
+            if (!checkbox.disabled) { // Skip disabled checkboxes
+                checkbox.checked = selectAllState;
+            }
         });
-        toggleBulkButtons();
+        toggleBulkButtons(); // Update button states after selection
     });
 
     function toggleBulkButtons() {
-        const anyChecked = [...checkboxes].some(checkbox => checkbox.checked);
+        // Check if there are any enabled and checked checkboxes
+        const anyChecked = [...checkboxes].some(checkbox => checkbox.checked && !checkbox.disabled);
+        
+        // Disable buttons if no valid checkboxes are selected
         approveButton.disabled = !anyChecked;
         denyButton.disabled = !anyChecked;
     }
@@ -272,6 +279,7 @@
         document.getElementById('bulk-update-form').submit();
     }
 
+    // Deny Modal
     function openDenyModal() {
         const selectedBookings = document.querySelectorAll('.booking-checkbox:checked');
 
