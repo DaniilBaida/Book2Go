@@ -2,7 +2,7 @@
     <div class="p-6 bg-white shadow-sm sm:rounded-lg">
         <h2 class="text-2xl font-semibold text-gray-800">Booking Details</h2>
 
-        <!-- Back Button -->
+        <!-- Botão para voltar -->
         <div class="mt-4">
             <a href="{{ route('business.bookings') }}" class="text-blue-500 hover:underline flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -12,7 +12,7 @@
             </a>
         </div>
 
-        <!-- Alerts -->
+        <!-- Alertas -->
         @if(session('success'))
             <div class="mt-4 p-4 bg-green-100 text-green-800 rounded">
                 {{ session('success') }}
@@ -24,7 +24,7 @@
             </div>
         @endif
 
-        <!-- Booking Information -->
+        <!-- Informações do Booking -->
         <div class="mt-6 border-t pt-4">
             <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
@@ -63,7 +63,7 @@
             </dl>
         </div>
 
-        <!-- Conditional Actions -->
+        <!-- Ações Condicionais -->
         <div class="mt-6">
             @if($booking->status === 'pending')
                 <div class="flex space-x-4">

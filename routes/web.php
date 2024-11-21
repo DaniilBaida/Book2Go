@@ -112,6 +112,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::patch('reviews/{review}/report', [BusinessReviewController::class, 'report'])->name('reviews.report');
 
             Route::get('/notifications', [BusinessNotificationController::class, 'index'])->name('notifications.index'); // View notifications
+
+            Route::get('/users/{id}', [BusinessController::class, 'showUserProfile'])->name('users.show');//Display user profile
+            Route::get('/business/bookings/{id}/details', [BusinessBookingController::class, 'show'])->name('business.bookings.details');//Order details
+
         });
 
         // Routes for businesses with incomplete setup
@@ -147,6 +151,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('bookings/{booking}/cancel', [ClientBookingController::class, 'cancel'])->name('bookings.cancel');
 
         Route::get('/notifications', [ClientNotificationController::class, 'index'])->name('notifications.index'); // View notifications
+
+
 
     });
 });

@@ -1,3 +1,9 @@
+<!-- BUSINESS: View Booking Details Button -->
+<a href="{{ route('business.bookings.show', $booking->id) }}" 
+   class="bg-gray-500/40 hover:bg-gray-500/60 duration-300 h-full px-3 py-2 rounded flex items-center">
+    <i class="fa-solid fa-info-circle text-gray-500"></i>
+</a>
+
 <!-- BUSINESS: Approve Booking -->
 <form method="POST" action="{{ route('business.bookings.accept', $booking) }}">
     @csrf
