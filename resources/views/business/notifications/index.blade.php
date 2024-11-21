@@ -17,12 +17,16 @@
                             </p>
                         </div>
 
-                        <!-- Conditional buttons based on notification type for BUSINESS only -->
+                        <!-- Conditional actions based on notification type -->
                         @if($notification->data['type'] === 'review_request' && isset($notification->data['booking_id']))
-                            <a href="{{ route('business.reviews.create', $notification->data['booking_id']) }}"
-                               class="text-blue-500 hover:underline">
-                                Leave a Review for Client
-                            </a>
+                            @if(!$notification->already_reviewed)
+                                <a href="{{ route('business.reviews.create', $notification->data['booking_id']) }}"
+                                   class="text-blue-500 hover:underline">
+                                    Leave a Review for Client
+                                </a>
+                            @else
+                                <p class="text-gray-500 text-sm">You have already reviewed this client.</p>
+                            @endif
                         @elseif($notification->data['type'] === 'booking_update' && isset($notification->data['booking_id']))
                             <a href="{{ route('business.bookings.show', $notification->data['booking_id']) }}"
                                class="text-blue-500 hover:underline">
@@ -36,7 +40,7 @@
 
                         <!-- Mark as read button -->
                         @if(!$notification->read_at)
-                            <form action="{{ route('business.notifications.markAsRead', $notification->id) }}" method="POST">
+                            <form action="{{ route('notifications.markAsRead', $notification->id) }}" method="POST">
                                 @csrf
                                 <button type="submit" class="text-gray-500 hover:text-gray-700 text-sm">
                                     Mark as Read
@@ -50,7 +54,7 @@
 
         <!-- Mark all as read button -->
         @if($notifications->whereNull('read_at')->count() > 0)
-            <form action="{{ route('business.notifications.markAllAsRead') }}" method="POST" class="mt-4">
+            <form action="{{ route('notifications.markAllAsRead') }}" method="POST" class="mt-4">
                 @csrf
                 <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                     Mark All as Read
