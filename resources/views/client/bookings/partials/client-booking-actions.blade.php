@@ -1,26 +1,27 @@
-@if($booking->status === 'accepted')
+@if($booking->status === 'accepted' || $booking->status === 'completed')
     <!-- Disabled Cancel Button with Tooltip -->
-    <div x-data="{ showTooltip: false }" class="relative">
+    <div x-data="{ showTooltip: false }" class="relative group">
         <!-- Cancel Button -->
         <x-danger-button 
             class="flex-1 w-full justify-center text-sm opacity-50 cursor-not-allowed"
-            disabled 
+            disabled
             @mouseenter="showTooltip = true" 
-            @mouseleave="showTooltip = false">
+            @mouseleave="showTooltip = false"
+        >
             Cancel Booking
         </x-danger-button>
 
-        <!-- Tooltip rendered outside the scrollable container -->
+        <!-- Tooltip -->
         <div 
             x-show="showTooltip" 
             x-cloak 
-            class="fixed z-50 w-[250px] text-xs bg-gray-800 text-white p-2 rounded shadow-lg"
-            x-bind:style="{
-                top: $el.getBoundingClientRect().top - document.documentElement.scrollTop - -230 + 'px',
-                left: $el.getBoundingClientRect().left + $el.offsetWidth / 2 - -1650 + 'px',
-            }"
+            class="absolute left-1/2 -translate-x-1/2 -top-10 z-50 w-64 sm:w-56 text-xs bg-gray-800 text-white p-2 rounded shadow-lg transition-opacity"
         >
-            Booking has already been accepted and cannot be canceled.
+            @if($booking->status === 'accepted')
+                Booking has already been accepted and cannot be canceled.
+            @elseif($booking->status === 'completed')
+                Booking has already been completed and cannot be canceled.
+            @endif
         </div>
     </div>
 @else
@@ -33,7 +34,10 @@
     <x-modal name="cancel-booking-{{ $booking->id }}" maxWidth="md" type="deletion">
         <div>
             <h2 class="text-lg font-medium text-gray-900">Confirm Cancellation:</h2>
-            <p class="text-gray-600 mt-2">Are you sure you want to cancel this booking? <span class="font-bold">This action cannot be undone.</span></p>
+            <p class="text-gray-600 mt-2">
+                Are you sure you want to cancel this booking? 
+                <span class="font-bold">This action cannot be undone.</span>
+            </p>
             <div class="flex justify-end gap-2 mt-4">
                 <!-- Close Modal -->
                 <x-button-secondary x-on:click="$dispatch('close-modal', 'cancel-booking-{{ $booking->id }}')">

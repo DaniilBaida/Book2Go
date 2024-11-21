@@ -218,9 +218,11 @@ class BusinessController extends Controller
 
     public function showUserProfile($id)
     {
-        $user = User::findOrFail($id); // Verifica se o usuário existe no banco de dados
+        // Busca o usuário e calcula a média de reviews
+        $user = User::with('reviews')->findOrFail($id);
+        $averageRating = $user->reviews->avg('rating') ?? 0; // Define 0 se não houver reviews
+        $totalReviews = $user->reviews->count();
 
-        return view('business.bookings.partials.business-show-user', compact('user'));
+        return view('business.bookings.partials.business-show-user', compact('user', 'averageRating', 'totalReviews'));
     }
-
 }
