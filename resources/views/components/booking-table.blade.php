@@ -193,7 +193,7 @@
                                 <span class="px-2 py-1 text-[12px] font-normal rounded-full
                                     {{ $booking->status === 'accepted' ? 'bg-green-500/20 text-green-500' : 
                                     ($booking->status === 'pending' ? 'bg-zinc-500/20 text-zinc-500' : 
-                                    ($booking->status === 'deny' ? 'bg-red-500/20 text-red-500' : 
+                                    ($booking->status === 'denied' ? 'bg-red-500/20 text-red-500' : 
                                     ($booking->status === 'completed' ? 'bg-yellow-500/20 text-yellow-500' : ''))) }}">
                                     {{ ucfirst($booking->status) }}
                                 </span>
