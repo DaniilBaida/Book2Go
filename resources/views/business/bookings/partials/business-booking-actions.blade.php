@@ -1,7 +1,8 @@
 <!-- BUSINESS: View Booking Details Button -->
-<a href="{{ route('business.bookings.show', $booking->id) }}" 
-   class="bg-gray-500/40 hover:bg-gray-500/60 duration-300 h-full px-3 py-2 rounded flex items-center">
-    <i class="fa-solid fa-info-circle text-gray-500"></i>
+<a href="{{ route('business.bookings.show', $booking->id) }}" >
+   <button class="bg-gray-500/40 hover:bg-gray-500/60 duration-300 h-full px-3 py-2 rounded-full flex items-center">
+        <i class="fa-solid fa-info-circle text-gray-500"></i>
+   </button>
 </a>
 
 <!-- BUSINESS: Approve Booking -->
@@ -14,7 +15,7 @@
 </form>
 
 <!-- BUSINESS: Deny Booking Button -->
-<x-danger-button x-on:click="$dispatch('open-modal', 'deny-booking-{{ $booking->id }}')" class="bg-red-500/60 hover:bg-red-500/70 duration-300">
+<x-danger-button x-on:click="$dispatch('open-modal', 'deny-booking-{{ $booking->id }}')" class="bg-red-500/40 hover:bg-red-500/60 duration-300">
     <i class="fa-solid fa-x text-red-500"></i>
 </x-danger-button>
 

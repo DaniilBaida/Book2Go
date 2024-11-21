@@ -163,9 +163,10 @@
                                 <!-- User Column for Business -->
                                 <td class="p-3 font-bold flex items-center gap-3">
                                     <!-- VIEW USER PROFILE -->
-                                    <a href="{{ route('business.users.show', $booking->user->id) }}" 
-                                        class="bg-blue-500/40 hover:bg-blue-500/60 duration-300 h-full px-3 py-2 rounded flex items-center">
-                                        <i class="fa-solid fa-eye text-blue-500"></i>
+                                    <a href="{{ route('business.users.show', $booking->user->id) }}">
+                                        <button class="bg-blue-400/20 hover:bg-blue-400/40 duration-300 rounded-full p-2 flex items-center justify-center">
+                                            <i class="fa-solid fa-eye text-blue-800"></i>
+                                        </button>
                                     </a>
                                     <span class="ml-2">{{ $booking->user->first_name }} {{ $booking->user->last_name }}</span>
                                 </td>
@@ -190,7 +191,10 @@
                             <td class="p-3">{{ $booking->start_time->format('H:i') }} - {{ $booking->end_time->format('H:i') }}</td>
                             <td class="p-3">
                                 <span class="px-2 py-1 text-[12px] font-normal rounded-full
-                                    {{ $booking->status === 'accepted' ? 'bg-green-500/20 text-green-500' : ($booking->status === 'pending' ? 'bg-zinc-500/20 text-zinc-500' : 'bg-red-500/20 text-red-500') }}">
+                                    {{ $booking->status === 'accepted' ? 'bg-green-500/20 text-green-500' : 
+                                    ($booking->status === 'pending' ? 'bg-zinc-500/20 text-zinc-500' : 
+                                    ($booking->status === 'deny' ? 'bg-red-500/20 text-red-500' : 
+                                    ($booking->status === 'completed' ? 'bg-yellow-500/20 text-yellow-500' : ''))) }}">
                                     {{ ucfirst($booking->status) }}
                                 </span>
                             </td>
