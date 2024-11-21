@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Business;
+use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -214,4 +215,12 @@ class BusinessController extends Controller
 
         return redirect()->route('admin.businesses.index')->with('success', 'Business deleted successfully.');
     }
+
+    public function showUserProfile($id)
+    {
+        $user = User::findOrFail($id); // Verifica se o usuário existe no banco de dados
+
+        return view('business.bookings.partials.business-show-user', compact('user'));
+    }
+
 }

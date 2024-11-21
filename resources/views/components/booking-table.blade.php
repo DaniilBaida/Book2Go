@@ -162,11 +162,10 @@
                                 </td>
                                 <!-- User Column for Business -->
                                 <td class="p-3 font-bold flex items-center gap-3">
-                                    <!-- VIEW BOOKING -->
-                                    <a href="{{ route($role . '.bookings.show', $booking) }}" class="flex items-center">
-                                        <button class="bg-blue-400/20 hover:bg-blue-400/40 duration-300 rounded-full p-2 flex items-center justify-center">
-                                            <i class="fa-solid fa-eye text-blue-800"></i>
-                                        </button>
+                                    <!-- VIEW USER PROFILE -->
+                                    <a href="{{ route('business.users.show', $booking->user->id) }}" 
+                                        class="bg-blue-500/40 hover:bg-blue-500/60 duration-300 h-full px-3 py-2 rounded flex items-center">
+                                        <i class="fa-solid fa-eye text-blue-500"></i>
                                     </a>
                                     <span class="ml-2">{{ $booking->user->first_name }} {{ $booking->user->last_name }}</span>
                                 </td>
