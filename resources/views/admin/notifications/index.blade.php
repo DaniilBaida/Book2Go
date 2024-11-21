@@ -19,7 +19,7 @@
 
                         <!-- Mark as read button -->
                         @if(!$notification->read_at)
-                            <form action="{{ route('admin.notifications.markAsRead', $notification->id) }}" method="POST">
+                            <form action="{{ route('notifications.markAsRead', $notification->id) }}" method="POST">
                                 @csrf
                                 <button type="submit" class="text-gray-500 hover:text-gray-700 text-sm">
                                     Mark as Read
@@ -33,7 +33,7 @@
 
         <!-- Mark all as read button -->
         @if($notifications->whereNull('read_at')->count() > 0)
-            <form action="{{ route('admin.notifications.markAllAsRead') }}" method="POST" class="mt-4">
+            <form action="{{ route('notifications.markAllAsRead') }}" method="POST" class="mt-4">
                 @csrf
                 <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                     Mark All as Read
