@@ -116,6 +116,9 @@ class BusinessBookingController extends Controller
 
         $booking->update(['status' => 'completed']);
 
+        $booking->service->increment('bookings_count');
+
+
         // Notify both client and business
         $booking->user->notify(new ReviewRequestNotification($booking)); // Notify client
         $booking->service->business->user->notify(new ReviewRequestNotification($booking)); // Notify business
