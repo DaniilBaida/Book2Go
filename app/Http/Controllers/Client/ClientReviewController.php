@@ -14,22 +14,16 @@ class ClientReviewController extends Controller
 
     public function create(Booking $booking)
     {
-        // Verificar se o cliente já fez uma review para este serviço
-        $existingReview = Review::where('booking_id', $booking->id)
-            ->where('reviewer_type', 'client')
-            ->exists();
-
-        if ($existingReview) {
-            // Redirecionar com mensagem de erro
+        try {
+            $this->authorize('leaveServiceReview', $booking);
+        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
             return redirect()->route('client.notifications.index')
-                ->with('error', 'You have already reviewed this service.');
+                ->with('error', $e->getMessage());
         }
-
-        // Aplicar política de permissão
-        $this->authorize('leaveServiceReview', $booking);
 
         return view('client.reviews.create', compact('booking'));
     }
+
 
     public function store(Request $request, Booking $booking)
     {

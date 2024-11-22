@@ -1,4 +1,9 @@
 <x-business-layout>
+    @if(session('error'))
+        <div class="bg-red-100 text-red-800 p-4 rounded mb-4">
+            {{ session('error') }}
+        </div>
+    @endif
     <div class="bg-white shadow-md rounded-lg p-6">
         <h2 class="text-2xl font-bold mb-4">Notifications</h2>
 
