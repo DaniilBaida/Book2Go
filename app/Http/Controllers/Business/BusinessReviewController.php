@@ -14,22 +14,17 @@ class BusinessReviewController extends Controller
 
     public function create(Booking $booking)
     {
-        // Verificar se o negócio já fez uma review para este cliente
-        $existingReview = Review::where('booking_id', $booking->id)
-            ->where('reviewer_type', 'business')
-            ->exists();
-
-        if ($existingReview) {
-            // Redirecionar com mensagem de erro
+        try {
+            $this->authorize('leaveClientReview', $booking);
+        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
             return redirect()->route('business.notifications.index')
-                ->with('error', 'You have already reviewed this client.');
+                ->with('error', $e->getMessage());
         }
-
-        // Aplicar política de permissão
-        $this->authorize('leaveClientReview', $booking);
 
         return view('business.reviews.create', compact('booking'));
     }
+
+
 
     public function store(Request $request, Booking $booking)
     {
