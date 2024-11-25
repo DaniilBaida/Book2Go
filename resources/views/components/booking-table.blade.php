@@ -247,7 +247,7 @@
     function toggleBulkButtons() {
         // Check if there are any enabled and checked checkboxes
         const anyChecked = [...checkboxes].some(checkbox => checkbox.checked && !checkbox.disabled);
-        
+
         // Disable buttons if no valid checkboxes are selected
         approveButton.disabled = !anyChecked;
         denyButton.disabled = !anyChecked;
