@@ -14,7 +14,11 @@ class User extends Authenticatable implements MustVerifyEmail
     const ROLE_CLIENT = 1;
     const ROLE_BUSINESS = 2;
     const ROLE_ADMIN = 3;
-
+    const ROLE = [
+        self::ROLE_CLIENT => 'Client',
+        self::ROLE_BUSINESS => 'Business',
+        self::ROLE_ADMIN => 'Admin',
+    ];
     protected $fillable = [
         'first_name',
         'last_name',
@@ -42,6 +46,17 @@ class User extends Authenticatable implements MustVerifyEmail
         'preferences' => 'array',
         'last_login_at' => 'datetime',
     ];
+
+    /**
+     * Get the role name by role ID.
+     *
+     * @param int $roleId
+     * @return string
+     */
+    public static function getRoleName(int $roleId): string
+    {
+        return self::ROLE[$roleId] ?? 'Unknown Role';
+    }
 
     public function getRedirectRouteName(): string
     {
