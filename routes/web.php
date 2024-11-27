@@ -24,6 +24,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CityController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\VerifyEmailController;
 
 // Helper function to define routes based on user roles
 function roleBasedRoutes(string $prefix, int $roleId, string $namePrefix, callable $routes)
@@ -41,6 +42,23 @@ Route::get('/', function () {
 
 // Public route to fetch cities based on country code
 Route::get('/get-cities/{countryCode}', [CityController::class, 'getCities']);
+
+// Authentication and email verification routes
+Route::middleware('auth')->group(function () {
+    // Email verification routes
+    Route::get('/email/verify', function () {
+        return view('auth.verify-email');
+    })->name('verification.notice');
+
+    Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
+        ->middleware(['signed'])
+        ->name('verification.verify');
+
+    Route::post('/email/verification-notification', function () {
+        auth()->user()->sendEmailVerificationNotification();
+        return back()->with('message', 'Verification link sent!');
+    })->name('verification.send');
+});
 
 // Authenticated and verified routes
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -151,8 +169,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('bookings/{booking}/cancel', [ClientBookingController::class, 'cancel'])->name('bookings.cancel');
 
         Route::get('/notifications', [ClientNotificationController::class, 'index'])->name('notifications.index'); // View notifications
-
-
 
     });
 });
