@@ -17,10 +17,17 @@ class EnsureEmailIsVerified
             return redirect()->route('login');
         }
 
-        if (!$request->user() || !$request->user()->hasVerifiedEmail()) {
+        $user = $request->user();
+
+        if (!$user || !$user->hasVerifiedEmail()) {
             return redirect()->route('verification.notice');
         }
 
+        if ($request->route()->named('verification.notice') && $user->hasVerifiedEmail()) {
+            $roleDashboardRoute = strtolower($user->getRoleName($user->role_id)) . '.dashboard';
+            return redirect()->route($roleDashboardRoute);
+
+        }
         return $next($request);
     }
 }
