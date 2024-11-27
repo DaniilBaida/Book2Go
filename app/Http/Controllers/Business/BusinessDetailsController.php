@@ -80,6 +80,6 @@ class BusinessDetailsController extends Controller
         $business->update($data);
 
         // Redirect back to the details page with a success message
-        return redirect()->route('business.details.index')->with('success', 'Business details updated successfully.');
+        return redirect()->route('business.details')->with('success', 'Business details updated successfully.');
     }
 }
