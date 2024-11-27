@@ -130,9 +130,9 @@
 
                     <!-- Submit Button -->
                     <div class="flex items-center justify-end mt-6">
-                        <x-primary-button class="ml-4">
+                        <x-button class="ml-4">
                             {{ __('Update Service') }}
-                        </x-primary-button>
+                        </x-button>
                     </div>
                 </div>
             </div>
