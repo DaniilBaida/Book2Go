@@ -51,10 +51,10 @@ class ClientBookingController extends Controller
             'start_time' => 'required|date_format:H:i',
         ]);
 
-        $autoAccept = $service->business->auto_accept_bookings;
         $startTime = Carbon::parse($validated['start_time']);
         $endTime = $startTime->copy()->addMinutes($service->duration_minutes);
 
+        // Check if the time slot is already booked
         $exists = Booking::where('service_id', $service->id)
             ->where('date', $validated['date'])
             ->where(function ($query) use ($startTime, $endTime) {
@@ -67,8 +67,10 @@ class ClientBookingController extends Controller
             return redirect()->back()->withErrors(['start_time' => 'The selected time slot is not available.']);
         }
 
+        // Set booking status based on service's auto-accept setting
         $status = $service->auto_accept ? 'accepted' : 'pending';
 
+        // Create the booking
         $booking = Booking::create([
             'service_id' => $service->id,
             'user_id' => auth()->id(),
@@ -78,7 +80,16 @@ class ClientBookingController extends Controller
             'status' => $status,
         ]);
 
-        // Initialize PayPal
+        return redirect()->route('client.bookings')->with('success', 'Booking created successfully.');
+    }
+
+    public function pay(Booking $booking)
+    {
+        // Ensure the booking is in 'accepted' status
+        if ($booking->status !== 'accepted') {
+            return redirect()->route('client.bookings')->with('error', 'Cannot proceed to payment for this booking.');
+        }
+
         $provider = new PayPalClient;
         $provider->setApiCredentials(config('paypal'));
         $token = $provider->getAccessToken();
@@ -90,9 +101,9 @@ class ClientBookingController extends Controller
                 [
                     "amount" => [
                         "currency_code" => "EUR",
-                        "value" => $service->price,
+                        "value" => $booking->service->price,
                     ],
-                    "description" => "Booking for service: " . $service->name,
+                    "description" => "Booking for service: " . $booking->service->name,
                 ]
             ],
             "application_context" => [
@@ -101,18 +112,18 @@ class ClientBookingController extends Controller
             ]
         ]);
 
+        // Redirect to PayPal approval URL
         if (isset($response['id']) && $response['id'] != null) {
             foreach ($response['links'] as $link) {
                 if ($link['rel'] === 'approve') {
                     return redirect()->away($link['href']);
                 }
             }
-        } else {
-            return redirect()
-                ->route('client.bookings')
-                ->with('error', 'Unable to create PayPal order. Please try again.');
         }
+
+        return redirect()->route('client.bookings')->with('error', 'Unable to create PayPal order. Please try again.');
     }
+
     public function show(Booking $booking)
     {
 

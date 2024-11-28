@@ -78,7 +78,7 @@
                 </div>
 
                 <!-- Actions -->
-                <div class="mt-3 flex space-x-4">
+                <div class="mt-3 flex space-x-3">
                     <!-- Back -->
                     <a href="{{ route('client.bookings') }}">
                         <x-button class="text-sm">Back to Bookings</x-button>
@@ -131,6 +131,17 @@
                             </x-modal>
                         </div>
                     @endif
+
+                    <!-- Pay Button -->
+                    @if($booking->status === 'accepted')
+                        <form method="POST" action="{{ route('client.pay', $booking) }}">
+                            @csrf
+                            <x-button type="submit" class="text-sm bg-blue-500 hover:bg-blue-600 px-4 py-2 duration-300">
+                                <i class="fa-brands fa-paypal"></i>
+                            </x-button>
+                        </form>
+                    @endif
+
                 </div>
 
             </div>
