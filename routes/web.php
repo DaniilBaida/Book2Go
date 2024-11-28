@@ -169,6 +169,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('bookings/{booking}', [ClientBookingController::class, 'show'])->name('bookings.show');  // View specific booking
         Route::delete('bookings/{booking}/cancel', [ClientBookingController::class, 'cancel'])->name('bookings.cancel');
 
+        Route::post('bookings/{booking}/pay', [ClientBookingController::class, 'pay'])->name('pay');
+
         Route::get('/notifications', [ClientNotificationController::class, 'index'])->name('notifications.index'); // View notifications
         Route::get('/payment/success/{booking}', [PaymentController::class, 'success'])->name('payment.success');
         Route::get('/payment/cancel/{booking}', [PaymentController::class, 'cancel'])->name('payment.cancel');
