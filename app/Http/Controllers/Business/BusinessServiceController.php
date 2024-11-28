@@ -89,6 +89,8 @@ class BusinessServiceController extends Controller
         // Ensure available_days is set as an empty array if no days are selected
         $data['available_days'] = $request->input('available_days', []);
 
+        // Auto accept booking
+        $data['auto_accept'] = $request->has('auto_accept');
 
         // Create the new service for the authenticated business
         auth()->user()->business->services()->create($data);
@@ -126,6 +128,8 @@ class BusinessServiceController extends Controller
         // Ensure available_days is set as an empty array if no days are selected
         $data['available_days'] = $request->input('available_days', []);
 
+        // Auto accept booking
+        $data['auto_accept'] = $request->has('auto_accept');
 
         // Update the service with the new data
         $service->update($data);
@@ -180,6 +184,7 @@ class BusinessServiceController extends Controller
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'required|in:active,inactive,archived',
+            'auto_accept' => 'nullable|boolean', // Add this line
         ]);
     }
 
