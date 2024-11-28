@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
 class ClientBookingController extends Controller
 {
@@ -50,13 +51,10 @@ class ClientBookingController extends Controller
             'start_time' => 'required|date_format:H:i',
         ]);
 
-        // Fetch the business associated with the service
         $autoAccept = $service->business->auto_accept_bookings;
-
         $startTime = Carbon::parse($validated['start_time']);
         $endTime = $startTime->copy()->addMinutes($service->duration_minutes);
 
-        // Check if slot is available
         $exists = Booking::where('service_id', $service->id)
             ->where('date', $validated['date'])
             ->where(function ($query) use ($startTime, $endTime) {
@@ -69,11 +67,9 @@ class ClientBookingController extends Controller
             return redirect()->back()->withErrors(['start_time' => 'The selected time slot is not available.']);
         }
 
-        // Set booking status based on auto-accept
         $status = $autoAccept ? 'accepted' : 'pending';
 
-        // Create the booking
-        Booking::create([
+        $booking = Booking::create([
             'service_id' => $service->id,
             'user_id' => auth()->id(),
             'date' => $validated['date'],
@@ -82,7 +78,40 @@ class ClientBookingController extends Controller
             'status' => $status,
         ]);
 
-        return redirect()->route('client.bookings')->with('success', 'Booking created successfully.');
+        // Initialize PayPal
+        $provider = new PayPalClient;
+        $provider->setApiCredentials(config('paypal'));
+        $token = $provider->getAccessToken();
+        $provider->setAccessToken($token);
+
+        $response = $provider->createOrder([
+            "intent" => "CAPTURE",
+            "purchase_units" => [
+                [
+                    "amount" => [
+                        "currency_code" => "EUR",
+                        "value" => $service->price,
+                    ],
+                    "description" => "Booking for service: " . $service->name,
+                ]
+            ],
+            "application_context" => [
+                "cancel_url" => route('client.payment.cancel', $booking),
+                "return_url" => route('client.payment.success', $booking),
+            ]
+        ]);
+
+        if (isset($response['id']) && $response['id'] != null) {
+            foreach ($response['links'] as $link) {
+                if ($link['rel'] === 'approve') {
+                    return redirect()->away($link['href']);
+                }
+            }
+        } else {
+            return redirect()
+                ->route('client.bookings')
+                ->with('error', 'Unable to create PayPal order. Please try again.');
+        }
     }
     public function show(Booking $booking)
     {

@@ -20,6 +20,7 @@ use App\Http\Controllers\Client\ClientReviewController;
 use App\Http\Controllers\Client\ClientServiceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CityController;
 use App\Models\User;
@@ -169,7 +170,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('bookings/{booking}/cancel', [ClientBookingController::class, 'cancel'])->name('bookings.cancel');
 
         Route::get('/notifications', [ClientNotificationController::class, 'index'])->name('notifications.index'); // View notifications
-
+        Route::get('/payment/success/{booking}', [PaymentController::class, 'success'])->name('payment.success');
+        Route::get('/payment/cancel/{booking}', [PaymentController::class, 'cancel'])->name('payment.cancel');
     });
 });
 
