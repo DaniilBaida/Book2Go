@@ -61,7 +61,7 @@
                     <!-- Booking Status -->
                     <div>
                         <p class="text-gray-600"><strong>Status:</strong></p>
-                        <span class="px-2 py-1 rounded-full text-white text-xs {{ $booking->status === 'accepted' ? 'bg-green-500' : ($booking->status === 'denied' ? 'bg-red-500' : 'bg-yellow-500') }}">
+                        <span class="px-2 py-1 rounded-full text-white text-xs {{ $booking->status === 'accepted' ? 'bg-green-500' : ($booking->status === 'canceled' ? 'bg-red-500' : 'bg-yellow-500') }}">
                             {{ ucfirst($booking->status) }}
                         </span>
                     </div>
