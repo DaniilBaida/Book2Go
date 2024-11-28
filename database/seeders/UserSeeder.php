@@ -23,6 +23,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
             'phone_number' => '912345678',
             'role_id' => 3,
+            'email_verified_at' => '2024-11-28 15:05:08',
         ]);
         // Create Business User and associated Business
         $businessUser = User::factory()->create([
@@ -32,6 +33,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
             'phone_number' => '912345678',
             'role_id' => 2,
+            'email_verified_at' => '2024-11-28 15:05:08',
         ]);
 
         Business::factory()->create([
@@ -47,6 +49,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
             'phone_number' => '912345678',
             'role_id' => 1, // Assuming role_id 1 is for Normal User
+            'email_verified_at' => '2024-11-28 15:05:08',
         ]);
 
 
