@@ -128,6 +128,22 @@
                         @enderror
                     </div>
 
+                    <!-- Auto-Accept Bookings Toggle -->
+                    <div class="mb-4">
+                        <x-input-label for="auto_accept" :value="__('Auto-Accept Bookings')" />
+                        <div class="flex items-center mt-1">
+                            <label for="auto_accept" class="inline-flex items-center cursor-pointer">
+                                <input id="auto_accept" name="auto_accept" type="checkbox" value="1" 
+                                    class="rounded-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 shadow-sm"
+                                    {{ old('auto_accept', $service->auto_accept ?? false) ? 'checked' : '' }}>
+                                <span class="ml-2 text-gray-700">{{ __('Enable Auto-Accept') }}</span>
+                            </label>
+                        </div>
+                        @error('auto_accept')
+                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+
                     <!-- Submit Button -->
                     <div class="flex items-center justify-end mt-6">
                         <x-button class="ml-4">

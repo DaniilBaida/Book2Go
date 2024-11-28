@@ -23,7 +23,7 @@ return new class extends Migration
             $table->time('end_time');
             $table->string('image_path')->nullable();
             $table->unsignedBigInteger('bookings_count')->default(0);
-            $table->enum('status', ['active', 'inactive', 'archived'])->default('active');
+            $table->enum('status', ['pending', 'accepted', 'completed', 'denied'])->default('pending');
             $table->text('available_days')->nullable();
             $table->foreignIdFor(Business::class)->constrained()->onDelete('cascade');
             $table->foreignIdFor(ServiceCategory::class)->constrained()->onDelete('cascade');

@@ -27,6 +27,7 @@ class Service extends Model
         'image_path',
         'business_id',
         'service_category_id',
+        'auto_accept',
     ];
 
     /**
@@ -87,6 +88,7 @@ class Service extends Model
         'discount_start_date' => 'datetime',
         'discount_end_date' => 'datetime',
         'available_days' => 'array',
+        'auto_accept' => 'boolean',
     ];
 
     /**

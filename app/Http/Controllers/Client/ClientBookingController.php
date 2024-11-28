@@ -67,7 +67,7 @@ class ClientBookingController extends Controller
             return redirect()->back()->withErrors(['start_time' => 'The selected time slot is not available.']);
         }
 
-        $status = $autoAccept ? 'accepted' : 'pending';
+        $status = $service->auto_accept ? 'accepted' : 'pending';
 
         $booking = Booking::create([
             'service_id' => $service->id,
