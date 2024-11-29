@@ -124,6 +124,48 @@ class ClientBookingController extends Controller
         return redirect()->route('client.bookings')->with('error', 'Unable to create PayPal order. Please try again.');
     }
 
+    public function paymentSuccess(Request $request, Booking $booking)
+    {
+        try {
+            $provider = new PayPalClient;
+            $provider->setApiCredentials(config('paypal'));
+            $token = $provider->getAccessToken();
+            $provider->setAccessToken($token);
+    
+            // Captura os detalhes do pagamento
+            $response = $provider->capturePaymentOrder($request->input('token'));
+    
+            // Verifica se o pagamento foi completado
+            if (isset($response['status']) && $response['status'] === 'COMPLETED') {
+                // Atualiza o status da reserva para "paid"
+                $booking->update(['status' => 'paid']);
+
+                // Prepare the payment details for the email
+                $paymentDetails = [
+                    'id' => $response['id'],
+                    'amount' => $response['purchase_units'][0]['amount']['value'], // Captura o valor
+                    'currency' => $response['purchase_units'][0]['amount']['currency_code'], // Captura a moeda
+                    'status' => $response['status'],
+                ];
+
+    
+                // Enviar recibo por email
+                \Mail::to($booking->user->email)->send(new \App\Mail\PaymentReceiptMail($booking, $paymentDetails));
+    
+                return redirect()->route('client.bookings')->with('success', 'Payment successful. Receipt sent to your email.');
+            }
+    
+            return redirect()->route('client.bookings')->with('error', 'Payment was not successful. Please try again.');
+    
+        } catch (\Exception $e) {
+            \Log::error('Payment Error: ' . $e->getMessage());
+    
+            return redirect()->route('client.bookings')->with('error', 'An error occurred while processing your payment. Please try again later.');
+        }
+    }
+    
+    
+
     public function show(Booking $booking)
     {
 

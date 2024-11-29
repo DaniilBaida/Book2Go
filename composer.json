@@ -11,7 +11,7 @@
         "laravel/tinker": "^2.9",
         "laravolt/avatar": "^6.0",
         "livewire/livewire": "^3.5",
-        "srmklive/paypal": "~3.0"
+        "srmklive/paypal": "^3.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
