@@ -6,5 +6,6 @@
         ['route' => route('business.bookings'), 'icon' => 'fas fa-calendar', 'label' => 'Bookings'],
         ['route' => route('business.details'), 'icon' => 'fas fa-info-circle', 'label' => 'Business Details'],
         ['route' => route('business.discounts.index'),'icon' => 'fas fa-tags','label' => 'Manage Discounts'],
+        ['route' => route('business.reviews.view'), 'icon' => 'fas fa-star', 'label' => 'Reviews'],
     ]"
 />
