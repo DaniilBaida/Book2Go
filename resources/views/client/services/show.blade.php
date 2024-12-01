@@ -113,87 +113,48 @@
 
     <!-- Script Section -->
     <script>
-        $(document).ready(function () {
-            // Initialize the booking form when the page is ready
-            initializeBookingForm();
+        document.addEventListener('DOMContentLoaded', function () {
+            const dateInput = document.getElementById('date');
+            const slotsContainer = document.getElementById('available_slots');
+            const selectedSlotInput = document.getElementById('selected_slot');
 
-            // Listen for changes when content is loaded dynamically
-            $(document).on('ajaxComplete', function () {
-                // Reinitialize Flatpickr every time new content is loaded via AJAX or other methods
-                initializeBookingForm();
-            });
-
-            // Or if you're using Turbo (Turbo.js for SPA-style navigation):
-            document.addEventListener('turbo:frame-load', function () {
-                // Reinitialize Flatpickr when Turbo loads new content
-                initializeBookingForm();
-            });
-        });
-
-        function initializeBookingForm() {
-            // Ensure Flatpickr is only initialized once by checking for the instance
-            if ($('#date').data('flatpickr')) {
-                return;
-            }
-
-            // Get available days for the service
-            const availableDays = @json($service->available_days);
-
-            const dayIndices = {
-                'Sunday': 0,
-                'Monday': 1,
-                'Tuesday': 2,
-                'Wednesday': 3,
-                'Thursday': 4,
-                'Friday': 5,
-                'Saturday': 6
-            };
-
-            const enabledDays = availableDays.map(day => dayIndices[day]);
-
-            // Initialize Flatpickr
-            flatpickr("#date", {
-                dateFormat: "Y-m-d",
-                disable: [date => !enabledDays.includes(date.getDay())],
-                locale: { firstDayOfWeek: 1 },
-                minDate: "today",
-                maxDate: new Date().fp_incr(60)
-            });
-
-            $('#date').data('flatpickr', true);
-
-            $('#date').on('change', function () {
-                const date = this.value;
-                const slotsContainer = document.getElementById('available_slots');
-                const selectedSlotInput = document.getElementById('selected_slot');
-
-                slotsContainer.innerHTML = '';
-                selectedSlotInput.value = '';
+            // Function to fetch and display available slots
+            function fetchAvailableSlots(date) {
+                slotsContainer.innerHTML = ''; // Clear existing slots
+                selectedSlotInput.value = ''; // Reset selected slot
 
                 if (!date) {
                     slotsContainer.innerHTML = '<p class="text-gray-500 mt-2">Please select a date to view available slots.</p>';
                     return;
                 }
 
+                // Fetch available slots from the server
                 fetch(`/client/services/{{ $service->id }}/available-slots?date=${date}`)
-                    .then(response => response.json())
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to fetch available slots');
+                        }
+                        return response.json();
+                    })
                     .then(slots => {
                         if (slots.length === 0) {
                             slotsContainer.innerHTML = '<p class="text-gray-500 mt-2">No slots available for the selected date.</p>';
                         } else {
+                            // Render available slots
                             slots.forEach(slot => {
                                 const button = document.createElement('button');
                                 button.type = 'button';
-                                button.textContent = slot;
+                                button.textContent = slot; // Display the slot time
                                 button.className = 'text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2';
 
+                                // Add click event to select the slot
                                 button.addEventListener('click', () => {
                                     document.querySelectorAll('#available_slots button').forEach(btn => btn.classList.remove('bg-green-700', 'text-white'));
                                     button.classList.add('bg-green-700', 'text-white');
-                                    selectedSlotInput.value = slot;
+                                    selectedSlotInput.value = slot; // Set the selected slot value
                                 });
 
-                                slotsContainer.appendChild(button);
+                                slotsContainer.appendChild(button); // Append button to the container
                             });
                         }
                     })
@@ -201,9 +162,44 @@
                         console.error('Error fetching slots:', error);
                         slotsContainer.innerHTML = '<p class="text-red-500 mt-2">Failed to load available slots.</p>';
                     });
-            });
+            }
 
-            $('#date').trigger('change');
-        }
+            // Initialize Flatpickr for date selection
+            function initializeFlatpickr() {
+                const availableDays = @json($service->available_days);
+
+                const dayIndices = {
+                    'Sunday': 0,
+                    'Monday': 1,
+                    'Tuesday': 2,
+                    'Wednesday': 3,
+                    'Thursday': 4,
+                    'Friday': 5,
+                    'Saturday': 6
+                };
+
+                const enabledDays = availableDays.map(day => dayIndices[day]);
+
+                flatpickr("#date", {
+                    dateFormat: "Y-m-d",
+                    disable: [date => !enabledDays.includes(date.getDay())],
+                    locale: { firstDayOfWeek: 1 },
+                    minDate: "today",
+                    maxDate: new Date().fp_incr(60), // Allow bookings up to 60 days in advance
+                    onChange: function (selectedDates, dateStr) {
+                        fetchAvailableSlots(dateStr); // Fetch slots when the date changes
+                    }
+                });
+            }
+
+            // Initialize the booking form
+            initializeFlatpickr();
+
+            // Fetch slots for the pre-selected date if any
+            if (dateInput.value) {
+                fetchAvailableSlots(dateInput.value);
+            }
+        });
     </script>
+
 </x-client-layout>
