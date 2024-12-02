@@ -1,14 +1,14 @@
 <x-business-layout>
-    <h2 class="text-3xl font-bold text-gray-800 mb-3">User Profile</h2>
+    <h2 class="text-3xl font-bold text-gray-800 mb-3">Reviewer Profile</h2>
     <div class="p-6 bg-white shadow-md sm:rounded-lg">
-        <!-- User Profile Header -->
+        <!-- Reviewer Profile Header -->
         <div class="flex-col items-center space-x-4 mb-6">
-            <h3 class="text-xl font-semibold text-gray-700 mb-2">Basic Information</h3>
+            <h3 class="text-xl font-semibold text-gray-700 mb-2">Reviewer Information</h3>
             <div class="flex items-center space-x-4 mb-6">
                 <!-- Avatar Section -->
-                @if($user->avatar_path)
+                @if($reviewer->avatar_path)
                     <img 
-                        src="{{ asset('storage/' . $user->avatar_path) }}" 
+                        src="{{ asset('storage/' . $reviewer->avatar_path) }}" 
                         alt="Avatar" 
                         class="w-24 h-24 rounded-full object-cover"
                     >
@@ -17,12 +17,12 @@
                         No Avatar
                     </div>
                 @endif
-                <!-- User Information -->
+                <!-- Reviewer Information -->
                 <div>
                     <div class="space-y-1">
-                        <p><strong>Name:</strong> {{ $user->first_name }} {{ $user->last_name }}</p>
-                        <p><strong>Email:</strong> {{ $user->email }}</p>
-                        <p><strong>Phone:</strong> {{ $user->phone_number ?? 'Not provided' }}</p>
+                        <p><strong>Name:</strong> {{ $reviewer->first_name }} {{ $reviewer->last_name }}</p>
+                        <p><strong>Email:</strong> {{ $reviewer->email }}</p>
+                        <p><strong>Phone:</strong> {{ $reviewer->phone_number ?? 'Not provided' }}</p>
                     </div>
                 </div>
             </div>
@@ -32,8 +32,8 @@
         <div class="mb-6">
             <h3 class="text-xl font-semibold text-gray-700 mb-2">Verification Status</h3>
             <span class="px-3 py-1 text-sm rounded-full font-medium
-                {{ $user->email_verified_at ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600' }}">
-                {{ $user->email_verified_at ? 'Verified' : 'Not Verified' }}
+                {{ $reviewer->email_verified_at ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600' }}">
+                {{ $reviewer->email_verified_at ? 'Verified' : 'Not Verified' }}
             </span>
         </div>
 
@@ -56,10 +56,10 @@
 
         <!-- Reviews Section -->
         <div class="mb-6">
-            <h3 class="text-xl font-semibold text-gray-700 mb-2">Reviews</h3>
-            @if($user->reviews->count() > 0)
+            <h3 class="text-xl font-semibold text-gray-700 mb-2">Reviews Given</h3>
+            @if($reviewer->reviews->count() > 0)
                 <div class="space-y-4">
-                    @foreach($user->reviews as $review)
+                    @foreach($reviewer->reviews as $review)
                         <div class="p-4 bg-gray-100 rounded-lg shadow-sm">
                             <div class="flex items-center space-x-3 mb-2">
                                 <!-- Stars -->
@@ -75,7 +75,7 @@
                             <p class="text-sm text-gray-700">{{ $review->comment ?? 'No comment provided.' }}</p>
                             <!-- Review Details -->
                             <p class="mt-2 text-xs text-gray-500">
-                                By {{ ucfirst($review->reviewer_type) }} on {{ $review->created_at->format('d M Y') }}
+                                For {{ $review->service_name ?? 'Unknown Service' }} on {{ $review->created_at->format('d M Y') }}
                             </p>
                         </div>
                     @endforeach
@@ -87,9 +87,9 @@
 
         <!-- Back Button -->
         <div>
-            <a href="{{ route('business.bookings') }}">
-                    <x-button>
-                    Back to Bookings
+            <a href="{{ route('business.reviews.index') }}">
+                <x-button>
+                    Back to Reviews
                 </x-button>
             </a>
         </div>
