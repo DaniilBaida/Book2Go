@@ -43,16 +43,19 @@ class AdminVerificationRequestsController extends Controller
     }
 
     // Approve Verification
+
     public function approve(User $user)
     {
-        // TODO: APPROVE VERIFICATION
+        $user->is_verified = 1;
+        $user->save();
         return back()->with('success', 'User verified successfully.');
     }
 
     // Reject Verification
     public function reject(User $user)
     {
-        // TODO: REJECT VERIFICATION
+        $user->is_verified = 0;
+        $user->save();
         return back()->with('success', 'User verification request rejected.');
     }
 }
