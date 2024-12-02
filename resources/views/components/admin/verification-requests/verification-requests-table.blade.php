@@ -5,7 +5,7 @@
             <thead>
                 <tr class="text-gray-500 uppercase text-xs leading-normal border-y h-6">
                     <th class="p-3 text-left w-1/4">
-                        <a href="{{ route('admin.verification-requests.index', ['sort' => 'name', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}">
+                        <a href="{{ route('admin.user-verification-requests.index', ['sort' => 'name', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}">
                             Name
                             @if(request('sort') === 'name')
                                 <i class="fa-solid fa-sort-{{ request('direction') === 'asc' ? 'up' : 'down' }}"></i>
@@ -33,13 +33,13 @@
                         </td>
                         <td class="p-3 flex justify-end gap-2">
                             @if (!$request->is_verified)
-                                <form method="POST" action="{{ route('admin.verification-requests.approve', $request->id) }}">
+                                <form method="POST" action="{{ route('admin.user-verification-requests.approve', $request->id) }}">
                                     @csrf
                                     <button class="bg-green-500 text-white px-4 py-2 rounded shadow hover:bg-green-600">
                                         <i class="fa-solid fa-check"></i>
                                     </button>
                                 </form>
-                                <form method="POST" action="{{ route('admin.verification-requests.reject', $request->id) }}">
+                                <form method="POST" action="{{ route('admin.user-verification-requests.reject', $request->id) }}">
                                     @csrf
                                     <button class="bg-red-500 text-white px-4 py-2 rounded shadow hover:bg-red-600">
                                         <i class="fa-solid fa-x text-sm"></i>

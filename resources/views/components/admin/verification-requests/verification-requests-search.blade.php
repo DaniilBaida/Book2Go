@@ -1,7 +1,7 @@
 <div class="md:flex justify-between items-center mb-4">
     <!-- Search Bar -->
     <div class="md:flex justify-between items-center mb-4 w-full">
-        <form method="GET" action="{{ route('admin.verification-requests.index') }}" class="max-md:mb-6 flex items-center max-md:gap-y-2 w-full md:w-auto">
+        <form method="GET" action="{{ route('admin.user-verification-requests.index') }}" class="max-md:mb-6 flex items-center max-md:gap-y-2 w-full md:w-auto">
             <div class="relative">
                 <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                     <svg class="w-4 h-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
@@ -23,7 +23,7 @@
                 </x-button-secondary>
                 <!-- Clear Button -->
                 @if(request('search'))
-                    <a href="{{ route('admin.verification-requests.index') }}">
+                    <a href="{{ route('admin.user-verification-requests.index') }}">
                         <x-danger-button type="button" class="text-sm">
                             Clear
                         </x-danger-button>

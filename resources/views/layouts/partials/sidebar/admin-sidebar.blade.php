@@ -38,9 +38,15 @@
             'isActive' => Request::is('admin/discounts*'),
         ],
         [
-            'route' => route('admin.verification-requests.index'),
+            'route' => route('admin.user-verification-requests.index'),
             'icon' => 'fas fa-user-check',
-            'label' => 'Verification Requests',
+            'label' => 'User Verification',
+            'isActive' => Request::is('admin/verification-requests*'),
+        ],
+                [
+            'route' => route('admin.business-verification-requests.index'),
+            'icon' => 'fas fa-user-check',
+            'label' => 'Business Verification',
             'isActive' => Request::is('admin/verification-requests*'),
         ],
 

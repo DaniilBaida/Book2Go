@@ -3,7 +3,7 @@
 use App\Http\Controllers\Admin\AdminBusinessVerificationRequestsController;
 use App\Http\Controllers\Admin\AdminNotificationController;
 use App\Http\Controllers\Admin\AdminReviewController;
-use App\Http\Controllers\Admin\AdminVerificationRequestsController;
+use App\Http\Controllers\Admin\AdminUserVerificationRequestsController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\DiscountController as AdminDiscountController;
@@ -103,9 +103,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('notifications.index'); // View notifications
 
         // Verification Requests
-        Route::get('verification-requests', [AdminVerificationRequestsController::class, 'index'])->name('verification-requests.index');
-        Route::post('verification-requests/{user}/approve', [AdminVerificationRequestsController::class, 'approve'])->name('verification-requests.approve');
-        Route::post('verification-requests/{user}/reject', [AdminVerificationRequestsController::class, 'reject'])->name('verification-requests.reject');
+        Route::get('user-verification-requests', [AdminUserVerificationRequestsController::class, 'index'])->name('user-verification-requests.index');
+        Route::post('user-verification-requests/{user}/approve', [AdminUserVerificationRequestsController::class, 'approve'])->name('user-verification-requests.approve');
+        Route::post('user-verification-requests/{user}/reject', [AdminUserVerificationRequestsController::class, 'reject'])->name('user-verification-requests.reject');
 
         // Business Verification Requests
         Route::get('business-verification-requests', [AdminBusinessVerificationRequestsController::class, 'index'])->name('business-verification-requests.index');

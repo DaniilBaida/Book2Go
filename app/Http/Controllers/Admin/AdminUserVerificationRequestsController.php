@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class AdminVerificationRequestsController extends Controller
+class AdminUserVerificationRequestsController extends Controller
 {
     public function index(Request $request)
     {
