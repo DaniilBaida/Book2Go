@@ -21,7 +21,7 @@ class BusinessReviewController extends Controller
                 ->with('error', $e->getMessage());
         }
 
-        return view('business.index.create', compact('booking'));
+        return view('business.reviews.create', compact('booking'));
     }
 
     public function index(Request $request)
