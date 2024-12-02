@@ -6,7 +6,7 @@
 </a>
 
 <!-- BUSINESS: Approve Booking -->
-@if($booking->status !== 'completed')
+@if($booking->status !== 'completed' && $booking->status !== 'paid')
     <form method="POST" action="{{ route('business.bookings.accept', $booking) }}">
         @csrf
         @method('PATCH')
@@ -17,7 +17,7 @@
 @endif
 
 <!-- BUSINESS: Deny Booking Button -->
-@if($booking->status !== 'completed')
+@if($booking->status !== 'completed' && $booking->status !== 'paid')
     <x-danger-button x-on:click="$dispatch('open-modal', 'deny-booking-{{ $booking->id }}')" class="bg-red-500/40 hover:bg-red-500/60 duration-300">
         <i class="fa-solid fa-x text-red-500"></i>
     </x-danger-button>

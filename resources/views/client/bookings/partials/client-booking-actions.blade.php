@@ -11,7 +11,7 @@
         @endif
 
         <!-- Cancel Booking Actions -->
-        @if($booking->status === 'accepted' || $booking->status === 'completed')
+        @if($booking->status === 'accepted' || $booking->status === 'paid' || $booking->status === 'completed')
             <!-- Disabled Cancel Button -->
             <x-danger-button 
                 class="text-sm opacity-50 cursor-not-allowed px-4 py-2"

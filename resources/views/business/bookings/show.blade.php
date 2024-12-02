@@ -82,7 +82,7 @@
                         </button>
                     </form>
                 </div>
-            @elseif($booking->status === 'accepted')
+            @elseif($booking->status === 'paid')
                 <div class="flex space-x-4">
                     <form action="{{ route('business.bookings.complete', $booking) }}" method="POST">
                         @csrf
