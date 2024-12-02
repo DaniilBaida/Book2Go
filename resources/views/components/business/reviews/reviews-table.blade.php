@@ -89,12 +89,12 @@
                     <tr class="border-b border-gray-100 hover:bg-gray-100 review-row" data-status="{{ $review['status'] ?? 'answered' }}">
                         <td class="p-3 font-bold flex items-center gap-3">
                             <!-- VIEW USER PROFILE -->
-                            <a>
+                            <a href="{{ route('business.users.show', $review->user->id) }}">
                                 <button class="bg-blue-400/20 hover:bg-blue-400/40 duration-300 rounded-full p-2 flex items-center justify-center">
                                     <i class="fa-solid fa-eye text-blue-800"></i>
                                 </button>
                             </a>
-                            {{ $review['reviewer'] }}
+                            {{ $review->user->first_name. " ". $review->user->last_name}}
                         </td>
                         <td class="p-3">{{ $review['rating'] }} ★</td>
                         <td class="p-3">{{ $review['comment'] }}</td>

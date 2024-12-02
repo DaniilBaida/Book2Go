@@ -7,9 +7,9 @@
             <div class="flex items-center space-x-4 mb-6">
                 <!-- Avatar Section -->
                 @if($user->avatar_path)
-                    <img 
-                        src="{{ asset('storage/' . $user->avatar_path) }}" 
-                        alt="Avatar" 
+                    <img
+                        src="{{ asset('storage/' . $user->avatar_path) }}"
+                        alt="Avatar"
                         class="w-24 h-24 rounded-full object-cover"
                     >
                 @else

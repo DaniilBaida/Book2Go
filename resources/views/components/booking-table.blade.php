@@ -81,7 +81,7 @@
                 </div>
             </x-modal>
         @endif
-    </div>    
+    </div>
     @if($bookings->isEmpty())
         <p class="text-gray-600 mt-6">
             {{ $role === 'client' ? 'You have no bookings at the moment.' : 'No bookings available.' }}
@@ -192,9 +192,9 @@
                             <td class="p-3">{{ $booking->start_time->format('H:i') }} - {{ $booking->end_time->format('H:i') }}</td>
                             <td class="p-3">
                                 <span class="px-2 py-1 text-[12px] font-normal rounded-full
-                                    {{ $booking->status === 'accepted' ? 'bg-green-500/20 text-green-500' : 
-                                    ($booking->status === 'pending' ? 'bg-zinc-500/20 text-zinc-500' : 
-                                    ($booking->status === 'denied' ? 'bg-red-500/20 text-red-500' : 
+                                    {{ $booking->status === 'accepted' ? 'bg-green-500/20 text-green-500' :
+                                    ($booking->status === 'pending' ? 'bg-zinc-500/20 text-zinc-500' :
+                                    ($booking->status === 'denied' ? 'bg-red-500/20 text-red-500' :
                                     ($booking->status === 'completed' ? 'bg-yellow-500/20 text-yellow-500' : ''))) }}">
                                     {{ ucfirst($booking->status) }}
                                 </span>
