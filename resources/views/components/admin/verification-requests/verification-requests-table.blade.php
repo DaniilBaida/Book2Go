@@ -19,10 +19,18 @@
             </thead>
             <tbody class="text-gray-700 text-sm font-light">
                 @forelse ($verificationRequests as $request)
-                    <tr class="border-b border-gray-100 hover:bg-gray-100 verification-row" data-status="{{ $request->is_verified ? 'approved' : 'pending' }}">
+                    <tr class="border-b border-gray-100 hover:bg-gray-100 verification-row" data-status="{{ $request->is_verified === 1 ? 'approved' : ($request->is_verified === 0 ? 'rejected' : 'pending')}}">
                         <td class="p-3 font-bold">{{ $request->first_name }} {{ $request->last_name }}</td>
                         <td class="p-3">{{ $request->email }}</td>
-                        <td class="p-3">{{ $request->is_verified ? 'Approved' : 'Pending' }}</td>
+                        <td class="p-3">
+                            @if($request->is_verified === 1)
+                                Approved
+                            @elseif($request->is_verified === 0)
+                                Denied
+                            @else
+                                Pending
+                            @endif
+                        </td>
                         <td class="p-3 flex justify-end gap-2">
                             @if (!$request->is_verified)
                                 <form method="POST" action="{{ route('admin.verification-requests.approve', $request->id) }}">
