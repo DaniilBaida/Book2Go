@@ -16,12 +16,14 @@ return new class extends Migration
             $table->string('first_name', 50);
             $table->string('last_name', 50);
             $table->string('email', 255)->unique();
+
             $table->string('password', 255);
             $table->string('phone_number', 20)->nullable();
             $table->foreignId('role_id')->nullable()->constrained('roles')->onDelete('set null');
             $table->string('avatar_path', 255)->default('images/avatars/default-avatar.png');
             $table->boolean('is_active')->default(true);
             $table->boolean('is_verified')->default(false);
+            $table->timestamp('email_verified_at')->nullable();
             $table->jsonb('preferences')->default('{}');
             $table->timestamps();
             $table->timestamp('last_login_at')->nullable();
