@@ -110,8 +110,8 @@ class BusinessBookingController extends Controller
 
     public function complete(Booking $booking)
     {
-        if ($booking->status !== 'accepted') {
-            return redirect()->back()->withErrors(['error' => 'Only accepted bookings can be marked as completed.']);
+        if ($booking->status !== 'paid') {
+            return redirect()->back()->withErrors(['error' => 'Only paid bookings can be marked as completed.']);
         }
 
         $booking->update(['status' => 'completed']);
