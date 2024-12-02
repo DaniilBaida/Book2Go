@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('postal_code')->nullable();
             $table->string('logo_path')->nullable();
             $table->boolean('setup_complete')->default(false);
+            $table->enum('verification_status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->timestamps();
             $table->softDeletes();
 

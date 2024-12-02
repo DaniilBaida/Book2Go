@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminBusinessVerificationRequestsController;
 use App\Http\Controllers\Admin\AdminNotificationController;
 use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Admin\AdminVerificationRequestsController;
@@ -106,6 +107,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('verification-requests/{user}/approve', [AdminVerificationRequestsController::class, 'approve'])->name('verification-requests.approve');
         Route::post('verification-requests/{user}/reject', [AdminVerificationRequestsController::class, 'reject'])->name('verification-requests.reject');
 
+        // Business Verification Requests
+        Route::get('business-verification-requests', [AdminBusinessVerificationRequestsController::class, 'index'])->name('business-verification-requests.index');
+        Route::post('business-verification-requests/{business}/approve', [AdminBusinessVerificationRequestsController::class, 'approve'])->name('business-verification-requests.approve');
+        Route::post('business-verification-requests/{business}/reject', [AdminBusinessVerificationRequestsController::class, 'reject'])->name('business-verification-requests.reject');
+
     });
 
     // Business-specific routes
@@ -134,10 +140,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::patch('bookings/{booking}/complete', [BusinessBookingController::class, 'complete'])->name('bookings.complete');
             Route::get('bookings/{booking}/reviews/create', [BusinessReviewController::class, 'create'])->name('reviews.create');
             Route::post('bookings/{booking}/reviews', [BusinessReviewController::class, 'store'])->name('reviews.store');
-            
+
             // Discount Codes for Business Route
             Route::resource('discounts', BusinessDiscountController::class)->except(['show']);
-            
+
             // Reviews Route
             Route::get('reviews', [BusinessReviewController::class, 'index'])->name('reviews.index'); // List of all reviews
             Route::patch('reviews/{review}/report', [BusinessReviewController::class, 'report'])->name('reviews.report'); // Report Reviews
