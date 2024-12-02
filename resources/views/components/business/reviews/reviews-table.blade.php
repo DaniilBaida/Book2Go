@@ -15,7 +15,7 @@
                     id="table-search-bookings"
                     value="{{ request('search') }}"
                     class="text-sm block w-full ps-10 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 max-sm:flex-1"
-                    placeholder="Search for bookings"
+                    placeholder="Search for reviews"
                 >
             </div>
             <div class="flex gap-2 justify-start mt-0">
