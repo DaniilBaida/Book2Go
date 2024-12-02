@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminNotificationController;
 use App\Http\Controllers\Admin\AdminReviewController;
+use App\Http\Controllers\Admin\AdminVerificationRequestsController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\DiscountController as AdminDiscountController;
@@ -99,6 +100,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('discounts', AdminDiscountController::class)->except(['show']);
 
         Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('notifications.index'); // View notifications
+
+        // Verification Requests
+        Route::get('verification-requests', [AdminVerificationRequestsController::class, 'index'])->name('verification-requests.index');
+        Route::post('verification-requests/{user}/approve', [AdminVerificationRequestsController::class, 'approve'])->name('verification-requests.approve');
+        Route::post('verification-requests/{user}/reject', [AdminVerificationRequestsController::class, 'reject'])->name('verification-requests.reject');
 
     });
 

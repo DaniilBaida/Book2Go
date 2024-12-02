@@ -37,6 +37,13 @@
             'label' => 'Manage Discounts',
             'isActive' => Request::is('admin/discounts*'),
         ],
+        [
+            'route' => route('admin.verification-requests.index'),
+            'icon' => 'fas fa-user-check',
+            'label' => 'Verification Requests',
+            'isActive' => Request::is('admin/verification-requests*'),
+        ],
+
     ]"
     :bottomLinks="[]"
 />
