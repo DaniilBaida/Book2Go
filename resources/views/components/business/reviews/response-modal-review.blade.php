@@ -42,7 +42,7 @@
     >
         <!-- Modal Content -->
         <div
-            class="bg-white p-6 rounded-2xl shadow-md w-1/2 max-h-[90vh] overflow-auto"
+            class="bg-white p-6 rounded-2xl shadow-md max-md:m-2 md:w-2/5 max-h-[90vh] overflow-auto"
             x-show="show"
             x-transition:enter="ease-out duration-300"
             x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
@@ -51,14 +51,6 @@
             x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
             x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
         >
-            <!-- Close Button -->
-            <button
-                @click="show = false"
-                class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
-            >
-                <i class="fas fa-times"></i>
-            </button>
-
             <!-- Customer Review -->
             <div class="border-b pb-4 mb-4">
                 <div class="justify-between flex items-center">

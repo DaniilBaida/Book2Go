@@ -126,10 +126,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             // Discount Codes for Business
             Route::resource('discounts', BusinessDiscountController::class)->except(['show']);
 
-           // Route for the hardcoded reviews page
-            Route::get('/business/reviews', function () {
-                return view('business.reviews.reviews'); // Correct Blade view location
-            })->name('reviews.view');
+            // Route for the hardcoded reviews page
+            Route::get('reviews', [BusinessReviewController::class, 'index'])->name('reviews.index');
 
             Route::get('bookings/{booking}/reviews/create', [BusinessReviewController::class, 'create'])->name('reviews.create');
             Route::post('bookings/{booking}/reviews', [BusinessReviewController::class, 'store'])->name('reviews.store');

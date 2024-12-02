@@ -21,9 +21,43 @@ class BusinessReviewController extends Controller
                 ->with('error', $e->getMessage());
         }
 
-        return view('business.reviews.create', compact('booking'));
+        return view('business.index.create', compact('booking'));
     }
 
+    public function index(Request $request)
+    {
+        $search = $request->input('search');
+
+        // TODO: this is HARDCODED, make reviews work with the backend
+        $reviews = [
+            ['id' => 1, 'reviewer' => 'Brian Howie', 'rating' => 5, 'comment' => 'Great service!', 'status' => 'answered', 'reply' => 'Thank you for your kind words!'],
+            ['id' => 3, 'reviewer' => 'Brian Howies', 'rating' => 4, 'comment' => 'Great service!', 'status' => 'answered', 'reply' => 'Thank you for your kind words!'],
+            ['id' => 2, 'reviewer' => 'Jane Doe', 'rating' => 4, 'comment' => 'Good experience, but can improve.', 'status' => 'unanswered']
+        ];
+
+        // Search for reviewer name
+        if ($search) {
+            $reviews = array_filter($reviews, function ($review) use ($search) {
+                return stripos($review['reviewer'], $search) !== false;
+            });
+        }
+
+        // Sorting Logic
+        if ($request->has('sort') && $request->has('direction')) {
+            $sortField = $request->input('sort');
+            $direction = $request->input('direction');
+
+            usort($reviews, function ($a, $b) use ($sortField, $direction) {
+                if ($direction === 'asc') {
+                    return strcmp($a[$sortField], $b[$sortField]);
+                } else {
+                    return strcmp($b[$sortField], $a[$sortField]);
+                }
+            });
+        }
+
+        return view('business.reviews.index', compact('reviews'));
+    }
 
 
     public function store(Request $request, Booking $booking)

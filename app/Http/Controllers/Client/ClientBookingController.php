@@ -166,5 +166,4 @@ class ClientBookingController extends Controller
         // Always return a JSON array
         return response()->json($slots);
     }
-
 }
