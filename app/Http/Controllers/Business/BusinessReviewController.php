@@ -59,7 +59,6 @@ class BusinessReviewController extends Controller
         return view('business.reviews.index', compact('reviews'));
     }
 
-
     public function store(Request $request, Booking $booking)
     {
         // Aplicar a Policy para verificar permissão

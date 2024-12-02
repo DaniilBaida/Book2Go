@@ -95,6 +95,4 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasManyThrough(Review::class, Booking::class, 'user_id', 'booking_id');
     }
-
-
 }
