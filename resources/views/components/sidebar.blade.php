@@ -1,5 +1,3 @@
-@props(['logoRoute', 'links' => [], 'variant' => 'default'])
-
 <div class="min-w-fit">
     <!-- Sidebar backdrop (mobile only) -->
     <div
@@ -30,7 +28,7 @@
         </div>
 
         <!-- Links -->
-        <div class="space-y-8">
+        <div class="space-y-8 flex-grow">
             <h3 class="text-xs uppercase text-gray-400 font-semibold xl:pl-3 pl-1 2xl:pl-3">
                 <span class="lg:sidebar-expanded:block 2xl:block">Pages</span>
             </h3>
@@ -51,5 +49,27 @@
                 @endforeach
             </ul>
         </div>
+
+        <!-- Bottom Links -->
+        @if (count($bottomLinks))
+        <div class="border-t pt-4">
+            <ul>
+                @foreach ($bottomLinks as $link)
+                    <li class="pl-4 pr-3 py-2 rounded-lg mb-0.5 last:mb-0">
+                        <a class="ajax-link block text-gray-600 truncate transition" 
+                        href="{{ $link['route'] }}" 
+                        data-path="{{ parse_url($link['route'], PHP_URL_PATH) }}">
+                            <div class="flex items-center">
+                                <i class="{{ $link['icon'] }} shrink-0"></i>
+                                <span class="text-sm font-medium ml-4 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                                    {{ $link['label'] }}
+                                </span>
+                            </div>
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
     </div>
 </div>

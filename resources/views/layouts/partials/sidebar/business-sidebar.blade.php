@@ -8,4 +8,7 @@
         ['route' => route('business.discounts.index'),'icon' => 'fas fa-tags','label' => 'Manage Discounts'],
         ['route' => route('business.reviews.index'), 'icon' => 'fas fa-star', 'label' => 'Reviews'],
     ]"
+    :bottomLinks="[
+        ['route' => route('business.settings.index'), 'icon' => 'fas fa-cog', 'label' => 'Settings'],
+    ]"
 />

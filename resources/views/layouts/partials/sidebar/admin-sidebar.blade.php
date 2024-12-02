@@ -38,4 +38,5 @@
             'isActive' => Request::is('admin/discounts*'),
         ],
     ]"
+    :bottomLinks="[]"
 />

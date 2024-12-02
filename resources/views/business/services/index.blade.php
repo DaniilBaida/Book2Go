@@ -52,33 +52,4 @@
             {{ $services->appends(['search' => request('search')])->links('vendor.pagination.tailwind') }}
         </div>
     </div>
-
-    <!-- Toast Notifications -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            @if (session('success'))
-                Toastify({
-                    text: "{{ session('success') }}",
-                    duration: 5000, // Display for 5 seconds
-                    close: true,
-                    gravity: "bottom", // Display at the top
-                    position: "right", // Align to the right
-                    backgroundColor: "#4caf50", // Green for success
-                    stopOnFocus: true // Pause on hover
-                }).showToast();
-            @endif
-
-            @if (session('error'))
-                Toastify({
-                    text: "{{ session('error') }}",
-                    duration: 5000, // Display for 5 seconds
-                    close: true,
-                    gravity: "bottom", // Display at the top
-                    position: "right", // Align to the right
-                    backgroundColor: "#f44336", // Red for error
-                    stopOnFocus: true // Pause on hover
-                }).showToast();
-            @endif
-        });
-    </script>
 </x-business-layout>

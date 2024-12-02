@@ -24,6 +24,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CityController;
 use App\Models\User;
+use App\Http\Controllers\Business\BusinessSettingsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\VerifyEmailController;
 
@@ -110,34 +111,40 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::patch('profile/update', [ProfileController::class, 'update'])->name('profile.update'); // Update profile
             Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy'); // Delete profile
 
+            // Details Route
             Route::get('details', [BusinessDetailsController::class, 'index'])->name('details'); // View business details
             Route::get('details/edit', [BusinessDetailsController::class, 'edit'])->name('details.edit'); // Edit business details
             Route::patch('details/update', [BusinessDetailsController::class, 'update'])->name('details.update'); // Update business details
 
+            // Services Route
             Route::resource('services', BusinessServiceController::class); // Manage business services
 
+            // Booking Routes
             Route::get('bookings', [BusinessBookingController::class, 'index'])->name('bookings'); // List of all bookings
             Route::get('bookings/{booking}', [BusinessBookingController::class, 'show'])->name('bookings.show'); // Booking details
             Route::patch('bookings/{booking}/accept', [BusinessBookingController::class, 'accept'])->name('bookings.accept'); // Accept booking
             Route::patch('bookings/{booking}/deny', [BusinessBookingController::class, 'deny'])->name('bookings.deny'); // Deny booking
             Route::post('bookings/bulk', [BusinessBookingController::class, 'bulkUpdate'])->name('bookings.bulk'); // Bulk update bookings
             Route::patch('bookings/{booking}/complete', [BusinessBookingController::class, 'complete'])->name('bookings.complete');
-
-            // Discount Codes for Business
-            Route::resource('discounts', BusinessDiscountController::class)->except(['show']);
-
-            // Route for the hardcoded reviews page
-            Route::get('reviews', [BusinessReviewController::class, 'index'])->name('reviews.index');
-
             Route::get('bookings/{booking}/reviews/create', [BusinessReviewController::class, 'create'])->name('reviews.create');
             Route::post('bookings/{booking}/reviews', [BusinessReviewController::class, 'store'])->name('reviews.store');
-            Route::patch('reviews/{review}/report', [BusinessReviewController::class, 'report'])->name('reviews.report');
+            
+            // Discount Codes for Business Route
+            Route::resource('discounts', BusinessDiscountController::class)->except(['show']);
+            
+            // Reviews Route
+            Route::get('reviews', [BusinessReviewController::class, 'index'])->name('reviews.index'); // List of all reviews
+            Route::patch('reviews/{review}/report', [BusinessReviewController::class, 'report'])->name('reviews.report'); // Report Reviews
 
-            Route::get('/notifications', [BusinessNotificationController::class, 'index'])->name('notifications.index'); // View notifications
+            // Notifications Route
+            Route::get('/notifications', [BusinessNotificationController::class, 'index'])->name('notifications.index'); // List of all notifications
 
-            Route::get('/users/{id}', [BusinessController::class, 'showUserProfile'])->name('users.show');//Display user profile
-            Route::get('/business/bookings/{id}/details', [BusinessBookingController::class, 'show'])->name('business.bookings.details');//Order details
+            Route::get('/users/{id}', [BusinessController::class, 'showUserProfile'])->name('users.show');
+            Route::get('/business/bookings/{id}/details', [BusinessBookingController::class, 'show'])->name('business.bookings.details');
 
+            // Settings Route
+            Route::get('/settings', [BusinessSettingsController::class, 'index'])->name('settings.index'); // Account Settings
+            Route::patch('/settings', [BusinessSettingsController::class, 'update'])->name('settings.update'); // Save Account Settings
         });
 
         // Routes for businesses with incomplete setup
@@ -177,6 +184,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/notifications', [ClientNotificationController::class, 'index'])->name('notifications.index'); // View notifications
         Route::get('/payment/success/{booking}', [PaymentController::class, 'success'])->name('payment.success');
         Route::get('/payment/cancel/{booking}', [PaymentController::class, 'cancel'])->name('payment.cancel');
+
+        // Settings Route
+        Route::get('/settings', [BusinessSettingsController::class, 'index'])->name('settings.index'); // Account Settings
+        Route::patch('/settings', [BusinessSettingsController::class, 'update'])->name('settings.update'); // Save Account Settings
     });
 });
 
