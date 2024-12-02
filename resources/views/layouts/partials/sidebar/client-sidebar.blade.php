@@ -20,4 +20,7 @@
             'isActive' => Request::is('client/bookings')
         ],
     ]"
+    :bottomLinks="[
+        ['route' => route('client.settings.index'), 'icon' => 'fas fa-cog', 'label' => 'Settings'],
+    ]"
 />
