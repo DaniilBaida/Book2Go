@@ -89,5 +89,13 @@ class Review extends Model
         $this->update(['reported_at' => now()]);
     }
 
+    public function replies()
+    {
+        return $this->hasMany(Reply::class);
+    }
 
+    public function reply()
+    {
+        return $this->hasOne(Reply::class);
+    }
 }
