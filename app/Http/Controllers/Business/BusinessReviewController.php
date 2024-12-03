@@ -26,8 +26,8 @@ class BusinessReviewController extends Controller
 
     public function index(Request $request)
     {
-        // Start the query and include the user relationship through Booking
-        $query = Review::query()->with(['user']); // Load the user relationship defined in Review
+        // Start the query and include the user and reply relationships
+        $query = Review::query()->with(['user', 'reply']); // Load both user and reply relationships
 
         // Apply search for the user's name
         if ($request->has('search')) {
@@ -57,8 +57,6 @@ class BusinessReviewController extends Controller
         // Return the view with the reviews
         return view('business.reviews.index', compact('reviews'));
     }
-
-
 
     public function store(Request $request, Booking $booking)
     {
@@ -91,3 +89,4 @@ class BusinessReviewController extends Controller
         return back()->with('success', 'Review has been reported and will be reviewed by an administrator.');
     }
 }
+

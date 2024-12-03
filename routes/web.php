@@ -16,6 +16,7 @@ use App\Http\Controllers\Business\BusinessSetupController;
 use App\Http\Controllers\Business\BusinessServiceController;
 use App\Http\Controllers\Business\BusinessDetailsController;
 use App\Http\Controllers\Business\BusinessDiscountController;
+use App\Http\Controllers\Business\BusinessReplyController;
 use App\Http\Controllers\Client\ClientBookingController;
 use App\Http\Controllers\Client\ClientNotificationController;
 use App\Http\Controllers\Client\ClientReviewController;
@@ -157,6 +158,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
             // Settings Route
             Route::get('/settings', [BusinessSettingsController::class, 'index'])->name('settings.index'); // Account Settings
             Route::patch('/settings', [BusinessSettingsController::class, 'update'])->name('settings.update'); // Save Account Settings
+
+            //Replys
+            Route::get('/reviews/{review}/replies/create', [BusinessReplyController::class, 'create'])->name('replies.create');
+            Route::post('/reviews/{review}/replies', [BusinessReplyController::class, 'store'])->name('replies.store');
+            Route::get('/reviews/replies/{reply}/edit', [BusinessReplyController::class, 'edit'])->name('replies.edit');
+            Route::delete('/reviews/replies/{reply}', [BusinessReplyController::class, 'destroy'])->name('replies.destroy');
+            Route::patch('/reviews/replies/{reply}', [BusinessReplyController::class, 'update'])->name('replies.update');
+
+
+
         });
 
         // Routes for businesses with incomplete setup
