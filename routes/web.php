@@ -40,7 +40,7 @@ function roleBasedRoutes(string $prefix, int $roleId, string $namePrefix, callab
 
 // Public route for the welcome page
 Route::get('/', function () {
-    return view('welcome');
+    return view('landing');
 });
 
 // Public route to fetch cities based on country code
