@@ -41,32 +41,22 @@ class BusinessReplyController extends Controller
         return redirect()->route('business.reviews.index')->with('success', 'Reply added successfully.');
     }
 
-
-    // Edit an existing reply
-    public function edit(Reply $reply)
-    {
-        $this->authorize('update', $reply);
-        return view('business.replies.edit', compact('reply'));
-    }
-
     // Update a reply
     public function update(Request $request, Reply $reply)
     {
         $this->authorize('update', $reply);
 
-        // Validate the reply content
         $request->validate([
             'content' => 'required|string|max:1000',
         ]);
 
-        // Update the reply in the database
         $reply->update([
             'content' => $request->content,
         ]);
 
-        // Redirect back to the reviews page with a success message
         return redirect()->route('business.reviews.index')->with('success', 'Reply updated successfully.');
     }
+
 
 
     // Delete a reply
