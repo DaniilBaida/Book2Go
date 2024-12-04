@@ -83,7 +83,7 @@
 
             <!-- Reply Section -->
             <div>
-                <form>
+                <form :action="`/business/replies/${reviewId}`" method="POST">
                     <div class="flex gap-5">
                         <div class="px-[2px] bg-zinc-300"></div>
                         <div class="w-full">
@@ -101,7 +101,7 @@
                         >
                             Cancel
                         </x-button-secondary>
-                        <x-button onclick="alert('Reply submitted!')"
+                        <x-button
                         >
                             Submit Reply
                         </x-button>
