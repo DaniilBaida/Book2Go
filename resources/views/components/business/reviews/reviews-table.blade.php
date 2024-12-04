@@ -58,8 +58,11 @@
                         <td class="p-3">{{ $review->rating }} ★</td>
                         <td class="p-3">{{ $review->comment }}</td>
                         <td class="p-3 flex justify-end gap-2">
-                            @if($review->reply)
-                                <!-- Edit and Delete Buttons -->
+                                <!-- Response Modal for Unanswered Reviews -->
+                                <x-business.reviews.response-modal-review />
+                                <!-- View Reply Button for Answered Reviews -->
+                                <x-business.reviews.view-modal-review />
+                            <!-- @if($review->reply)
                                 <a href="{{ route('business.replies.edit', ['reply' => $review->reply->id]) }}" class="bg-yellow-500 text-white hover:bg-yellow-700 py-1 px-3 rounded text-sm">
                                     Edit
                                 </a>
@@ -69,11 +72,10 @@
                                     <button type="submit" class="bg-red-500 text-white hover:bg-red-700 py-1 px-3 rounded text-sm">Delete</button>
                                 </form>
                             @else
-                                <!-- Reply to Review Button -->
                                 <a href="{{ route('business.replies.create', ['review' => $review->id]) }}" class="bg-blue-500 text-white hover:bg-blue-700 py-1 px-3 rounded text-sm">
                                     Reply to Review
                                 </a>
-                            @endif
+                            @endif -->
                         </td>
                     </tr>
                 @endforeach

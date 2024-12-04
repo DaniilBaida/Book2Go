@@ -87,9 +87,9 @@
 
         <!-- Back Button -->
         <div>
-            <a href="{{ route('business.bookings') }}">
-                    <x-button>
-                    Back to Bookings
+            <a href="{{ url()->previous() }}">
+                <x-button>
+                    Back
                 </x-button>
             </a>
         </div>
