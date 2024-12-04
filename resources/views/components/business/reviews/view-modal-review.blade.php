@@ -1,16 +1,6 @@
 <div
     x-data="{
         show: false,
-        focusables() {
-            let selector = 'a, button, input:not([type=\'hidden\']), textarea, select, details, [tabindex]:not([tabindex=\'-1\'])';
-            return [...$el.querySelectorAll(selector)].filter(el => !el.hasAttribute('disabled'));
-        },
-        firstFocusable() { return this.focusables()[0] },
-        lastFocusable() { return this.focusables().slice(-1)[0] },
-        nextFocusable() { return this.focusables()[this.nextFocusableIndex()] || this.firstFocusable() },
-        prevFocusable() { return this.focusables()[this.prevFocusableIndex()] || this.lastFocusable() },
-        nextFocusableIndex() { return (this.focusables().indexOf(document.activeElement) + 1) % (this.focusables().length + 1) },
-        prevFocusableIndex() { return Math.max(0, this.focusables().indexOf(document.activeElement)) - 1 },
     }"
     x-init="$watch('show', value => {
         if (value) {
@@ -19,12 +9,9 @@
             document.body.classList.remove('overflow-y-hidden');
         }
     })"
-    class="relative"
->
+    class="relative">
     <!-- Button to Open Modal -->
-    <x-button 
-        @click="show = true"
-    >
+    <x-button @click="show = true">
         View Reply
     </x-button>
 
@@ -51,19 +38,26 @@
             x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
             x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
         >
-            <!-- Reply Details -->
+            <!-- Display Reply -->
             <div class="border-b pb-4 mb-4">
                 <h3 class="font-bold text-lg">Reply Details</h3>
                 <p class="text-sm text-gray-700 mt-2 text-justify">
-                    <!-- Example reply; this can be dynamically passed -->
-                    {{ $reply ?? 'No reply available.' }}
+                    {{ $review->reply->content ?? 'No reply available.' }}
                 </p>
             </div>
-            <!-- Close Modal Button -->
-            <div class="mt-4 flex justify-end">
-                <x-button-secondary 
-                    @click="show = false"
-                >
+            <!-- Action Buttons -->
+            <div class="mt-4 flex justify-end gap-3">
+                @if($review->reply)
+                    <!-- Delete Button -->
+                    <form method="POST" action="{{ route('business.replies.destroy', $review->reply->id) }}" onsubmit="return confirm('Are you sure you want to delete this reply?')">
+                        @csrf
+                        @method('DELETE')
+                        <x-danger-button>
+                            Delete Reply
+                        </x-danger-button>
+                    </form>
+                @endif
+                <x-button-secondary @click="show = false">
                     Close
                 </x-button-secondary>
             </div>

@@ -3,13 +3,11 @@
         show: false,
         focusables() {
             let selector = 'a, button, input:not([type=\'hidden\']), textarea, select, details, [tabindex]:not([tabindex=\'-1\'])';
-            return [...$el.querySelectorAll(selector)].filter(el => ! el.hasAttribute('disabled'));
+            return [...$el.querySelectorAll(selector)].filter(el => !el.hasAttribute('disabled'));
         },
         firstFocusable() { return this.focusables()[0] },
         lastFocusable() { return this.focusables().slice(-1)[0] },
         nextFocusable() { return this.focusables()[this.nextFocusableIndex()] || this.firstFocusable() },
-        prevFocusable() { return this.focusables()[this.prevFocusableIndex()] || this.lastFocusable() },
-        nextFocusableIndex() { return (this.focusables().indexOf(document.activeElement) + 1) % (this.focusables().length + 1) },
         prevFocusableIndex() { return Math.max(0, this.focusables().indexOf(document.activeElement)) - 1 },
     }"
     x-init="$watch('show', value => {
@@ -22,9 +20,7 @@
     class="relative"
 >
     <!-- Button to Open Modal -->
-    <x-button 
-        @click="show = true"
-    >
+    <x-button @click="show = true">
         Reply
     </x-button>
 
@@ -56,16 +52,16 @@
                 <div class="justify-between flex items-center">
                     <div class="flex items-center mb-2">
                         <img 
-                            src="https://via.placeholder.com/40" 
+                            src="{{ $review->user->avatar_url ?? 'https://via.placeholder.com/40' }}" 
                             alt="Customer Avatar" 
                             class="rounded-full w-10 h-10 mr-3"
                         >
                         <div>
-                            <h3 class="font-bold text-lg">Brian Howie</h3>
-                            <p class="text-sm text-gray-500">2 reviews · 2 weeks ago</p>
+                            <h3 class="font-bold text-lg">{{ $review->user->first_name }} {{ $review->user->last_name }}</h3>
+                            <p class="text-sm text-gray-500">{{ $review->created_at->diffForHumans() }}</p>
                         </div>
                     </div>
-                    <div class="">
+                    <div>
                         <button>
                             <i class="fa-solid fa-circle-exclamation text-red-400 hover:text-red-500 text-2xl duration-300 hover:cursor-pointer"></i>
                         </button>
@@ -73,22 +69,24 @@
                 </div>
                 <div class="flex items-center mb-2">
                     <span class="text-yellow-500">
-                        ★★★★☆
+                        {{ str_repeat('★', $review->rating) }}{{ str_repeat('☆', 5 - $review->rating) }}
                     </span>
                 </div>
                 <p class="text-sm text-gray-700 text-justify">
-                    My wife and I just purchased a 2019 Audi A8 from Audi Westwood. It was the best car buying experience I have had. The whole process was customer-focused, engaged, and transparent. Our Sales Rep was Justin Vargas, and he made the whole experience very customer-focused. His knowledge of the vehicles, options, and approach to the buying process was outstanding. Would highly recommend both Justin and Audi Westwood for your car buying needs.
+                    {{ $review->comment }}
                 </p>
             </div>
 
             <!-- Reply Section -->
             <div>
-                <form :action="`/business/replies/${reviewId}`" method="POST">
+                <form action="{{ route('business.replies.store', ['review' => $review->id]) }}" method="POST">
+                    @csrf
                     <div class="flex gap-5">
                         <div class="px-[2px] bg-zinc-300"></div>
                         <div class="w-full">
                             <h4 class="font-bold mb-2">Reply</h4>
                             <textarea
+                                name="content"
                                 rows="4"
                                 placeholder="Write your reply here..."
                                 class="mt-1 block w-full rounded-md shadow-sm border-gray-300 focus:ring-blue-500 focus:border-blue-500 sm:text-sm resize-none"
@@ -96,13 +94,10 @@
                         </div>
                     </div>
                     <div class="mt-4 flex justify-end gap-3">
-                        <x-button-secondary 
-                            @click="show = false"
-                        >
+                        <x-button-secondary @click="show = false">
                             Cancel
                         </x-button-secondary>
-                        <x-button
-                        >
+                        <x-button type="submit">
                             Submit Reply
                         </x-button>
                     </div>

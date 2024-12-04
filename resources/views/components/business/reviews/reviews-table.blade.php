@@ -49,7 +49,7 @@
             </thead>
             <tbody class="text-gray-700 text-sm font-light">
                 @foreach($reviews as $review)
-                    <tr class="border-b border-gray-100 hover:bg-gray-100 review-row" data-status="{{ $review->status ?? 'answered' }}">
+                    <tr class="border-b border-gray-100 hover:bg-gray-100 review-row" data-status="{{ $review->reply ? 'answered' : 'unanswered' }}">
                         <td class="p-3 font-bold flex items-center gap-3">
                             <a href="{{ route('business.users.show', $review->user->id) }}" class="text-blue-600 hover:underline">
                                 {{ $review->user->first_name . " " . $review->user->last_name }}
@@ -58,24 +58,21 @@
                         <td class="p-3">{{ $review->rating }} ★</td>
                         <td class="p-3">{{ $review->comment }}</td>
                         <td class="p-3 flex justify-end gap-2">
-                                <!-- Response Modal for Unanswered Reviews -->
-                                <x-business.reviews.response-modal-review />
-                                <!-- View Reply Button for Answered Reviews -->
-                                <x-business.reviews.view-modal-review />
-                            <!-- @if($review->reply)
-                                <a href="{{ route('business.replies.edit', ['reply' => $review->reply->id]) }}" class="bg-yellow-500 text-white hover:bg-yellow-700 py-1 px-3 rounded text-sm">
-                                    Edit
-                                </a>
+                            @if($review->reply)
+                                <!-- View Reply Modal -->
+                                <x-business.reviews.view-modal-review :review="$review" />
+                                <!-- Delete Button -->
                                 <form method="POST" action="{{ route('business.replies.destroy', ['reply' => $review->reply->id]) }}" onsubmit="return confirm('Are you sure you want to delete this reply?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="bg-red-500 text-white hover:bg-red-700 py-1 px-3 rounded text-sm">Delete</button>
+                                    <x-danger-button>
+                                        Delete Reply
+                                    </x-danger-button>
                                 </form>
                             @else
-                                <a href="{{ route('business.replies.create', ['review' => $review->id]) }}" class="bg-blue-500 text-white hover:bg-blue-700 py-1 px-3 rounded text-sm">
-                                    Reply to Review
-                                </a>
-                            @endif -->
+                                <!-- Reply Modal -->
+                                <x-business.reviews.response-modal-review :review="$review" />
+                            @endif
                         </td>
                     </tr>
                 @endforeach
@@ -96,6 +93,6 @@
             }
         });
     }
-    // Default to showing all reviews
-    filterReviews('answered');
+    // Default to showing unanswered reviews
+    filterReviews('unanswered');
 </script>
