@@ -12,6 +12,26 @@ class BusinessReplyController extends Controller
 {
     use AuthorizesRequests;
 
+    public function index(Request $request)
+    {
+        $query = Review::query()
+            ->where('reviewer_type', 'client') // Only include client reviews
+            ->with(['user', 'reply']); // Eager load relationships
+
+        // Apply additional filters if necessary (like search)
+        if ($request->has('search')) {
+            $query->whereHas('user', function ($q) use ($request) {
+                $q->where('first_name', 'like', '%' . $request->search . '%')
+                ->orWhere('last_name', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $reviews = $query->paginate(10);
+
+        return view('business.reviews.index', compact('reviews'));
+    }
+
+
     public function create(Review $review)
     {
         return view('business.replies.create', compact('review'));

@@ -49,7 +49,7 @@
             </thead>
             <tbody class="text-gray-700 text-sm font-light">
                 @foreach($reviews as $review)
-                    <tr class="border-b border-gray-100 hover:bg-gray-100 review-row" data-status="{{ $review->reply ? 'answered' : 'unanswered' }}">
+                    <tr class="border-b border-gray-100 hover:bg-gray-100 review-row" data-status="{{ $review->reply ? 'answered' : 'unanswered' }}"  data-reviewer-type="{{ $review->reviewer_type }}">
                         <td class="p-3 font-bold flex items-center gap-3">
                             <a href="{{ route('business.users.show', $review->user->id) }}" class="text-blue-600 hover:underline">
                                 {{ $review->user->first_name . " " . $review->user->last_name }}
@@ -86,13 +86,18 @@
     function filterReviews(status) {
         const rows = document.querySelectorAll('.review-row');
         rows.forEach(row => {
-            if (row.dataset.status === status || status === 'all') {
+            const reviewStatus = row.dataset.status; // Get the review's status
+            const reviewerType = row.dataset.reviewerType; // Get the reviewer's type
+
+            // Ensure only client reviews are shown
+            if ((reviewStatus === status || status === 'all') && reviewerType === 'client') {
                 row.style.display = ''; // Show row
             } else {
                 row.style.display = 'none'; // Hide row
             }
         });
     }
-    // Default to showing unanswered reviews
+
+    // Default to showing unanswered client reviews
     filterReviews('unanswered');
 </script>
