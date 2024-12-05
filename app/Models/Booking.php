@@ -70,6 +70,17 @@ class Booking extends Model
         return $query->where('status', 'completed');
     }
 
+    /**
+     * Scope for available slots.
+     */
+    public function scopeAvailableSlots($query, $serviceId, $date)
+    {
+        return $query->where('service_id', $serviceId)
+            ->where('date', $date)
+            ->where('status', '!=', 'denied');
+    }
+
+
     protected static function boot()
     {
         parent::boot();

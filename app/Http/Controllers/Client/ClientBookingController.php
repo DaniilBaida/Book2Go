@@ -54,34 +54,36 @@ class ClientBookingController extends Controller
         $startTime = Carbon::parse($validated['start_time']);
         $endTime = $startTime->copy()->addMinutes($service->duration_minutes);
 
-        // Check if the time slot is already booked
+        // Check if the slot is already booked (pending or accepted)
         $exists = Booking::where('service_id', $service->id)
             ->where('date', $validated['date'])
             ->where(function ($query) use ($startTime, $endTime) {
-                $query->whereBetween('start_time', [$startTime, $endTime->subMinute()])
-                    ->orWhereBetween('end_time', [$startTime->addMinute(), $endTime]);
+                $query->where('start_time', '<=', $startTime->format('H:i'))
+                    ->where('end_time', '>=', $endTime->format('H:i'));
             })
+            ->whereIn('status', ['pending', 'accepted'])
             ->exists();
 
         if ($exists) {
             return redirect()->back()->withErrors(['start_time' => 'The selected time slot is not available.']);
         }
 
-        // Set booking status based on service's auto-accept setting
-        $status = $service->auto_accept ? 'accepted' : 'pending';
-
         // Create the booking
-        $booking = Booking::create([
+        Booking::create([
             'service_id' => $service->id,
             'user_id' => auth()->id(),
             'date' => $validated['date'],
-            'start_time' => $startTime,
-            'end_time' => $endTime,
-            'status' => $status,
+            'start_time' => $startTime->format('H:i'),
+            'end_time' => $endTime->format('H:i'),
+            'status' => 'pending',
         ]);
 
         return redirect()->route('client.bookings')->with('success', 'Booking created successfully.');
     }
+
+
+
+
 
     public function pay(Booking $booking)
     {
@@ -193,19 +195,32 @@ class ClientBookingController extends Controller
         // Validate the date parameter
         $request->validate(['date' => 'required|date']);
 
-        // Parse the date and get the day name
-        $date = Carbon::parse($request->input('date'));
-        $dayName = $date->format('l'); // E.g., 'Monday'
+        // Parse the date
+        $date = $request->input('date');
 
-        // Check if the selected day is in the service's available days
-        if (!in_array($dayName, $service->available_days)) {
-            return response()->json([]); // Return an empty array for unavailable days
+        // Generate available slots based on service working hours
+        $startTime = strtotime('08:00'); // Adjust based on your service settings
+        $endTime = strtotime('16:00'); // Adjust based on your service settings
+        $allSlots = [];
+
+        while ($startTime < $endTime) {
+            $allSlots[] = date('H:i', $startTime);
+            $startTime = strtotime('+1 hour', $startTime);
         }
 
-        // Get available slots and exclude the pending bookings
-        $slots = $service->getAvailableSlots($date->format('Y-m-d'));
+        // Fetch already booked slots for the selected date
+        $bookedSlots = Booking::where('service_id', $service->id)
+            ->where('date', $date)
+            ->whereIn('status', ['pending', 'accepted'])
+            ->pluck('start_time')
+            ->toArray();
 
-        // Always return a JSON array
-        return response()->json($slots);
+        // Filter out booked slots
+        $availableSlots = array_filter($allSlots, function ($slot) use ($bookedSlots) {
+            return !in_array($slot, $bookedSlots);
+        });
+
+        // Return available slots
+        return response()->json(array_values($availableSlots));
     }
 }

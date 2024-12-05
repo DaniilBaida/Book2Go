@@ -83,10 +83,19 @@ class BusinessBookingController extends Controller
      */
     public function deny(Booking $booking)
     {
-
+        // Update the status to denied
         $booking->update(['status' => 'denied']);
 
+        // Free up the slot
+        $this->freeUpSlot($booking);
+
         return redirect()->route('business.bookings')->with('success', 'Booking denied.');
+    }
+
+    private function freeUpSlot(Booking $booking)
+    {
+        // Denied bookings don't block slots; no explicit changes are needed
+        return true;
     }
 
     public function bulkUpdate(Request $request)
