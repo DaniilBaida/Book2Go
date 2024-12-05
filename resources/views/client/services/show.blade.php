@@ -120,15 +120,15 @@
 
             // Function to fetch and display available slots
             function fetchAvailableSlots(date) {
-                slotsContainer.innerHTML = ''; // Clear existing slots
-                selectedSlotInput.value = ''; // Reset selected slot
+                slotsContainer.innerHTML = ''; // Limpar horários existentes
+                selectedSlotInput.value = ''; // Resetar o slot selecionado
 
                 if (!date) {
                     slotsContainer.innerHTML = '<p class="text-gray-500 mt-2">Please select a date to view available slots.</p>';
                     return;
                 }
 
-                // Fetch available slots from the server
+                // Buscar horários disponíveis do servidor
                 fetch(`/client/services/{{ $service->id }}/available-slots?date=${date}`)
                     .then(response => {
                         if (!response.ok) {
@@ -140,21 +140,21 @@
                         if (slots.length === 0) {
                             slotsContainer.innerHTML = '<p class="text-gray-500 mt-2">No slots available for the selected date.</p>';
                         } else {
-                            // Render available slots
+                            // Renderizar horários disponíveis
                             slots.forEach(slot => {
                                 const button = document.createElement('button');
                                 button.type = 'button';
-                                button.textContent = slot; // Display the slot time
+                                button.textContent = slot; // Exibir o horário
                                 button.className = 'text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2';
 
-                                // Add click event to select the slot
+                                // Evento de clique para selecionar o horário
                                 button.addEventListener('click', () => {
                                     document.querySelectorAll('#available_slots button').forEach(btn => btn.classList.remove('bg-green-700', 'text-white'));
                                     button.classList.add('bg-green-700', 'text-white');
-                                    selectedSlotInput.value = slot; // Set the selected slot value
+                                    selectedSlotInput.value = slot; // Definir o horário selecionado
                                 });
 
-                                slotsContainer.appendChild(button); // Append button to the container
+                                slotsContainer.appendChild(button); // Adicionar botão ao container
                             });
                         }
                     })
@@ -163,6 +163,7 @@
                         slotsContainer.innerHTML = '<p class="text-red-500 mt-2">Failed to load available slots.</p>';
                     });
             }
+
 
             // Initialize Flatpickr for date selection
             function initializeFlatpickr() {
