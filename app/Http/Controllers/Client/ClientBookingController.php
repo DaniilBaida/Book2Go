@@ -198,29 +198,46 @@ class ClientBookingController extends Controller
         // Parse the date
         $date = $request->input('date');
 
+        // Convert service duration to minutes
+        $serviceDuration = $service->duration_minutes;
+
         // Generate available slots based on service working hours
-        $startTime = strtotime('08:00'); // Adjust based on your service settings
-        $endTime = strtotime('16:00'); // Adjust based on your service settings
+        $startTime = Carbon::parse($service->start_time);
+        $endTime = Carbon::parse($service->end_time);
         $allSlots = [];
 
-        while ($startTime < $endTime) {
-            $allSlots[] = date('H:i', $startTime);
-            $startTime = strtotime('+1 hour', $startTime);
+        while ($startTime->lessThan($endTime)) {
+            $allSlots[] = $startTime->format('H:i');
+            $startTime->addMinutes($serviceDuration);
         }
 
         // Fetch already booked slots for the selected date
         $bookedSlots = Booking::where('service_id', $service->id)
             ->where('date', $date)
             ->whereIn('status', ['pending', 'accepted'])
-            ->pluck('start_time')
-            ->toArray();
+            ->get(['start_time', 'end_time']);
 
-        // Filter out booked slots
-        $availableSlots = array_filter($allSlots, function ($slot) use ($bookedSlots) {
-            return !in_array($slot, $bookedSlots);
+        // Filter out conflicting slots
+        $availableSlots = array_filter($allSlots, function ($slot) use ($bookedSlots, $serviceDuration) {
+            $slotStart = Carbon::parse($slot);
+            $slotEnd = $slotStart->copy()->addMinutes($serviceDuration);
+
+            foreach ($bookedSlots as $booked) {
+                $bookedStart = Carbon::parse($booked->start_time);
+                $bookedEnd = Carbon::parse($booked->end_time);
+
+                // Check if the current slot overlaps with any booked slot
+                if ($slotEnd->greaterThan($bookedStart) && $slotStart->lessThan($bookedEnd)) {
+                    return false;
+                }
+            }
+            return true;
         });
 
         // Return available slots
         return response()->json(array_values($availableSlots));
     }
+
+
+
 }
