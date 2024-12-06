@@ -1,112 +1,127 @@
 <x-client-layout>
-    <div class="bg-white shadow-md rounded-lg p-6">
-        <!-- Service Header -->
-        <div class="flex items-center space-x-4">
-            @if($service->image_path)
-                <img src="{{ asset($service->image_path) }}" alt="{{ $service->name }}" class="w-24 h-24 rounded">
-            @endif
-            <div>
-                <h3 class="text-2xl font-bold">{{ $service->name }}</h3>
-                <p class="text-gray-800 font-bold">€{{ number_format($service->price, 2) }}</p>
-                <p class="text-gray-600">{{ $service->category->name }}</p>
+    <div class="space-y-5">
+        <!-- Book Service -->
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <h1 class="text-3xl text-gray-800 font-bold mb-5">Booking Service</h1>
+            <!-- Service Header -->
+            <div class="flex max-sm:flex-col space-x-4">
+                @if($service->image_path)
+                    <!-- Display service image -->
+                    <img src="{{ asset($service->image_path) }}" alt="{{ $service->name }}" class="w-24 h-24 rounded-full border-1 border border-zinc-200">
+                @else
+                    <!-- Placeholder image if no service image is provided -->
+                    <img src="{{ asset('images/placeholder.png') }}" alt="No Image" class="w-24 h-24 rounded-full bg-zinc-500 flex justify-center text-center">
+                @endif
+                <div>
+                    <h3 class="text-2xl font-bold">{{ $service->name }}</h3>
+                    <p class="text-gray-800 font-bold">€{{ number_format($service->price, 2) }}</p>
+                    <p class="text-gray-600">{{ $service->category->name }}</p>
+                </div>
+            </div>
+
+            <!-- Service Description -->
+            <div class="mt-4">
+                <h4 class="text-lg font-semibold">{{ __('Description') }}</h4>
+                <p class="mt-2 text-gray-600">{{ $service->description }}</p>
             </div>
         </div>
-
-        <!-- Service Description -->
-        <div class="mt-4">
-            <h4 class="text-lg font-semibold">{{ __('Description') }}</h4>
-            <p class="mt-2 text-gray-600">{{ $service->description }}</p>
-        </div>
-
-        <!-- Booking Section -->
-        <div class="mt-6">
-            @if($existingBooking)
-                <!-- Existing Booking Message -->
-                <div class="p-4 bg-green-100 text-green-800 rounded">
-                    <p>{{ __('You have already booked this service for :date at :time.', ['date' => $existingBooking->date->format('d M Y'), 'time' => $existingBooking->start_time->format('H:i')]) }}</p>
-                    <a href="{{ route('client.bookings.show', $existingBooking) }}" class="mt-4 inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                        {{ __('View Booking') }}
-                    </a>
-                </div>
-            @else
-                <!-- Booking Form -->
-                <form method="POST" action="{{ route('client.bookings.store', $service) }}" class="space-y-4">
-                    @csrf
-                    <!-- Date Picker -->
-                    <div>
-                        <label for="date" class="block text-gray-700">{{ __('Booking Date') }}</label>
-                        <input
-                            type="text"
-                            id="date"
-                            name="date"
-                            class="block mt-1 w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
-                            required>
-                        @error('date')
-                        <span class="text-red-500 text-sm">{{ $message }}</span>
-                        @enderror
+        <!-- Book Details -->
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <h1 class="text-3xl text-gray-800 font-bold mb-5">Booking Details</h1>
+            <!-- Booking Section -->
+            <div class="mt-6">
+                @if($existingBooking)
+                    <!-- Existing Booking Message -->
+                    <div class="p-4 bg-green-100 text-green-800 rounded">
+                        <p>{{ __('You have already booked this service for :date at :time.', ['date' => $existingBooking->date->format('d M Y'), 'time' => $existingBooking->start_time->format('H:i')]) }}</p>
+                        <a href="{{ route('client.bookings.show', $existingBooking) }}">
+                            <x-button class="mt-2">
+                                {{ __('View Booking') }}
+                            </x-button>
+                        </a>
                     </div>
-
-                    <!-- Available Slots -->
-                    <div>
-                        <label for="available_slots" class="block text-gray-700">{{ __('Available Slots') }}</label>
-                        <div id="available_slots" class="flex flex-wrap gap-2 mt-2"></div>
-                        <input type="hidden" id="selected_slot" name="start_time" required>
-                        @error('start_time')
-                        <span class="text-red-500 text-sm">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <!-- Submit Button -->
-                    <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-                        {{ __('Book Now') }}
-                    </button>
-                </form>
-            @endif
-        </div>
-
-        <!-- Reviews Section -->
-        <div class="mt-8">
-            <h3 class="text-xl font-semibold text-gray-800">Reviews</h3>
-
-            @php
-                // Filter reviews specifically for the service (from clients)
-                $serviceReviews = $service->reviews->where('review_type', 'service');
-            @endphp
-
-            @if($serviceReviews->isEmpty())
-                <p class="text-gray-600 mt-4">No reviews available for this service yet.</p>
-            @else
-                <div class="space-y-4 mt-4">
-                    @foreach($serviceReviews as $review)
-                        <div class="bg-gray-100 p-4 rounded">
-                            <div class="flex justify-between items-center">
-                                <div>
-                                    <h4 class="font-semibold text-gray-800">
-                                        {{ $review->reviewer->first_name }} {{ $review->reviewer->last_name }}
-                                    </h4>
-                                    <p class="text-sm text-gray-600">{{ $review->created_at->format('d M Y') }}</p>
-                                </div>
-                                <div class="text-yellow-500">
-                                    @for($i = 1; $i <= 5; $i++)
-                                        @if($i <= $review->rating)
-                                            ★
-                                        @else
-                                            ☆
-                                        @endif
-                                    @endfor
-                                </div>
-                            </div>
-                            <p class="mt-2 text-gray-700">{{ $review->comment ?? 'No comment provided.' }}</p>
+                @else
+                    <!-- Booking Form -->
+                    <form method="POST" action="{{ route('client.bookings.store', $service) }}" class="space-y-4">
+                        @csrf
+                        <!-- Date Picker -->
+                        <div>
+                            <label for="date" class="block text-gray-700">{{ __('Booking Date') }}</label>
+                            <input
+                                type="text"
+                                id="date"
+                                name="date"
+                                class="block mt-1 w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
+                                required>
+                            @error('date')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                            @enderror
                         </div>
-                    @endforeach
-                </div>
-            @endif
-        </div>
 
+                        <!-- Available Slots -->
+                        <div>
+                            <label for="available_slots" class="block text-gray-700">{{ __('Available Slots') }}</label>
+                            <div id="available_slots" class="flex flex-wrap gap-2 mt-2"></div>
+                            <input type="hidden" id="selected_slot" name="start_time" required>
+                            @error('start_time')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <!-- Submit Button -->
+                        <x-button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                            {{ __('Book Now') }}
+                        </x-button>
+                    </form>
+                @endif
+            </div>
+        </div>
+        <!-- Book Reviews -->
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <h1 class="text-3xl text-gray-800 font-bold mb-5">Booking Reviews</h1>
+            <!-- Reviews Section -->
+            <div class="mt-8">
+                @php
+                    // Filter reviews specifically for the service (from clients)
+                    $serviceReviews = $service->reviews->where('review_type', 'service');
+                @endphp
+
+                @if($serviceReviews->isEmpty())
+                    <p class="text-gray-600 mt-4">No reviews available for this service yet.</p>
+                @else
+                    <div class="space-y-4 mt-4">
+                        @foreach($serviceReviews as $review)
+                            <div class="bg-gray-100 p-4 rounded">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">
+                                            {{ $review->reviewer->first_name }} {{ $review->reviewer->last_name }}
+                                        </h4>
+                                        <p class="text-sm text-gray-600">{{ $review->created_at->format('d M Y') }}</p>
+                                    </div>
+                                    <div class="text-yellow-500">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            @if($i <= $review->rating)
+                                                ★
+                                            @else
+                                                ☆
+                                            @endif
+                                        @endfor
+                                    </div>
+                                </div>
+                                <p class="mt-2 text-gray-700">{{ $review->comment ?? 'No comment provided.' }}</p>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+        </div>
         <!-- Back Button -->
         <div class="mt-6">
-            <a href="{{ route('client.services') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
-                {{ __('Back to Services') }}
+            <a href="{{ route('client.services') }}">
+                <x-button>
+                    {{ __('Back to Services') }}
+                </x-button>
             </a>
         </div>
     </div>
@@ -145,12 +160,12 @@
                                 const button = document.createElement('button');
                                 button.type = 'button';
                                 button.textContent = slot; // Exibir o horário
-                                button.className = 'text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2';
+                                button.className = 'text-blue-700 hover:text-white border-2 border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2';
 
                                 // Evento de clique para selecionar o horário
                                 button.addEventListener('click', () => {
-                                    document.querySelectorAll('#available_slots button').forEach(btn => btn.classList.remove('bg-green-700', 'text-white'));
-                                    button.classList.add('bg-green-700', 'text-white');
+                                    document.querySelectorAll('#available_slots button').forEach(btn => btn.classList.remove('bg-blue-800', 'text-white'));
+                                    button.classList.add('bg-blue-800', 'text-white');
                                     selectedSlotInput.value = slot; // Definir o horário selecionado
                                 });
 
@@ -202,5 +217,4 @@
             }
         });
     </script>
-
 </x-client-layout>
