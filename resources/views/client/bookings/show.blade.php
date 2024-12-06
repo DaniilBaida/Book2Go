@@ -61,18 +61,17 @@
                     <!-- Booking Status -->
                     <div>
                         <p class="text-gray-600"><strong>Status:</strong></p>
-                        <span class="px-2 py-1 rounded-full text-white text-xs {{ $booking->status === 'accepted' ? 'bg-green-500' : ($booking->status === 'canceled' ? 'bg-red-500' : 'bg-yellow-500') }}">
+                        <span class="px-2 py-1 rounded-full text-white text-xs {{ $booking->status === 'accepted' ? 'bg-green-500' : ($booking->status === 'canceled' ? 'bg-red-500' : ($booking->status === 'paid' ? 'bg-pink-500' : 'bg-yellow-500')) }}">
                             {{ ucfirst($booking->status) }}
                         </span>
                     </div>
                     <!-- Business Address -->
                     <div class="sm:col-span-2">
-                        <p class="text-gray-600"><strong>Address:</strong></p>
                         <p class="text-gray-800">
-                            {{ $booking->service->business->address }},
-                            {{ $booking->service->business->city }},
-                            {{ $booking->service->business->country }} -
-                            {{ $booking->service->business->postal_code }}
+                            <p><strong>Adress: </strong>{{ $booking->service->business->address }}</p>
+                            <p><strong>City: </strong>{{ $booking->service->business->city }}</p>
+                            <p><strong>Country: </strong>{{ $booking->service->business->country }}</p>
+                            <p><strong>Postal Code: </strong>{{ $booking->service->business->postal_code }}</p>
                         </p>
                     </div>
                 </div>
