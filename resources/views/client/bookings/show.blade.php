@@ -80,8 +80,8 @@
                 <!-- Actions -->
                 <div class="mt-3 flex space-x-3">
                     <!-- Back -->
-                    <a href="{{ route('client.bookings') }}">
-                        <x-button class="text-sm">Back to Bookings</x-button>
+                    <a href="{{ url()->previous() }}">
+                        <x-button class="text-sm">Back</x-button>
                     </a>
                     <!-- Cancel Booking -->
                     @if($booking->status === 'pending')
@@ -96,11 +96,6 @@
 
                             <!-- Confirmation Modal -->
                             <x-modal name="confirm-cancel-booking" :show="$errors->bookingCancellation->isNotEmpty()" maxWidth="md">
-                                <div>
-                                    <div class="rounded-full bg-zinc-500/10 p-2 flex">
-                                        <i class="fa-solid fa-exclamation rounded-full text-[10px] bg-red-500 py-1 px-2 text-white"></i>
-                                    </div>
-                                </div>
                                 <div>
                                     <h2 class="text-xl font-medium text-black">
                                         {{ __('Cancel Booking?') }}
@@ -141,7 +136,6 @@
                         </a>
                     @endif
                 </div>
-
             </div>
         </div>
     </div>
