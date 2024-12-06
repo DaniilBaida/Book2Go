@@ -21,6 +21,7 @@
         ],
     ]"
     :bottomLinks="[
+        ['route' => route('client.profile.edit'), 'icon' => 'fa-solid fa-user', 'label' => 'Profile'],
         ['route' => route('client.settings.index'), 'icon' => 'fas fa-cog', 'label' => 'Settings'],
     ]"
 />

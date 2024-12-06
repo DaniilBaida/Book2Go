@@ -49,7 +49,8 @@
             'label' => 'Business Verification',
             'isActive' => Request::is('admin/verification-requests*'),
         ],
-
     ]"
-    :bottomLinks="[]"
+    :bottomLinks="[
+        ['route' => route('admin.profile.edit'), 'icon' => 'fa-solid fa-user', 'label' => 'Profile'],
+    ]"
 />
