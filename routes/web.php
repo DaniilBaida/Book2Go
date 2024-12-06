@@ -109,9 +109,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('user-verification-requests/{user}/reject', [AdminUserVerificationRequestsController::class, 'reject'])->name('user-verification-requests.reject');
 
         // Business Verification Requests
-        Route::get('business-verification-requests', [AdminBusinessVerificationRequestsController::class, 'index'])->name('business-verification-requests.index');
-        Route::post('business-verification-requests/{business}/approve', [AdminBusinessVerificationRequestsController::class, 'approve'])->name('business-verification-requests.approve');
-        Route::post('business-verification-requests/{business}/reject', [AdminBusinessVerificationRequestsController::class, 'reject'])->name('business-verification-requests.reject');
+        Route::get('/business-verification-requests', [AdminBusinessVerificationRequestsController::class, 'index'])->name('business-verification-requests.index');
+        Route::post('/business-verification-requests/{business}/approve', [AdminBusinessVerificationRequestsController::class, 'approve'])->name('business-verification-requests.approve');
+        Route::post('/business-verification-requests/{business}/reject', [AdminBusinessVerificationRequestsController::class, 'reject'])->name('business-verification-requests.reject');
 
     });
 

@@ -10,10 +10,10 @@ class AdminBusinessVerificationRequestsController extends Controller
 {
     public function index()
     {
-        // Fetch pending business verification requests
-        $businessRequests = Business::where('verification_status', 'pending')->get();
-        return view('admin.business-verification-requests.index', compact('businessRequests'));
+        $verificationRequests = Business::where('verification_status', 'pending')->paginate(10);
+        return view('admin.business-verification-requests.index', compact('verificationRequests'));
     }
+
 
     public function approve(Business $business)
     {
