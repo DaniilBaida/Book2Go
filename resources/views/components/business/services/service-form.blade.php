@@ -77,14 +77,20 @@
             <div class="flex gap-5">
                 <!-- Time Range Picker -->
                 <div class="mb-4 w-1/2">
-                    <x-input-label for="time_range" :value="__('Service Time Range')" />
-                    <input type="text" id="time_range" name="time_range" class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm" placeholder="Select time range">
-                    <!-- Hidden inputs for storing start and end times -->
-                    <input type="hidden" id="start_time" name="start_time" value="{{ old('start_time', '08:00') }}">
-                    <input type="hidden" id="end_time" name="end_time" value="{{ old('end_time', '17:00') }}">
+                    <x-input-label for="start_time" :value="__('Start Time')" />
+                    <input type="text" id="start_time" name="start_time"
+                           class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm"
+                           placeholder="Select start time" value="{{ old('start_time', '08:00') }}">
                     @error('start_time')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                     @enderror
+                </div>
+
+                <div class="mb-4 w-1/2">
+                    <x-input-label for="end_time" :value="__('End Time')" />
+                    <input type="text" id="end_time" name="end_time"
+                           class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm"
+                           placeholder="Select end time" value="{{ old('end_time', '17:00') }}">
                     @error('end_time')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                     @enderror
@@ -132,7 +138,7 @@
                 <x-input-label for="auto_accept" :value="__('Auto-Accept Bookings')" />
                 <div class="flex items-center mt-1">
                     <label for="auto_accept" class="inline-flex items-center cursor-pointer">
-                        <input id="auto_accept" name="auto_accept" type="checkbox" value="1" 
+                        <input id="auto_accept" name="auto_accept" type="checkbox" value="1"
                             class="border-gray-300 focus:border-blue-500 focus:ring-blue-500 shadow-sm"
                             {{ old('auto_accept', $service->auto_accept ?? false) ? 'checked' : '' }}>
                         <span class="ml-2 text-gray-700">{{ __('Enable Auto-Accept') }}</span>
@@ -156,50 +162,51 @@
 <!-- Script to initialize Flatpickr for time range selection -->
 <script>
     $(document).ready(function () {
-        // Initialize the time range picker when the page is ready
-        initializeTimeRangePicker();
+        // Initialize the time pickers on page load
+        initializeTimePickers();
 
-        // Listen for changes when content is loaded dynamically
-        $(document).on('ajaxComplete', function () {
-            // Reinitialize the time range picker every time new content is loaded via AJAX or other methods
-            initializeTimeRangePicker();
-        });
-
-        // Or if you're using Turbo (Turbo.js for SPA-style navigation):
-        document.addEventListener('turbo:frame-load', function () {
-            // Reinitialize the time range picker when Turbo loads new content
-            initializeTimeRangePicker();
-        });
+        // Listen for dynamic content loading (AJAX or Turbo.js)
+        $(document).on('ajaxComplete', initializeTimePickers);
+        document.addEventListener('turbo:frame-load', initializeTimePickers);
     });
 
-    function initializeTimeRangePicker() {
-        // Ensure Flatpickr is only initialized once by checking for the instance
-        if ($('#time_range').data('flatpickr')) {
-            // If Flatpickr is already initialized, return
+    function initializeTimePickers() {
+        // Check if Flatpickr is already initialized for the inputs
+        if ($('#start_time').data('flatpickr') || $('#end_time').data('flatpickr')) {
             return;
         }
 
-        // Initialize Flatpickr for the time range input
-        flatpickr("#time_range", {
+        // Initialize Flatpickr for the start time
+        flatpickr("#start_time", {
             enableTime: true,
             noCalendar: true,
             dateFormat: "H:i",
             time_24hr: true,
-            mode: "range",
-            defaultDate: ["09:00", "18:00"],
-            onClose: function (selectedDates) {
-                if (selectedDates.length === 2) {
+            defaultDate: "08:00",
+            onChange: function (selectedDates) {
+                if (selectedDates.length === 1) {
                     document.getElementById('start_time').value = flatpickr.formatDate(selectedDates[0], "H:i");
-                    document.getElementById('end_time').value = flatpickr.formatDate(selectedDates[1], "H:i");
                 }
-            },
-            locale: {
-                rangeSeparator: " to "
             }
         });
 
-        // Mark Flatpickr as initialized by storing the instance in the data attribute
-        $('#time_range').data('flatpickr', true);
+        // Initialize Flatpickr for the end time
+        flatpickr("#end_time", {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i",
+            time_24hr: true,
+            defaultDate: "17:00",
+            onChange: function (selectedDates) {
+                if (selectedDates.length === 1) {
+                    document.getElementById('end_time').value = flatpickr.formatDate(selectedDates[0], "H:i");
+                }
+            }
+        });
+
+        // Mark Flatpickr as initialized
+        $('#start_time').data('flatpickr', true);
+        $('#end_time').data('flatpickr', true);
     }
 
 </script>
