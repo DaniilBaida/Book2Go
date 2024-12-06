@@ -81,10 +81,6 @@ class ClientBookingController extends Controller
         return redirect()->route('client.bookings')->with('success', 'Booking created successfully.');
     }
 
-
-
-
-
     public function pay(Booking $booking)
     {
         // Ensure the booking is in 'accepted' status
@@ -165,6 +161,47 @@ class ClientBookingController extends Controller
             return redirect()->route('client.bookings')->with('error', 'An error occurred while processing your payment. Please try again later.');
         }
     }
+
+    public function checkout(Booking $booking)
+    {
+        return view('client.checkout.checkout', compact('booking'));
+    }
+
+    public function applyDiscount(Request $request, Booking $booking)
+    {
+        $request->validate([
+            'discount_code' => 'required|string',
+        ]);
+
+        $discountCode = $request->input('discount_code');
+
+        // Check for valid discount code
+        $discount = \App\Models\DiscountCode::where('code', $discountCode)
+            ->where('status', 'active')
+            ->where(function ($query) use ($booking) {
+                $query->whereNull('business_id') // Admin-level discounts
+                    ->orWhere('business_id', $booking->service->business_id); // Business-specific discounts
+            })
+            ->first();
+
+        if (!$discount || ($discount->uses >= $discount->max_uses)) {
+            return back()->withErrors(['discount_code' => 'Invalid or expired discount code.']);
+        }
+
+        // Calculate discount value
+        $discountValue = $discount->type === 'fixed'
+            ? $discount->value
+            : $booking->service->price * ($discount->value / 100);
+
+        // Store discount in session
+        session(['discount' => [
+            'code' => $discount->code,
+            'value' => min($discountValue, $booking->service->price),
+        ]]);
+
+        return back()->with('success', 'Discount applied successfully.');
+    }
+
     
     
 

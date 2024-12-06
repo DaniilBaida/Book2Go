@@ -2,12 +2,11 @@
     @if($role === 'client')
         <!-- Pay Button -->
         @if($booking->status === 'accepted')
-            <form method="POST" action="{{ route('client.pay', $booking) }}">
-                @csrf
-                <x-button type="submit" class="text-sm bg-blue-500 hover:bg-blue-600 px-4 py-2 duration-300">
-                    <i class="fa-brands fa-paypal"></i>
+            <a href="{{ route('client.checkout', $booking) }}">
+                <x-button class="text-sm bg-blue-500 hover:bg-blue-600 px-4 py-2 duration-300">
+                    <i class="fa-solid fa-credit-card mr-2"></i> Proceed to Checkout
                 </x-button>
-            </form>
+            </a>
         @endif
 
         <!-- Cancel Booking Actions -->
