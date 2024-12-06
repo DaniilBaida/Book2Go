@@ -30,6 +30,15 @@
                 :increase="$percentageChangeInServices > 0"
             />
 
+            <!-- Profile Completion Card -->
+            <x-dashboard.dashboard-card
+                title="Profile Completion"
+                :value="$profileCompletion . '%'"
+                icon="clipboard"
+                :increase="true"
+            />
+
+
         </div>
         @if(auth()->user()->unreadNotifications->count() > 0)
             <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4">

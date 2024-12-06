@@ -76,11 +76,15 @@ class DashboardController extends Controller
         // Calculate percentage change in bookings
         $percentageChangeInBookings = $this->calculatePercentageChange($previousMonthBookings, $currentMonthBookings);
 
+        // Calculate profile completion percentage
+        $profileCompletion = $this->calculateProfileCompletion($business);
+
         return view('business.dashboard', compact(
             'totalServices',
             'percentageChangeInServices',
             'currentMonthBookings',
-            'percentageChangeInBookings'
+            'percentageChangeInBookings',
+            'profileCompletion'
         ));
     }
 
@@ -94,6 +98,41 @@ class DashboardController extends Controller
         return view('admin.dashboard');
     }
 
+    private function calculatePercentageChange(int $previous, int $current): float
+    {
+        return $previous > 0
+            ? (($current - $previous) / $previous) * 100
+            : ($current > 0 ? 100 : 0);
+    }
+
+    /**
+     * Calculate the profile completion percentage for a business.
+     *
+     * @param $business
+     * @return int
+     */
+    private function calculateProfileCompletion($business): int
+    {
+        $totalScore = 0;
+
+        // Mandatory fields (50%)
+        if ($business->name) $totalScore += 10;
+        if ($business->email) $totalScore += 10;
+        if ($business->phone_number) $totalScore += 10;
+        if ($business->street_address) $totalScore += 10;
+        if ($business->country) $totalScore += 5;
+        if ($business->city) $totalScore += 5;
+        if ($business->postal_code) $totalScore +=10;
+
+        // Optional fields (25% each)
+        if ($business->description) $totalScore += 25;
+        if ($business->logo_path) $totalScore += 25;
+
+        // Calculate the percentage
+        return min(100, $totalScore); // Ensure it does not exceed 100%
+    }
+
+
     /**
      * Count bookings within a date range for all services.
      *
@@ -106,19 +145,5 @@ class DashboardController extends Controller
         return $business->services->sum(fn($service) =>
         $service->bookings->whereBetween('created_at', $dateRange)->count()
         );
-    }
-
-    /**
-     * Calculate the percentage change between two values.
-     *
-     * @param int $previous
-     * @param int $current
-     * @return float
-     */
-    private function calculatePercentageChange(int $previous, int $current): float
-    {
-        return $previous > 0
-            ? (($current - $previous) / $previous) * 100
-            : ($current > 0 ? 100 : 0);
     }
 }
