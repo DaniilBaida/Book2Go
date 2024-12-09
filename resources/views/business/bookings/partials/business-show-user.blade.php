@@ -3,30 +3,45 @@
     <div class="p-6 bg-white shadow-md sm:rounded-lg">
         <!-- User Profile Header -->
         <div class="flex-col items-center space-x-4 mb-6">
-            <h3 class="text-xl font-semibold text-gray-700 mb-2">Basic Information</h3>
-            <div class="flex items-center space-x-4 mb-6">
-                <!-- Avatar Section -->
-                @if($user->avatar_path)
-                    <img
-                        src="{{ asset('storage/' . $user->avatar_path) }}"
-                        alt="Avatar"
-                        class="w-24 h-24 rounded-full object-cover"
-                    >
-                @else
-                    <div class="w-24 h-24 rounded-full bg-gray-300 flex items-center justify-center text-gray-500">
-                        No Avatar
+        <h3 class="text-xl font-semibold text-gray-700 mb-2">Basic Information</h3>
+        <div class="flex items-center space-x-4 mb-6">
+            <!-- Avatar Section -->
+            @if($user->avatar_path)
+                <img
+                    src="{{ asset('storage/' . $user->avatar_path) }}"
+                    alt="Avatar"
+                    class="w-24 h-24 rounded-full object-cover"
+                >
+            @else
+                <div class="w-24 h-24 rounded-full bg-gray-300 flex items-center justify-center text-gray-500">
+                    No Avatar
+                </div>
+            @endif
+            <!-- User Information -->
+            <div>
+                <div class="space-y-1">
+                    <div class="flex items-center space-x-2">
+                        <p class="font-medium text-lg text-gray-800">
+                            {{ $user->first_name }} {{ $user->last_name }}
+                        </p>
+                        @if($user->is_verified == 1)
+                            <span class="relative flex items-center justify-center w-5 h-5 rounded-full bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 p-0.5">
+                                <div class="flex items-center justify-center w-full h-full bg-white rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.707a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </span>
+                        @endif
                     </div>
-                @endif
-                <!-- User Information -->
-                <div>
-                    <div class="space-y-1">
-                        <p><strong>Name:</strong> {{ $user->first_name }} {{ $user->last_name }}</p>
-                        <p><strong>Email:</strong> {{ $user->email }}</p>
-                        <p><strong>Phone:</strong> {{ $user->phone_number ?? 'Not provided' }}</p>
-                    </div>
+                    <p><strong>Email:</strong> {{ $user->email }}</p>
+                    <p><strong>Phone:</strong> {{ $user->phone_number ?? 'Not provided' }}</p>
                 </div>
             </div>
         </div>
+    </div>
+
+
 
         <!-- Verification Status -->
         <div class="mb-6">

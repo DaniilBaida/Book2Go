@@ -54,7 +54,7 @@ class AdminUserVerificationRequestsController extends Controller
     // Reject Verification
     public function reject(User $user)
     {
-        $user->is_verified = 0;
+        $user->is_verified = 2;
         $user->save();
         return back()->with('success', 'User verification request rejected.');
     }
