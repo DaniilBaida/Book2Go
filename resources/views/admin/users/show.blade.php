@@ -5,7 +5,6 @@
         </div>
         <div class="flex flex-col space-y-8 w-full">
             <div class="p-6 bg-white shadow sm:rounded-lg">
-                <!-- Informações do Usuário -->
                 <div class="max-w-xl space-y-6">
                     <div>
                         <h3 class="text-xl font-semibold text-gray-700 mb-2">Basic Information</h3>
