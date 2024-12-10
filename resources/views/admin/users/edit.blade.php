@@ -6,11 +6,6 @@
         <div class="flex flex-col space-y-8 w-full">
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="max-w-xl">
-                    @include('admin.users.partials.update-avatar-form')
-                </div>
-            </div>
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
                     @include('admin.users.partials.update-user-information-form')
                 </div>
             </div>
