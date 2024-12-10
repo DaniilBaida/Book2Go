@@ -5,18 +5,6 @@
         <div class="flex-col items-center space-x-4 mb-6">
         <h3 class="text-xl font-semibold text-gray-700 mb-2">Basic Information</h3>
         <div class="flex items-center space-x-4 mb-6">
-            <!-- Avatar Section -->
-            @if($user->avatar_path)
-                <img
-                    src="{{ asset('storage/' . $user->avatar_path) }}"
-                    alt="Avatar"
-                    class="w-24 h-24 rounded-full object-cover"
-                >
-            @else
-                <div class="w-24 h-24 rounded-full bg-gray-300 flex items-center justify-center text-gray-500">
-                    No Avatar
-                </div>
-            @endif
             <!-- User Information -->
             <div>
                 <div class="space-y-1">

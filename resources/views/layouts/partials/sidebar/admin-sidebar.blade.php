@@ -43,12 +43,6 @@
             'label' => 'User Verification',
             'isActive' => Request::is('admin/verification-requests*'),
         ],
-                [
-            'route' => route('admin.business-verification-requests.index'),
-            'icon' => 'fas fa-user-check',
-            'label' => 'Business Verification',
-            'isActive' => Request::is('admin/verification-requests*'),
-        ],
     ]"
     :bottomLinks="[
         ['route' => route('admin.profile.edit'), 'icon' => 'fa-solid fa-user', 'label' => 'Profile'],
