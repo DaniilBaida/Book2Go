@@ -43,7 +43,7 @@
             <!-- Right Section -->
             <div class="w-full 2xl:w-2/5 flex items-center max-2xl:h-32">
                 <div class="w-full h-full bg-blue-300 rounded-xl flex items-center justify-center">
-                    <p class="font-bold text-black">See how it’s done</p>
+                    <p class="font-bold text-white text-lg md:text-6xl">See how it’s done</p>
                 </div>
             </div>
         </section>

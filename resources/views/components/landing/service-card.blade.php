@@ -45,7 +45,33 @@
                 <i class="fa-regular fa-bookmark text-xl flex my-auto"></i>
             </button>
             <div class="flex-1">
-                <button class="w-full bg-blue-300 hover:bg-blue-200 duration-300 rounded-xl py-2 text-xl font-bold text-zinc-700">Book Now</button>
+                <!-- User Section -->
+                @if (Route::has('login'))
+                    <div class="flex justify-end items-center space-x-6">
+                        <!-- User Avatar Section -->
+                        @auth
+                            @php
+                                $role = Auth::user()->role_id;
+                            @endphp
+                            <a 
+                                href="{{ 
+                                    $role === \App\Models\User::ROLE_BUSINESS 
+                                        ? route('business.services') 
+                                        : ($role === \App\Models\User::ROLE_ADMIN 
+                                            ? route('admin.services') 
+                                            : route('client.services')) 
+                                }}" 
+                                class="w-full bg-blue-300 hover:bg-blue-200 duration-300 rounded-xl py-2 text-xl font-bold text-zinc-700 text-center">
+                                Book Now
+                            </a>
+                        @else
+                            <!-- Log in Button for Guests -->
+                            <a href="{{ route('login') }}" class="w-full bg-blue-300 hover:bg-blue-200 duration-300 rounded-xl py-2 text-xl font-bold text-zinc-700 text-center">
+                                Book Now
+                            </a>
+                        @endauth
+                    </div>
+                @endif
             </div>
         </div>
     </div>
