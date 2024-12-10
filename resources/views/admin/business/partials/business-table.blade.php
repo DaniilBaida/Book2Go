@@ -26,7 +26,6 @@
         @foreach ($businesses as $business)
             <tr class="bg-white border-b hover:bg-gray-50">
                 <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap w-[]">
-                    <img class="w-10 h-10 rounded-full" src="{{ asset($business->logo_path) }}" alt="{{ $business->name }}">
                     <div class="ps-3">
                         <div class="text-base font-semibold">{{ $business->name }}</div>
                         <div class="font-normal text-gray-500">{{ $business->email }}</div>
