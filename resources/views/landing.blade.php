@@ -20,8 +20,5 @@
 
     <!-- Home -->
     @include('partials.home')
-
-    <!-- Services -->
-    @include('partials.services')
 </body>
 </html>

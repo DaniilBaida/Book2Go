@@ -17,18 +17,6 @@
                         </a>
                         <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-300 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
                     </li>
-                    <li class="relative hover:text-blue-300 cursor-pointer group h-full flex items-center">
-                        <a href="#" class="h-full flex items-center px-4">
-                            Services
-                        </a>
-                        <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-300 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-                    </li>
-                    <li class="relative hover:text-blue-300 cursor-pointer group h-full flex items-center">
-                        <a href="#" class="h-full flex items-center px-4">
-                            Business
-                        </a>
-                        <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-300 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-                    </li>
                 </ul>
             </div>
 

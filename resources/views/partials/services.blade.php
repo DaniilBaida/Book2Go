@@ -19,40 +19,9 @@
     <div class="bg-[#D8DAD7] flex">
         <div class="max-w-9xl container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="my-10 flex max-lg:flex-col gap-10">
-                <!-- Filters -->
-                <div class="flex flex-col">
-                    <div class="flex justify-between mb-5">
-                        <div class="font-bold text-2xl">Filters</div>
-                        <div class="font-bold text-lg my-auto flex">
-                            <i class="fa-solid fa-sliders text-[#6D6E6E]"></i>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-xl p-5">
-                        <div class="flex justify-between gap-10">
-                            <div class="font-bold text-lg">Account subject</div>
-                            <button class="bg-[#F2F4F0] rounded-full px-3 py-1 my-auto flex text-sm font-bold">Reset</button>
-                        </div>
-                        <div class="mt-4 space-y-3">
-                            <!-- Checkbox List -->
-                            <label class="flex items-center space-x-2">
-                                <input type="checkbox" class="w-5 h-5 accent-black rounded focus:ring-2 focus:ring-offset-1 focus:ring-gray-300">
-                                <span class="text-md font-bold">Lifestyle</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
                 <!-- Services Found -->
                 <div class="flex-1">
                     <div class="flex flex-col">
-                        <div class="flex justify-between mb-5">
-                            <div class="font-bold text-2xl">Services</div>
-                            <div class="font-bold text-lg my-auto">Sort by:
-                                <span class="font-bold text-zinc-500 mr-2">Default</span>
-                                <button>
-                                    <i class="fa-solid fa-sliders text-[#6D6E6E]"></i>
-                                </button>
-                            </div>
-                        </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-5">
                             <x-landing.service-card 
                                 image="{{ asset('images/landing/gym_landing.jpg') }}" 
@@ -65,7 +34,7 @@
                                 businessName="Brito Consulting"
                             />
                             <x-landing.service-card 
-                                image="{{ asset('images/landing/gym_landing.jpg') }}" 
+                                image="{{ asset('images/landing/barber_landing.jpg') }}" 
                                 title="GymMaster Fitness" 
                                 location="Barcelona, ESP" 
                                 bookings="1892" 
@@ -75,7 +44,7 @@
                                 businessName="Business 1"
                             />
                             <x-landing.service-card 
-                                image="{{ asset('images/landing/gym_landing.jpg') }}" 
+                                image="{{ asset('images/landing/dentist_landing.jpg') }}" 
                                 title="GymMaster Fitness" 
                                 location="Barcelona, ESP" 
                                 bookings="1892" 
