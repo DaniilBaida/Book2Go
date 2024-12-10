@@ -7,7 +7,7 @@
             <div class="flex max-sm:flex-col space-x-4">
                 @if($service->image_path)
                     <!-- Display service image -->
-                    <img src="{{ asset($service->image_path) }}" alt="{{ $service->name }}" class="w-24 h-24 rounded-full border-1 border border-zinc-200">
+                    <img src="{{ asset($service->image_path) }}" alt="{{ $service->name }}" class="w-24 h-24 rounded-full object-cover border-1 border border-zinc-200">
                 @else
                     <!-- Placeholder image if no service image is provided -->
                     <img src="{{ asset('images/placeholder.png') }}" alt="No Image" class="w-24 h-24 rounded-full bg-zinc-500 flex justify-center text-center">

@@ -8,7 +8,7 @@
                     <img
                         src="{{ asset($booking->service->image_path) }}"
                         alt="{{ $booking->service->name }}"
-                        class="w-full max-w-md h-auto object-contain rounded-lg"
+                        class="w-full max-w-md h-auto rounded-lg object-contain"
                     />
                 @else
                     <p class="text-gray-500 text-center">No image available for this service.</p>
