@@ -8,18 +8,6 @@
                 </a>
             </div>
 
-            <!-- Navigation Links -->
-            <div class="hidden md:flex justify-center h-full px-5">
-                <ul class="flex gap-2 lg:gap-8 text-white text-sm font-medium h-full">
-                    <li class="relative hover:text-blue-300 cursor-pointer group h-full flex items-center">
-                        <a href="#" class="h-full flex items-center px-4">
-                            Home
-                        </a>
-                        <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-300 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-                    </li>
-                </ul>
-            </div>
-
             <!-- User Section -->
             @if (Route::has('login'))
                 <div class="flex justify-end items-center space-x-6">
