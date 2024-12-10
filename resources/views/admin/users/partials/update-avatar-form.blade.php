@@ -7,10 +7,10 @@
             {{ __("Update $user->first_name $user->last_name's profile avatar") }}
         </p>
     </header>
-    <form action="{{ route('admin.users.update-avatar', ['user' => $user->id]) }}" method="POST" enctype="multipart/form-data"  class="mt-6 space-y-6">
+    <form action="{{ route('admin.users.update-avatar', ['user' => $user->id]) }}" method="POST" enctype="multipart/form-data" class="mt-6 space-y-6">
         @csrf
         @method('PATCH')
-        <x-upload-avatar />
+        <x-upload-avatar :name="'avatar'" />
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
             @if (session('status') === 'profile-updated')
