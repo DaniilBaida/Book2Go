@@ -32,12 +32,6 @@
             'isActive' => Route::is('admin.reviews.index')
         ],
         [
-            'route' => route('admin.discounts.index'),
-            'icon' => 'fas fa-tags',
-            'label' => 'Manage Discounts',
-            'isActive' => Request::is('admin/discounts*'),
-        ],
-        [
             'route' => route('admin.user-verification-requests.index'),
             'icon' => 'fas fa-user-check',
             'label' => 'User Verification',
