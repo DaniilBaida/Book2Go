@@ -8,8 +8,7 @@
                     <!-- Display client profile picture -->
                     <img src="{{ asset($booking->user->image_path) }}" class="w-24 h-24 rounded-full border-1 border border-zinc-200">
                 @else
-                    <!-- Placeholder image if no service image is provided -->
-                    <img src="{{ asset('images/placeholder.png') }}" alt="No Image" class="w-24 h-24 rounded-full bg-zinc-500 flex justify-center text-center">
+
                 @endif
                 <div class="my-auto flex flex-col">
                     <h3 class="text-2xl font-bold">{{ $booking->user->first_name }} {{ $booking->user->last_name }}</h3>
@@ -72,7 +71,7 @@
             <div class="flex max-sm:flex-col space-x-4">
                 @if($booking->service->image_path)
                     <!-- Display service image -->
-                    <img src="{{ asset($booking->service->image_path) }}" alt="{{ $booking->service->name }}" class="w-24 h-24 rounded-full border-1 border border-zinc-200">
+                    <img src="{{ asset($booking->service->image_path) }}" alt="{{ $booking->service->name }}" class="w-24 h-24 rounded-full border-1 border object-cover border-zinc-200">
                 @else
                     <!-- Placeholder image if no service image is provided -->
                     <img src="{{ asset('images/placeholder.png') }}" alt="No Image" class="w-24 h-24 rounded-full bg-zinc-500 flex justify-center text-center">
@@ -106,7 +105,7 @@
         </div>
         <!-- Botão para voltar -->
         <div class="mt-4">
-            <a href="{{ route('business.bookings') }}" >          
+            <a href="{{ route('business.bookings') }}" >
                 <x-button>Back to Bookings</x-button>
             </a>
         </div>
