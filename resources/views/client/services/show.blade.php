@@ -81,39 +81,45 @@
             <h1 class="text-3xl text-gray-800 font-bold mb-5">Booking Reviews</h1>
             <!-- Reviews Section -->
             <div class="mt-8">
-                @php
-                    // Filter reviews specifically for the service (from clients)
-                    $serviceReviews = $service->reviews->where('review_type', 'service');
-                @endphp
-
-                @if($serviceReviews->isEmpty())
-                    <p class="text-gray-600 mt-4">No reviews available for this service yet.</p>
-                @else
-                    <div class="space-y-4 mt-4">
-                        @foreach($serviceReviews as $review)
-                            <div class="bg-gray-100 p-4 rounded">
-                                <div class="flex justify-between items-center">
-                                    <div>
-                                        <h4 class="font-semibold text-gray-800">
-                                            {{ $review->reviewer->first_name }} {{ $review->reviewer->last_name }}
-                                        </h4>
-                                        <p class="text-sm text-gray-600">{{ $review->created_at->format('d M Y') }}</p>
-                                    </div>
-                                    <div class="text-yellow-500">
-                                        @for($i = 1; $i <= 5; $i++)
-                                            @if($i <= $review->rating)
-                                                ★
-                                            @else
-                                                ☆
-                                            @endif
-                                        @endfor
-                                    </div>
+                <div class="space-y-4 mt-4">
+                    @foreach($serviceReviews as $review)
+                        <div class="bg-gray-100 p-4 rounded">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">
+                                        {{ ucfirst($review->reviewer_type) }} <!-- Display reviewer type -->
+                                    </h4>
+                                    <p class="text-sm text-gray-600">{{ $review->created_at->format('d M Y') }}</p>
                                 </div>
-                                <p class="mt-2 text-gray-700">{{ $review->comment ?? 'No comment provided.' }}</p>
+                                <div class="text-yellow-500">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        @if($i <= $review->rating)
+                                            ★
+                                        @else
+                                            ☆
+                                        @endif
+                                    @endfor
+                                </div>
                             </div>
-                        @endforeach
-                    </div>
-                @endif
+                            <p class="mt-2 text-gray-700">{{ $review->comment ?? 'No comment provided.' }}</p>
+
+                            <!-- Replies Section -->
+                            <div class="mt-4 pl-4 border-l-2 border-gray-300">
+                                <h5 class="font-semibold text-gray-700">Replies:</h5>
+                                @forelse($review->replies as $reply)
+                                    <div class="mt-2">
+                                        <p class="text-sm text-gray-600">
+                                            {{ $reply->user->name }} replied on {{ $reply->created_at->format('d M Y') }}:
+                                        </p>
+                                        <p class="text-gray-800">{{ $reply->content }}</p>
+                                    </div>
+                                @empty
+                                    <p class="text-gray-500">No replies yet.</p>
+                                @endforelse
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
             </div>
         </div>
         <!-- Back Button -->

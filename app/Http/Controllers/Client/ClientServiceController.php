@@ -50,7 +50,13 @@ class ClientServiceController extends Controller
         $existingBooking = Booking::where('service_id', $service->id)
             ->where('user_id', auth()->id())
             ->first();
-        // Return the view for showing a specific service
-        return view('client.services.show', compact('service', 'existingBooking'));
+
+        // Fetch reviews for the service, including replies
+        $serviceReviews = $service->reviews()
+            ->with('replies.user') // Eager load replies and the users who wrote them
+            ->get();
+
+        // Return the view with the service and reviews
+        return view('client.services.show', compact('service', 'existingBooking', 'serviceReviews'));
     }
 }
