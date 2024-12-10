@@ -3,16 +3,8 @@
         <!-- Display business details -->
         <div class="bg-white p-6 rounded-lg shadow-md">
             <h1 class="text-2xl font-bold mb-6">Overview</h1>
-            
+
             <div class="flex gap-5 items-center mb-8">
-                <!-- Avatar Section -->
-                @if($business->avatar_path)
-                    <img src="{{ asset('storage/' . $business->avatar_path) }}" alt="Avatar" class="w-24 h-24 rounded-full object-cover">
-                @else
-                    <div class="w-24 h-24 rounded-full bg-gray-300 flex items-center justify-center text-gray-500">
-                        No Avatar
-                    </div>
-                @endif
 
                 <!-- Business Name and Description -->
                 <div>
