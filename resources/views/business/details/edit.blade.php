@@ -84,17 +84,7 @@
                     @error('description') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
 
-                <!-- Business Image Upload -->
-                <div class="mb-4">
-                    <x-input-label for="business_image" :value="__('Business Image')" />
-                    <x-upload-avatar 
-                        name="business_image" 
-                        currentImage="{{ $business->image_path ? Storage::url($business->image_path) : null }}" 
-                    />
-                    @error('business_image')
-                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                    @enderror
-                </div>
+
 
                 <!-- Submit Button -->
                 <div class="flex items-center justify-end mt-6">
@@ -112,7 +102,7 @@
         document.getElementById('country').addEventListener('change', function() {
             var countryCode = this.value;
             var citySelect = document.getElementById('city');
-            
+
             // Clear existing options
             citySelect.innerHTML = '<option value="" disabled selected>{{ __("Select City") }}</option>';
 
