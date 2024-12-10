@@ -54,13 +54,6 @@
                                 $role = Auth::user()->role_id;
                             @endphp
                             <a 
-                                href="{{ 
-                                    $role === \App\Models\User::ROLE_BUSINESS 
-                                        ? route('business.services') 
-                                        : ($role === \App\Models\User::ROLE_ADMIN 
-                                            ? route('admin.services') 
-                                            : route('client.services')) 
-                                }}" 
                                 class="w-full bg-blue-300 hover:bg-blue-200 duration-300 rounded-xl py-2 text-xl font-bold text-zinc-700 text-center">
                                 Book Now
                             </a>

@@ -1,4 +1,7 @@
 <x-client-layout>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
     <div class="space-y-5">
         <!-- Book Service -->
         <div class="bg-white shadow-md rounded-lg p-6">
@@ -128,7 +131,7 @@
 
     <!-- Script Section -->
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        window.addEventListener('load', function () {
             const dateInput = document.getElementById('date');
             const slotsContainer = document.getElementById('available_slots');
             const selectedSlotInput = document.getElementById('selected_slot');
@@ -179,7 +182,6 @@
                     });
             }
 
-
             // Initialize Flatpickr for date selection
             function initializeFlatpickr() {
                 const availableDays = @json($service->available_days);
@@ -216,5 +218,6 @@
                 fetchAvailableSlots(dateInput.value);
             }
         });
+
     </script>
 </x-client-layout>
