@@ -26,7 +26,6 @@
         @foreach ($users as $user)
             <tr class="bg-white border-b hover:bg-gray-50">
                 <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap w-[]">
-                    <img class="w-10 h-10 rounded-full" src="{{ asset($user->avatar_path) }}" alt="{{ $user->name }}">
                     <div class="ps-3">
                         <div class="text-base font-semibold">{{ $user->first_name.' '.$user->last_name  }}</div>
                         <div class="font-normal text-gray-500">{{ $user->email }}</div>
@@ -115,5 +114,5 @@
 
     {{ $users->links('vendor.pagination.tailwind') }}
 
-    
+
 </div>

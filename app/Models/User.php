@@ -69,11 +69,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     protected static function booted()
     {
-        static::creating(function ($user) {
-            if (empty($user->avatar_path)) {
-                $user->avatar_path = 'storage/avatars/default-avatar.svg';
-            }
-        });
+
     }
 
     public function role()
