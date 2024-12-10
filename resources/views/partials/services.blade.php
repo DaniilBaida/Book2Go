@@ -38,18 +38,6 @@
                                 <input type="checkbox" class="w-5 h-5 accent-black rounded focus:ring-2 focus:ring-offset-1 focus:ring-gray-300">
                                 <span class="text-md font-bold">Lifestyle</span>
                             </label>
-                            <label class="flex items-center space-x-2">
-                                <input type="checkbox" class="w-5 h-5 accent-black rounded focus:ring-2 focus:ring-offset-1 focus:ring-gray-300">
-                                <span class="text-md font-bold">Lifestyle</span>
-                            </label>
-                            <label class="flex items-center space-x-2">
-                                <input type="checkbox" class="w-5 h-5 accent-black rounded focus:ring-2 focus:ring-offset-1 focus:ring-gray-300">
-                                <span class="text-md font-bold">Lifestyle</span>
-                            </label>
-                            <label class="flex items-center space-x-2">
-                                <input type="checkbox" class="w-5 h-5 accent-black rounded focus:ring-2 focus:ring-offset-1 focus:ring-gray-300">
-                                <span class="text-md font-bold">Lifestyle</span>
-                            </label>
                         </div>
                     </div>
                 </div>
