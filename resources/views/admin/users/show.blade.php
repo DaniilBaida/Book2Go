@@ -9,8 +9,8 @@
                     <div>
                         <h3 class="text-xl font-semibold text-gray-700 mb-2">Basic Information</h3>
                         <div class="flex items-center space-x-4">
-                            <img src="{{ $user->avatar_path }}" alt="User Avatar" class="w-14 h-14 rounded-full border-2 border-gray-300">
-                            
+
+
                             <div class="flex items-center space-x-2">
                                 <p class="font-medium text-lg text-gray-800">
                                     {{ $user->first_name }} {{ $user->last_name }}
